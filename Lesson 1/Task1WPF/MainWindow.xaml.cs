@@ -24,7 +24,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
-    // hello
+    
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         var hello = new HelloLibrary();
