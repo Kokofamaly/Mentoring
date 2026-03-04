@@ -2,7 +2,7 @@
 
 namespace Task2;
 
-public class HelloClass
+public class HelloLibrary
 {
     public string GetMessage(string username)
     {
