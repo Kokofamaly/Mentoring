@@ -6,6 +6,8 @@ partial class Form1
     ///  Required designer variable.
     /// </summary>
     private System.ComponentModel.IContainer components = null;
+    private System.Windows.Forms.TextBox textBox1;
+    private System.Windows.Forms.Button button1;
 
     /// <summary>
     ///  Clean up any resources being used.
@@ -28,9 +30,17 @@ partial class Form1
     /// </summary>
     private void InitializeComponent()
     {
+        textBox1 = new();
+        button1 = new();
+
+        button1.Text = "Greetings!";
+        button1.Click += button1_Click;
+        
         components = new System.ComponentModel.Container();
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(800, 450);
+        Controls.Add(textBox1);
+        Controls.Add(button1);
         Text = "Form1";
     }
 
