@@ -7,6 +7,6 @@ public class HelloLibrary
     public string GetMessage(string username)
     {
         if(String.IsNullOrEmpty(username)) username = "User";
-        return $"{DateTime.UtcNow}:\n\tHello, {username}";
+        return $"{DateTime.UtcNow}:\tHello, {username}";
     }
 }
