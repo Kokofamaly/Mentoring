@@ -4,8 +4,9 @@ namespace Task2;
 
 public class HelloLibrary
 {
-    public string GetMessage(string username = "User")
+    public string GetMessage(string username)
     {
+        if(String.IsNullOrEmpty(username)) username = "User";
         return $"{DateTime.UtcNow}:Hello, {username}";
     }
 }
