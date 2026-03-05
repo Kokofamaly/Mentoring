@@ -6,7 +6,7 @@
     <ScrollView>
         <VerticalStackLayout Padding="30,0" Spacing="25">
             <Entry x:Name="UserInput" Placeholder="Enter your name"/>
-            <Button Text="Say Hello" Clicked="OnClicked"/>
+            <Button Text="Greetings" Clicked="OnClicked"/>
         </VerticalStackLayout>
     </ScrollView>
 
