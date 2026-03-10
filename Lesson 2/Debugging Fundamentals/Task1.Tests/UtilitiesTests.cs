@@ -15,6 +15,7 @@ namespace Task1.Tests
             Utilities.Sort(numbers);
 
             CollectionAssert.AreEqual(new[] { -5, 1, 2, 3, 4 }, numbers);
+
         }
 
         [Test]
