@@ -1,7 +1,17 @@
 using System.IO;
+using FileSystemProject.Task2;
 
 public class FileSystemVisitor
 {
+    private bool _started = false;
+    private bool _finished = true;
+    public event EventHandler? Started;
+    public event EventHandler? Finished;
+    public event EventHandler<FileSystemVisitorEventArgs>? DirectoryFound;
+    public event EventHandler<FileSystemVisitorEventArgs>? FileFound;
+    public event EventHandler<FileSystemVisitorEventArgs>? FilteredDirectoryFound;
+    public event EventHandler<FileSystemVisitorEventArgs>? FilteredFileFound;
+
     private Predicate<FileSystemInfo> _filter;
     private DirectoryInfo _directoryInfo;
     public FileSystemVisitor()
@@ -24,13 +34,40 @@ public class FileSystemVisitor
 
     public IEnumerable<FileSystemInfo> Traverse(DirectoryInfo currentDirectory = null!)
     {
+        if (!_started)
+        {
+            _started = true;
+            _finished = false;
+            Started?.Invoke(this, EventArgs.Empty);
+        }
+
         if(currentDirectory == null) 
             currentDirectory = _directoryInfo;
         
         foreach(var fs in currentDirectory.GetFileSystemInfos())
         {
-            if(_filter(fs)) 
-                yield return fs;
+            FileSystemVisitorEventArgs args = new FileSystemVisitorEventArgs(fs);
+
+            if(fs is DirectoryInfo)
+                DirectoryFound?.Invoke(this, args);
+            else
+                FileFound?.Invoke(this, args);
+                    
+            if(_filter(fs))
+            {
+                if(fs is DirectoryInfo)
+                    FilteredDirectoryFound?.Invoke(this, args);
+                else
+                    FilteredFileFound?.Invoke(this, args);
+
+                if(!args.Exclude)
+                    yield return fs;
+                if(args.Abort)
+                    _started = false;
+                    _finished = true;
+                    Finished?.Invoke(this, EventArgs.Empty);
+                    yield break;
+            }
             
             if(fs is DirectoryInfo directory) 
                 foreach(var item in Traverse(directory))
@@ -40,5 +77,13 @@ public class FileSystemVisitor
 
             
         }
+
+        if (!_finished)
+        {
+            _started = false;
+            _finished = true;
+            Finished?.Invoke(this, EventArgs.Empty);
+        }
+
     }
 }
