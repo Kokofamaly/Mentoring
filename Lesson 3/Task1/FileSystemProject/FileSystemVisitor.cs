@@ -63,10 +63,12 @@ public class FileSystemVisitor
                 if(!args.Exclude)
                     yield return fs;
                 if(args.Abort)
+                {
                     _started = false;
                     _finished = true;
                     Finished?.Invoke(this, EventArgs.Empty);
                     yield break;
+                }
             }
             
             if(fs is DirectoryInfo directory) 
