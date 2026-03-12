@@ -1,48 +1,44 @@
 using System.IO;
 
-namespace FileSystemProject.FileSystemVisitor;
-
 public class FileSystemVisitor
 {
-    private Predicate<string> _predicate;
-
-    // private string? _path;
+    private Predicate<FileSystemInfo> _filter;
     private DirectoryInfo _directoryInfo;
-    public FileSystemInfo fileSystemInfo;
-    public FileSystemVisitor(string predefinedPath = null!)
+    public FileSystemVisitor()
     {
-        if(predefinedPath == null) _directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
-        else _directoryInfo = new DirectoryInfo(predefinedPath);
-    }
-    public FileSystemVisitor(Predicate<string> predicate, string predefinedPath = null!)
-    {
-        _predicate = predicate;
-
-        if(predefinedPath == null) _directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
-        else _directoryInfo = new DirectoryInfo(predefinedPath);
+        _directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
+        _filter = fs => true;
     }
 
-    public IEnumerable<string> GetFiles()
+    public FileSystemVisitor(string path)
     {
-        var directories = _directoryInfo.GetDirectories();
-        foreach(var d in directories)
+        _directoryInfo = new DirectoryInfo(path);
+        _filter = fs => true;
+    }
+
+    public FileSystemVisitor(string path, Predicate<FileSystemInfo> filter)
+    {
+        _directoryInfo = new DirectoryInfo(path);
+        _filter = filter;
+    }
+
+    public IEnumerable<FileSystemInfo> Traverse(DirectoryInfo currentDirectory = null!)
+    {
+        if(currentDirectory == null) 
+            currentDirectory = _directoryInfo;
+        
+        foreach(var fs in currentDirectory.GetFileSystemInfos())
         {
-            yield return d.Name;
-        }
-    }
-
-    public IEnumerable<FileSystemInfo> Traverse(string path)
-    {
-        foreach(var fs in _directoryInfo.GetFileSystemInfos(path))
-        {
-            yield return fs;
-            if(fs is DirectoryInfo subDir)
-            {
-                foreach(var item in this.Traverse(fs.FullName){
-                    yield return item
+            if(_filter(fs)) 
+                yield return fs;
+            
+            if(fs is DirectoryInfo directory) 
+                foreach(var item in Traverse(directory))
+                {
+                    yield return item;
                 }
-            }
+
+            
         }
     }
-
 }
