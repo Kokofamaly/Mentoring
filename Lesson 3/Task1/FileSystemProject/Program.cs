@@ -11,7 +11,7 @@ public class Program
 
         fileVisitor.FileFound += (s, e) => Console.WriteLine($"File Found: {e.Item?.Name}");
         fileVisitor.DirectoryFound += (s, e) => Console.WriteLine($"Directory Found: {e.Item?.Name}");
-        fileVisitor.FilteredFileFound += (s, e) => {Console.WriteLine($"Filtered File Found: {e.Item?.Name}"); e.Abort = true;};
+        fileVisitor.FilteredFileFound += (s, e) => Console.WriteLine($"Filtered File Found: {e.Item?.Name}");
         fileVisitor.FilteredDirectoryFound += (s, e) => Console.WriteLine($"Filtered Directory Found: {e.Item?.Name}");
         
         foreach(var fs in fileVisitor.Traverse())

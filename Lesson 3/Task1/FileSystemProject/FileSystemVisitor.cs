@@ -5,6 +5,7 @@ public class FileSystemVisitor
 {
     private bool _started = false;
     private bool _finished = true;
+    private bool _abort;
     public event EventHandler? Started;
     public event EventHandler? Finished;
     public event EventHandler<FileSystemVisitorEventArgs>? DirectoryFound;
@@ -52,7 +53,7 @@ public class FileSystemVisitor
                 DirectoryFound?.Invoke(this, args);
             else
                 FileFound?.Invoke(this, args);
-                    
+
             if(_filter(fs))
             {
                 if(fs is DirectoryInfo)
@@ -62,7 +63,11 @@ public class FileSystemVisitor
 
                 if(!args.Exclude)
                     yield return fs;
+
                 if(args.Abort)
+                    _abort = true;
+                    
+                if(_abort)
                 {
                     _started = false;
                     _finished = true;
@@ -74,6 +79,8 @@ public class FileSystemVisitor
             if(fs is DirectoryInfo directory) 
                 foreach(var item in Traverse(directory))
                 {
+                    if(_abort) yield break;
+                    
                     yield return item;
                 }
 
