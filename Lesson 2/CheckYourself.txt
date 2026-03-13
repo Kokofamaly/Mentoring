@@ -1,0 +1,46 @@
+What is break mode? What are the options to step through code?
+    Break Mode it is a mode, when program is paused during debugging
+    You can enter Break Mode when: breakpoint is hit, program is manually paused or when exception occurs.
+    With Break Mode you can inspect variables, call stack. threads and memory, also you can execute your code step by step.
+    Options to step through code: Step Into, Step Over, Step Out, Continue.
+
+
+
+How to ignore some exceptions during debugging?
+    Go to window debug - windows - exception settings and then uncheck checkboxes of exceptions that you want to be ignored.
+
+
+How to set up conditional breakpoint?
+    Right click the breakpoint and select Conditions, then you can find a field for you to write your condition.
+    Breakpoint is hit, when your conditional expression is true.
+
+What is data breakpoint?
+    It is kind of breakpoint that tells to debugger to pause program execution when chosen data(some value) has been changed.
+
+What is trace point and how to use it?
+    Trace point is a breakpoint that logs a message and then continues the execution of a program.
+    Trace point used when you don't want to modify your code for debugging.
+
+What are pdb files, when are they created and how to use them?
+    A PDB file is a file format for storing debugging and project state information about a compiled program.
+    PDB files are created during the compilation and linking process when you build a project in Visual Studio. 
+    Visual Studio usually handles PDB automatically but still you can load it manually.
+    PDB file allows you to set a breakpoint in your code, step through your code line by line, view call stacks, values and thread information.
+
+
+What is symbol server?
+
+Symbol server is a file server that stores debugging information, like symbol files, allowing debugger to automatically retrieve the correct symbol files as needed, without you having to manage large, version-specific files locally. 
+
+
+What are debug and release build configurations?
+
+--------------------------------------------------
+- Debug:
+    * For development and testing
+    * Full debug info, no optimization
+    * Easier to debug
+- Release:
+    * For production
+    * Optimized for speed/size
+    * Minimal debug info, harder to debug
