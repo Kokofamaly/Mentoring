@@ -11,9 +11,12 @@ public class Program
 
         fileVisitor.FileFound += (s, e) => Console.WriteLine($"File Found: {e.Item?.Name}");
         fileVisitor.DirectoryFound += (s, e) => Console.WriteLine($"Directory Found: {e.Item?.Name}");
-        fileVisitor.FilteredFileFound += (s, e) => Console.WriteLine($"Filtered File Found: {e.Item?.Name}");
+        fileVisitor.FilteredFileFound += (s, e) => e.Exclude = true;
         fileVisitor.FilteredDirectoryFound += (s, e) => Console.WriteLine($"Filtered Directory Found: {e.Item?.Name}");
         
+        int count = fileVisitor.Traverse().Count();
+        Console.WriteLine(count);
+
         foreach(var fs in fileVisitor.Traverse())
         {
             Console.WriteLine(fs.Name);
