@@ -29,18 +29,8 @@ What are pdb files, when are they created and how to use them?
 
 
 What is symbol server?
-
-Symbol server is a file server that stores debugging information, like symbol files, allowing debugger to automatically retrieve the correct symbol files as needed, without you having to manage large, version-specific files locally. 
+    Symbol server is a file server that stores debugging information, like symbol files, allowing debugger to automatically retrieve the correct symbol files as needed, without you having to manage large, version-specific files locally. 
 
 
 What are debug and release build configurations?
-
---------------------------------------------------
-- Debug:
-    * For development and testing
-    * Full debug info, no optimization
-    * Easier to debug
-- Release:
-    * For production
-    * Optimized for speed/size
-    * Minimal debug info, harder to debug
+    Debug version is for finding and fixing errors, while the release version is optimized for performance and distribution to end users.

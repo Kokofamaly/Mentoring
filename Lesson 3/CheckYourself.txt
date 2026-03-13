@@ -1,0 +1,26 @@
+What is the difference between reference and value types? 
+    Value types are stored on stack, while reference types are stock on heap.
+
+What is boxing and unboxing? 
+    Boxing is casting value type to object, unboxing is the opposite - casting object to value type. It is a thing to avoid because of extra loading of memory
+
+What is a class? What is an interface? 
+    Class is like a blueprint for objects, can have fields, methods, constructors.
+    Interface is a contract, that can have only method/property signatures, no implementation
+
+What is the difference between class and structure? 
+    Class is reference type, so it is stock on heap. Structure is value type, so it is stock on stack.
+
+What is a generic type? What is Covariance and Contravariance? 
+    A generic type allows writing reusable and type-safe code using type parameters, like List<T>.
+    Covariance allows using a more derived type than the original one (for output types).
+    Contravariance allows using a less derived type than the original one (for input types).
+
+What is delegate? 
+    It is something like a link to some method.
+
+What is event? 
+    An event in C# is a way for a class to provide notifications to clients of that class when something of interest occurs.
+
+What is the difference between delegate and event? 
+    Delegate references to methods, while events are a wrapper around delegates to implement the publisher-subscriber pattern with added safety and control. 
