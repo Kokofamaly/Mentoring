@@ -3,8 +3,6 @@ using FileSystemProject.Task2;
 
 public class FileSystemVisitor
 {
-    private bool _started = false;
-    private bool _finished = true;
     private bool _abort;
     public event EventHandler? Started;
     public event EventHandler? Finished;
@@ -15,6 +13,7 @@ public class FileSystemVisitor
 
     private Predicate<FileSystemInfo> _filter;
     private DirectoryInfo _directoryInfo;
+
     public FileSystemVisitor()
     {
         _directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
@@ -27,23 +26,38 @@ public class FileSystemVisitor
         _filter = fs => true;
     }
 
+    public FileSystemVisitor(Predicate<FileSystemInfo> filter)
+    {
+        
+        _directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
+        _filter = filter;
+    }
     public FileSystemVisitor(string path, Predicate<FileSystemInfo> filter)
     {
+        
         _directoryInfo = new DirectoryInfo(path);
         _filter = filter;
     }
 
     public IEnumerable<FileSystemInfo> Traverse(DirectoryInfo currentDirectory = null!)
     {
-        if (!_started)
-        {
-            _started = true;
-            _finished = false;
-            Started?.Invoke(this, EventArgs.Empty);
+        if(currentDirectory == null) currentDirectory = _directoryInfo;
+
+        Started?.Invoke(this, EventArgs.Empty);
+
+        foreach(var fs in TraverseInternal(currentDirectory)){
+            if(_abort) yield break;
+            yield return fs;
         }
 
-        if(currentDirectory == null) 
-            currentDirectory = _directoryInfo;
+        Finished?.Invoke(this, EventArgs.Empty);
+
+    }
+
+
+
+    private IEnumerable<FileSystemInfo> TraverseInternal(DirectoryInfo currentDirectory)
+    {
         
         foreach(var fs in currentDirectory.GetFileSystemInfos())
         {
@@ -69,15 +83,12 @@ public class FileSystemVisitor
                     
                 if(_abort)
                 {
-                    _started = false;
-                    _finished = true;
-                    Finished?.Invoke(this, EventArgs.Empty);
                     yield break;
                 }
             }
             
             if(fs is DirectoryInfo directory) 
-                foreach(var item in Traverse(directory))
+                foreach(var item in TraverseInternal(directory))
                 {
                     if(_abort) yield break;
                     
@@ -87,12 +98,6 @@ public class FileSystemVisitor
             
         }
 
-        if (!_finished)
-        {
-            _started = false;
-            _finished = true;
-            Finished?.Invoke(this, EventArgs.Empty);
-        }
 
     }
 }
