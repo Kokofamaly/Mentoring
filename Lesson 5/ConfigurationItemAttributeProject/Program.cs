@@ -8,18 +8,26 @@ public class Program
     {
 
 
-        // string pathSettingsTxt = "/Users/kokofamaly/Desktop/Mentoring/Lesson 5/ConfigurationItemAttributeProject/settings/settings.txt";
-        
-        var testClass = new SomeClass(){Title = "Unchanged", Age = 23, Id = 0};
+
+        var testClass = new SomeClass(){Name = "Unchanged", Age = 23, Weight = 88.5F, WaitingTime = TimeSpan.FromMinutes(30)};
 
         testClass.SaveSettings();
-        testClass.Title = "Changed";
-        testClass.Id++;
-        Console.WriteLine(testClass.Title);
-        Console.WriteLine(testClass.Id);
+
+        testClass.Name = "Changed";
+        testClass.Weight += 12.23F;
+        testClass.Age -= 3;
+        testClass.WaitingTime = TimeSpan.MaxValue;
+
         testClass.LoadSettings();
-        Console.WriteLine(testClass.Title);
-        Console.WriteLine(testClass.Id);
+
+
+        var props = testClass.GetType().GetProperties();
+        foreach(var prop in props)
+        {
+            Console.WriteLine(prop.GetValue(testClass).ToString());
+        }
+
+
 
 
     }

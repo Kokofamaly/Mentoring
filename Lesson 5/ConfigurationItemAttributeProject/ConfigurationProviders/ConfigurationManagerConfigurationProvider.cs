@@ -15,7 +15,7 @@ public class ConfigurationManagerConfigurationProvider : ConfigurationItemAttrib
         
         _path = path;
         _config = new ConfigurationBuilder()
-            .SetBasePath("/Users/kokofamaly/Desktop/Mentoring/Lesson 5/ConfigurationItemAttributeProject/settings")
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "settings"))
             .AddJsonFile("appsettings.json", optional: false)
             .Build();
         
@@ -36,7 +36,7 @@ public class ConfigurationManagerConfigurationProvider : ConfigurationItemAttrib
         File.WriteAllText(_path, updatedJson);
 
         _config = new ConfigurationBuilder()
-            .SetBasePath("/Users/kokofamaly/Desktop/Mentoring/Lesson 5/ConfigurationItemAttributeProject/settings")
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "settings"))
             .AddJsonFile("appsettings.json", optional: false)
             .Build();
     }

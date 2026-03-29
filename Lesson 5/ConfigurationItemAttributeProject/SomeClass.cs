@@ -4,11 +4,16 @@ namespace ConfigurationItemAttributeProject;
 
 public class SomeClass : ConfigurationComponentBase
 {
-    [ConfigurationItem("Title", ProviderType.File)]
-    public string Title { get; set; }
+    [ConfigurationItem("Name", ProviderType.File)]
+
+    public string Name { get; set; }
+    
+    [ConfigurationItem("Age", ProviderType.Config)]
     public int Age { get; set; }
-    [ConfigurationItem("Id", ProviderType.Config)]
-    public int Id { get; set; }
+    [ConfigurationItem("Weight", ProviderType.Config)]
+    public float Weight { get; set; }
+    [ConfigurationItem("WaitingTime", ProviderType.File)]
+    public TimeSpan WaitingTime { get; set; }
     
 
 }

@@ -9,8 +9,8 @@ public class ConfigurationComponentBase
 {
     Dictionary<ProviderType, IConfigurationProvider> providers = new Dictionary<ProviderType, IConfigurationProvider>()
     {
-        {ProviderType.File, new FileConfigurationProvider("/Users/kokofamaly/Desktop/Mentoring/Lesson 5/ConfigurationItemAttributeProject/settings/settings.txt")},
-        {ProviderType.Config, new ConfigurationManagerConfigurationProvider("/Users/kokofamaly/Desktop/Mentoring/Lesson 5/ConfigurationItemAttributeProject/settings/appsettings.json")}
+        {ProviderType.File, new FileConfigurationProvider(Path.Combine(Directory.GetCurrentDirectory(), "settings", "settings.txt"))},
+        {ProviderType.Config, new ConfigurationManagerConfigurationProvider(Path.Combine(Directory.GetCurrentDirectory(), "settings", "appsettings.json"))}
     };
     public void SaveSettings()
     {
@@ -36,7 +36,15 @@ public class ConfigurationComponentBase
             var provider = providers[attr.Provider];
             var value = provider.Load(attr.SettingName!);
             if(value == null) continue;
-
+            if(prop.PropertyType == typeof(TimeSpan))
+            {
+                if(TimeSpan.TryParse(value, out TimeSpan result))
+                {
+                    prop.SetValue(this, result);
+                    continue;
+                }
+                continue;
+            }
             var converted = Convert.ChangeType(value, prop.PropertyType);
             prop.SetValue(this, converted);
         }

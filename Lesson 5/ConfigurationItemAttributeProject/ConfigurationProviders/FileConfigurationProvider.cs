@@ -1,3 +1,4 @@
+using System.Text;
 using ConfigurationItemAttributeProject.Interfaces;
 
 namespace ConfigurationItemAttributeProject.ConfigurationProviders;
@@ -12,12 +13,12 @@ public class FileConfigurationProvider : IConfigurationProvider
     public void Save(string key, object value)
     {
         var lines = File.ReadAllLines(path).ToList();
-        foreach(var line in lines)
+        for(int i = 0; i < lines.Count; i++)
         {
-            var nameAndValue = line.Split('=');
+            var nameAndValue = lines[i].Split('=', 2);
             if(nameAndValue[0] == key)
             {
-                nameAndValue[1] = value.ToString()!;
+                lines[i] = $"{key}={value}";
                 break;
             }   
         }
@@ -33,7 +34,7 @@ public class FileConfigurationProvider : IConfigurationProvider
         var lines = File.ReadAllLines(path).ToList();
         foreach(var line in lines)
         {
-            var nameAndValue = line.Split('=');
+            var nameAndValue = line.Split('=', 2);
             if(key == nameAndValue[0])
             {
                 return nameAndValue[1];
