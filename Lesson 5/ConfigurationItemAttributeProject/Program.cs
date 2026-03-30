@@ -24,7 +24,7 @@ public class Program
         var props = testClass.GetType().GetProperties();
         foreach(var prop in props)
         {
-            Console.WriteLine(prop.GetValue(testClass).ToString());
+            Console.WriteLine(prop.GetValue(testClass)!.ToString());
         }
 
 
