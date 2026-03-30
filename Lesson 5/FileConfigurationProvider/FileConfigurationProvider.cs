@@ -1,15 +1,12 @@
-using System.Text;
-using ConfigurationItemAttributeProject.Interfaces;
-
-namespace ConfigurationItemAttributeProject.ConfigurationProviders;
+﻿using Abstractions;
+namespace FileConfigurationProvider;
 
 public class FileConfigurationProvider : IConfigurationProvider
 {
     public readonly string path;
-    public FileConfigurationProvider(string path)
-    {
-        this.path = path;
-    }
+
+    public FileConfigurationProvider(string path) => this.path = path;
+
     public void Save(string key, object value)
     {
         var lines = File.ReadAllLines(path).ToList();
@@ -29,6 +26,7 @@ public class FileConfigurationProvider : IConfigurationProvider
 
         File.WriteAllLines(path, lines);
     }
+
     public string? Load(string key)
     {
         var lines = File.ReadAllLines(path).ToList();

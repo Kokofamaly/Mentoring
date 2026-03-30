@@ -6,7 +6,7 @@ public class SomeClass : ConfigurationComponentBase
 {
     [ConfigurationItem("Name", ProviderType.File)]
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
     
     [ConfigurationItem("Age", ProviderType.Config)]
     public int Age { get; set; }
@@ -17,3 +17,4 @@ public class SomeClass : ConfigurationComponentBase
     
 
 }
+

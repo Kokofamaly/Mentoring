@@ -1,14 +1,12 @@
-using ConfigurationItemAttributeProject.Interfaces;
+﻿using Abstractions;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 
-namespace ConfigurationItemAttributeProject.ConfigurationProviders;
+namespace ConfigurationManagerConfigurationProvider;
 
-public class ConfigurationManagerConfigurationProvider : ConfigurationItemAttributeProject.Interfaces.IConfigurationProvider
+public class ConfigurationManagerConfigurationProvider : Abstractions.IConfigurationProvider
 {
     private IConfigurationRoot _config;
-    
-
     private readonly string _path;
 
     public ConfigurationManagerConfigurationProvider(string path){

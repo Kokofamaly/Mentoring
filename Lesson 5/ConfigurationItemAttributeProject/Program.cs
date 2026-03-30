@@ -7,8 +7,6 @@ public class Program
     public static void Main(string[] args)
     {
 
-
-
         var testClass = new SomeClass(){Name = "Unchanged", Age = 23, Weight = 88.5F, WaitingTime = TimeSpan.FromMinutes(30)};
 
         testClass.SaveSettings();
@@ -20,15 +18,11 @@ public class Program
 
         testClass.LoadSettings();
 
-
         var props = testClass.GetType().GetProperties();
         foreach(var prop in props)
         {
-            Console.WriteLine(prop.GetValue(testClass).ToString());
+            Console.WriteLine(prop.GetValue(testClass)!.ToString());
         }
-
-
-
 
     }
 }
