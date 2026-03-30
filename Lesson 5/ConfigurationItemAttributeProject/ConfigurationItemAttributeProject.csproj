@@ -11,8 +11,15 @@
     <None Update="settings/appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="ConfigurationProviders\*.dll">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Abstractions/Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

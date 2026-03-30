@@ -1,21 +1,19 @@
-using ConfigurationItemAttributeProject.Interfaces;
+﻿using Abstractions;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 
-namespace ConfigurationItemAttributeProject.ConfigurationProviders;
+namespace ConfigurationManagerConfigurationProvider;
 
-public class ConfigurationManagerConfigurationProvider : ConfigurationItemAttributeProject.Interfaces.IConfigurationProvider
+public class ConfigurationManagerConfigurationProvider : Abstractions.IConfigurationProvider
 {
     private IConfigurationRoot _config;
-    
-
     private readonly string _path;
 
     public ConfigurationManagerConfigurationProvider(string path){
         
         _path = path;
         _config = new ConfigurationBuilder()
-            .SetBasePath("/Users/kokofamaly/Desktop/Mentoring/Lesson 5/ConfigurationItemAttributeProject/settings")
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "settings"))
             .AddJsonFile("appsettings.json", optional: false)
             .Build();
         
@@ -36,7 +34,7 @@ public class ConfigurationManagerConfigurationProvider : ConfigurationItemAttrib
         File.WriteAllText(_path, updatedJson);
 
         _config = new ConfigurationBuilder()
-            .SetBasePath("/Users/kokofamaly/Desktop/Mentoring/Lesson 5/ConfigurationItemAttributeProject/settings")
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "settings"))
             .AddJsonFile("appsettings.json", optional: false)
             .Build();
     }
