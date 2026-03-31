@@ -1,0 +1,14 @@
+What is reflection in .NET? 
+    Reflection is a way to inspect and work with types (classes, methods, properties) at runtime.
+
+What does reflection allow you to do? 
+   It lets you get information about types, create objects, and call methods dynamically.
+
+What are fully qualified type names? 
+    A fully qualified type name is the full “address” of a type, showing its namespace and assembly 
+    so .NET can find it.
+
+What examples of practical application of reflection can you imagine? 
+
+Is it possible to get information about private fields/methods using reflection? 
+    Yes, using special flags (BindingFlags.NonPublic with Instance or Static)
