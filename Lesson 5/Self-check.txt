@@ -9,6 +9,11 @@ What are fully qualified type names?
     so .NET can find it.
 
 What examples of practical application of reflection can you imagine? 
+    Load plugins or modules at runtime.
+    Automatically save/load objects (serialization).
+    Find and run tests in a test framework.
+    Map database fields to objects in ORMs.
+    Read custom attributes to change behavior.
 
 Is it possible to get information about private fields/methods using reflection? 
     Yes, using special flags (BindingFlags.NonPublic with Instance or Static)
