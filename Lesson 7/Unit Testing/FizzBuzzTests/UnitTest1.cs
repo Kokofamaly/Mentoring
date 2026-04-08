@@ -4,7 +4,7 @@ namespace FizzBuzzTests;
 public class FizzBuzzTests
 {
     [Fact]
-    public void Print_Should_Return_String()
+    public void Print_Returns_String()
     {
         var fizzBuzz = new FizzBuzz();
 
@@ -44,4 +44,22 @@ public class FizzBuzzTests
         string output = fizzBuzz.Print();
         Assert.Contains("FizzBuzz", output);
     }
+
+    [Theory]
+    [InlineData(1, "1")]
+    [InlineData(2, "2")]
+    [InlineData(3, "Fizz")]
+    [InlineData(5, "Buzz")]
+    [InlineData(15, "FizzBuzz")]
+    [InlineData(30, "FizzBuzz")]
+    [InlineData(100, "Buzz")]
+    public void GetValue_Should_Return_Correct_FizzBuzz_For_Number(int number, string expected)
+    {
+        var fizzBuzz = new FizzBuzz();
+
+        var result = fizzBuzz.GetValue(number);
+        
+        Assert.Equal(expected, result);
+    }
+    
 }

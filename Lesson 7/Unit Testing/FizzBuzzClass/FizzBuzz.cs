@@ -4,27 +4,19 @@ namespace FizzBuzzClass;
 
 public class FizzBuzz
 {
+    public string GetValue(int number)
+    {
+        if(number % 3 == 0 && number % 5 == 0) return "FizzBuzz";
+        else if(number % 3 == 0) return "Fizz";
+        else if(number % 5 == 0) return "Buzz";
+        return number.ToString();
+    }
     public string Print()
     {
         StringBuilder outputSb = new();
         for(int i = 1; i <= 100; i++)
         {
-            if(i % 3 == 0 && i % 5 == 0)
-            {
-                outputSb.AppendLine("FizzBuzz");
-            }
-            else if(i % 3 == 0)
-            {
-                outputSb.AppendLine("Fizz");
-            }
-            else if(i % 5 == 0)
-            {
-                outputSb.AppendLine("Buzz");
-            }
-            else
-            {
-                outputSb.AppendLine(i.ToString());
-            }
+            outputSb.AppendLine(GetValue(i));
         }
         string result = outputSb.ToString();
         Console.WriteLine(result);
