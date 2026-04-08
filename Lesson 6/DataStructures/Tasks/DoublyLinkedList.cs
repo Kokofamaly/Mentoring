@@ -10,34 +10,25 @@ namespace Tasks
     {
         Node<T> Head{ get; set; }
         Node<T> Tail { get; set; }
-        private int _length;
+        private int _length = 0;
         public int Length => _length;
 
         
 
         public void Add(T e)
         {
+            var newNode = new Node<T>(e);
             if(Head == null)
             {
-                Head = new Node<T>(e);
-                _length = 1;
-            }
-            else if(Head.Next == null)
-            {
-                var node = new Node<T>(e);
-                Head.Next = node;
-                node.Previous = Head;
-                Tail = node;
-                _length = 2;
+                Head = Tail = newNode;
             }
             else
             {
-                var node = new Node<T>(e);
-                Tail.Next = node;
-                node.Previous = Tail;
-                Tail = node;
-                _length++;
+                Tail.Next = newNode;
+                newNode.Previous = Tail;
+                Tail = newNode;
             }
+                _length++;
         }
 
         public void AddAt(int index, T e)
@@ -48,21 +39,18 @@ namespace Tasks
             if(Head == null)
             {
                 Head = Tail = newNode;
-                _length = 1;
             }
             else if(index == 0)
             {
                 newNode.Next = Head;
                 Head.Previous = newNode;
                 Head = newNode;
-                _length++;
             }
             else if(index == Length)
             {
                 newNode.Previous = Tail;
                 Tail.Next = newNode;
                 Tail = newNode;
-                _length++;
             }
             else
             {
@@ -75,8 +63,8 @@ namespace Tasks
                 currentNode.Previous.Next = newNode;
                 newNode.Previous = currentNode.Previous;
                 currentNode.Previous = newNode;
-                _length++;
             }
+            _length++;
         }
 
         public T ElementAt(int index)
@@ -84,16 +72,11 @@ namespace Tasks
             if(index < 0 || index >= Length) throw new IndexOutOfRangeException();
             
             var currentNode = Head;
-            for(int i = 0; i < Length; i++)
+            for(int i = 0; i < index; i++)
             {
-                if(i == index)
-                {
-                    return currentNode.Value;
-                }
                 currentNode = currentNode.Next;
-
             }
-            return default;
+            return currentNode.Value;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -108,10 +91,27 @@ namespace Tasks
             {
                 if(EqualityComparer<T>.Default.Equals(item, currentNode.Value))
                 {
-                    currentNode.Previous.Next = currentNode.Next;
-                    currentNode.Next.Previous = currentNode.Previous;
+                    if(Head == Tail)
+                    {
+                        Head = Tail = null;
+                    }
+                    else if(Head == currentNode)
+                    {
+                        Head = Head.Next;
+                        Head.Previous = null;
+                    }
+                    else if(Tail == currentNode)
+                    {
+                        Tail = Tail.Previous;
+                        Tail.Next = null;
+                    }
+                    else
+                    {
+                        currentNode.Previous.Next = currentNode.Next;
+                        currentNode.Next.Previous = currentNode.Previous;
+                    } 
                     _length--;
-                    break;
+                    return;
                 }
                 currentNode = currentNode.Next;
             }
@@ -122,19 +122,33 @@ namespace Tasks
             if(index < 0 || index >= Length) throw new IndexOutOfRangeException();
 
             var currentNode = Head;
-            for(int i = 0; i < Length; i++)
+            for(int i = 0; i < index; i++)
             {
-                if(i == index)
-                {
-                    currentNode.Previous.Next = currentNode.Next;
-                    currentNode.Next.Previous = currentNode.Previous;
-                    _length--;
-                    return currentNode.Value;
-                }
                 currentNode = currentNode.Next;
-
             }
-            return default;
+
+            if(Head == Tail)
+            {
+                Head = Tail = null;
+            }
+            else if(Head == currentNode)
+            {
+                Head = Head.Next;
+                Head.Previous = null;
+            }
+            else if(Tail == currentNode)
+            {
+                Tail = Tail.Previous;
+                Tail.Next = null;
+            }
+            else
+            {
+                currentNode.Previous.Next = currentNode.Next;
+                currentNode.Next.Previous = currentNode.Previous;
+            }
+            _length--;
+            return currentNode.Value;
+
         }
 
         IEnumerator IEnumerable.GetEnumerator()
