@@ -5,73 +5,25 @@ namespace Tasks
 {
     public class HybridFlowProcessor<T> : IHybridFlowProcessor<T>
     {
-        Node<T> Head{ get; set; }
-        Node<T> Tail { get; set; }        
+        DoublyLinkedList<T> doublyList = new DoublyLinkedList<T>();
         public T Dequeue()
         {
-            var tempNode = Head;
-
-            if(Head == null)
-            {
-                throw new InvalidOperationException();
-            }
-            else if(Head == Tail)
-            {
-                Head = Tail = null;
-            }
-            else
-            {
-                Head = Head.Next;
-                Head.Previous = null;
-            }
-
-            return tempNode.Value;
+            return doublyList.RemoveAt(0);
         }
 
         public void Enqueue(T item)
         {
-            var newNode = new Node<T>(item);
-            if(Head == null)
-            {
-                Head = Tail = newNode;
-            }
-            else
-            {
-                Tail.Next = newNode;
-                newNode.Previous = Tail;
-                Tail = newNode;
-            }
+            doublyList.Add(item);
         }
 
         public T Pop()
         {
-            var tempNode = Tail;
-            if(Tail == null) throw new InvalidOperationException();
-            if(Tail == Head)
-            {
-                Tail = Head = null;
-            }
-            else
-            {
-                Tail = Tail.Previous;
-                Tail.Next = null;
-            }
-            return tempNode.Value;
+            return doublyList.RemoveAt(doublyList.Length - 1);
         }
 
         public void Push(T item)
         {
-            var newNode = new Node<T>(item);
-            if(Head == null)
-            {
-                Head = Tail = newNode;
-            }
-            else
-            {
-                Tail.Next = newNode;
-                newNode.Previous = Tail;
-                Tail = newNode;
-            }
+            doublyList.Add(item);
         }
     }
 }
