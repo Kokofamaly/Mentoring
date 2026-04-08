@@ -42,23 +42,40 @@ namespace Tasks
 
         public void AddAt(int index, T e)
         {
-            if(index < 0 || index >= Length) throw new IndexOutOfRangeException();
-
-            var currentNode = Head;
-            for(int i = 0; i < Length; i++)
+            if(index < 0 || index > Length) throw new IndexOutOfRangeException();
+            
+            var newNode = new Node<T>(e);
+            if(Head == null)
             {
-                if(i == index)
+                Head = Tail = newNode;
+                _length = 1;
+            }
+            else if(index == 0)
+            {
+                newNode.Next = Head;
+                Head.Previous = newNode;
+                Head = newNode;
+                _length++;
+            }
+            else if(index == Length)
+            {
+                newNode.Previous = Tail;
+                Tail.Next = newNode;
+                Tail = newNode;
+                _length++;
+            }
+            else
+            {
+                var currentNode = Head;
+                for(int i = 0; i < index; i++)
                 {
-                    var newNode = new Node<T>(e);
-                    newNode.Next = currentNode;
-                    currentNode.Previous.Next = newNode;
-                    newNode.Previous = currentNode.Previous;
-                    currentNode.Previous = newNode;
-                    _length++;
-                    break;
+                    currentNode = currentNode.Next;
                 }
-                currentNode = currentNode.Next;
-
+                newNode.Next = currentNode;
+                currentNode.Previous.Next = newNode;
+                newNode.Previous = currentNode.Previous;
+                currentNode.Previous = newNode;
+                _length++;
             }
         }
 
