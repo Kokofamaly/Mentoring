@@ -48,9 +48,9 @@ public class UnitTest1
     {
         var list = new RecentlyUsedListClass();
 
-        list.FindByIndex(-1);
+        Action action = () => list.FindByIndex(-1);
 
-        Assert.Throws<IndexOutOfRangeException>(() => list.FindByIndex(-1));
+        Assert.Throws<System.IndexOutOfRangeException>(action);
     }
 
 
