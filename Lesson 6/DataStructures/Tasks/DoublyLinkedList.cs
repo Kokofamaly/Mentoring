@@ -93,6 +93,7 @@ namespace Tasks
                 {
                     currentNode.Previous.Next = currentNode.Next;
                     currentNode.Next.Previous = currentNode.Previous;
+                    _length--;
                     break;
                 }
                 currentNode = currentNode.Next;
@@ -110,6 +111,7 @@ namespace Tasks
                 {
                     currentNode.Previous.Next = currentNode.Next;
                     currentNode.Next.Previous = currentNode.Previous;
+                    _length--;
                     return currentNode.Value;
                 }
                 currentNode = currentNode.Next;
