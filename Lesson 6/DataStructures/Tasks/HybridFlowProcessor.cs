@@ -8,6 +8,7 @@ namespace Tasks
         DoublyLinkedList<T> doublyList = new DoublyLinkedList<T>();
         public T Dequeue()
         {
+            if(doublyList.Length == 0) throw new InvalidOperationException();   
             return doublyList.RemoveAt(0);
         }
 
@@ -18,6 +19,7 @@ namespace Tasks
 
         public T Pop()
         {
+            if(doublyList.Length == 0) throw new InvalidOperationException();   
             return doublyList.RemoveAt(doublyList.Length - 1);
         }
 
