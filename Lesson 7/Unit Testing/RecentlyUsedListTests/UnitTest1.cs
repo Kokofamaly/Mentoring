@@ -8,12 +8,14 @@ public class UnitTest1
     public void Pop_Returns_LastItem()
     {
         var list = new RecentlyUsedListClass();
+        string expected = "World";
 
         list.Add("Hello");
         list.Add("World");
+        
         var result = list.Pop();
 
-        Assert.Equal(result, list.FindByIndex(1));
+        Assert.Equal(result, expected);
     }
 
     [Fact]
