@@ -1,0 +1,26 @@
+What is a unit test? What other types of tests exist?
+    A unit test is a test that checks a piece of code (usually one method) in isolation to make sure it works correctly.
+    Also there are Integration tests, Load tests, Performance tests, UI tests.
+
+What is testing pyramid?
+    The testing pyramid is a concept that shows how tests should be distributed:
+    It goes in a next way; many units tests -> fewer integration tests -> very few UI tests(or any other End-to-End tests).
+
+What is TDD and BDD?
+    TDD stands for Tesd-Driven Development. It is when you write tests before writing the code.
+    BDD stands for Begavior-Driven Development. It is when you are more focused on behavior from the user's perspective.
+
+What is a mock, stub and fake?
+    Mock is an object that verifies interactions (was method called, how many times)
+    Stub returns predefined data, no logic.
+    Fake is simplified working implementation (e.g. in-memory database)
+
+Which test frameworks in C# do you know?
+    I know xUnit, NUnit, MSTest.
+
+What best practices of unit testing do you know? What is AAA, FIRST?
+    AAA stands for Arrange Act Assert. It is testing pattern, that says,
+    that you shoud at first arrange values, then make them to act, and after that assert results.
+    FIRST stands for Fast Independent Repeatable Self-validating Timely.
+    This pattern says that tests should run quickly, they should not depend on each other,
+    they have same result every time, they need no manual checking and the tests should be written before code.
