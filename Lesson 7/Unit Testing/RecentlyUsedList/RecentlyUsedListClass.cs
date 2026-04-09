@@ -2,29 +2,32 @@
 
 public class RecentlyUsedListClass
 {
-    List<string> strings = new List<string>();
+    private readonly List<string> strings = new();
+
     public void Add(string value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(value);
-        if (strings.Contains(value))
-        {
-            strings.Remove(value);
-            strings.Add(value);
-        }
-        else
-        {
-            strings.Add(value);
-        }
+
+        strings.Remove(value);
+
+        strings.Insert(0, value);
     }
 
     public string FindByIndex(int index)
     {
-        if(index < 0 || index >= strings.Count) throw new IndexOutOfRangeException();
+        if (index < 0 || index >= strings.Count)
+            throw new IndexOutOfRangeException();
+
         return strings[index];
     }
 
     public string Pop()
     {
-        return strings[^1];
+        if (strings.Count == 0)
+            throw new InvalidOperationException();
+
+        var value = strings[0];
+        strings.RemoveAt(0);
+        return value;
     }
 }

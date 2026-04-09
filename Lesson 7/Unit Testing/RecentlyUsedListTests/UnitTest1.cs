@@ -40,7 +40,7 @@ public class UnitTest1
         list.Add("World");
         var firstValue = list.FindByIndex(0);
         
-        Assert.NotSame(expected, firstValue);
+        Assert.Equal(expected, firstValue);
     }
 
     [Fact]
