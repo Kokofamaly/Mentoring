@@ -1,0 +1,7 @@
+What are the four principles of object-oriented programming? Can you explain each in your own words? 
+
+What is multiple inheritance? How are we able to achieve it in .NET? 
+
+What do S.O.L.I.D. principles stand for? Can you decipher each letter? 
+
+What other principles do you know, do they conflict or complement each other? 

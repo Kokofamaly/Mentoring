@@ -1,0 +1,17 @@
+What is logging?  
+
+What information needs to be logged? 
+
+What log levels do you know and how do they differ from each other? 
+
+What is ILogger in .NET Core? 
+
+Is it possible to stop logging with Serilog? If "yes", how can you do it? 
+
+What information is good to include in a log message? 
+
+How can Exceptions be logged? 
+
+What is the default log level? 
+
+Where can custom logging provider and corresponding logger be registered? 

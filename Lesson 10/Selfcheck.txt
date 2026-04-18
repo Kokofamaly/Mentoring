@@ -1,0 +1,7 @@
+What is serialization?
+
+Give examples where serialization is used?
+
+When binary/XML/Json serialization need to be used? What are the main advantages of binary/XML/Json serialization?
+
+When is custom serialization needed? How can custom serialization be implemented?

@@ -1,0 +1,13 @@
+What is the difference between primary and secondary keys? How many primary keys are available for the table? How many secondary keys are available for the table?
+
+What is the difference between clustered and non-clustered indexes?
+
+What is a transaction?
+
+What is a trigger? How to create a trigger?
+
+What is the difference between INNER JOIN, RIGHT JOIN and LEFT JOIN?
+
+What is a stored procedure? How to create a SP?
+
+What is a view? How to create a view? What is the difference between view and table?
