@@ -57,4 +57,13 @@
   <ItemGroup>
     <Folder Include="Properties" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="Person.sql" />
+    <Build Include="Address.sql" />
+    <Build Include="Employee.sql" />
+    <Build Include="Company.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.PostDeployment1.sql" />
+  </ItemGroup>
 </Project>
