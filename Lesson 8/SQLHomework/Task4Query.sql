@@ -1,0 +1,1 @@
+﻿EXEC [dbo].[InsertEmployeeInfo] 'Jimmy McGill', 'Jimmy', 'McGill', 'LawFirm.', 'Lawyer', 'Montgomery Blvd', 'Albuquerque', 'USA', '9800'
