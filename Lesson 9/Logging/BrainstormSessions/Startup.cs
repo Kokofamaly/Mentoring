@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
 
 namespace BrainstormSessions
 {
@@ -18,7 +20,7 @@ namespace BrainstormSessions
         {
             services.AddDbContext<AppDbContext>(
                 optionsBuilder => optionsBuilder.UseInMemoryDatabase("InMemoryDb"));
-
+            
             services.AddControllersWithViews();
 
             services.AddScoped<IBrainstormSessionRepository,
