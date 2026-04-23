@@ -22,7 +22,7 @@ namespace BrainstormSessions.Controllers
             _logger.LogInformation("Entered Index");
             if (!id.HasValue)
             {
-                _logger.LogError("Id doesn't have value");
+                _logger.LogWarning("Id doesn't have value");
                 return RedirectToAction(actionName: nameof(Index),
                     controllerName: "Home");
             }
@@ -30,7 +30,7 @@ namespace BrainstormSessions.Controllers
             var session = await _sessionRepository.GetByIdAsync(id.Value);
             if (session == null)
             {
-                _logger.LogError("Session is null");
+                _logger.LogWarning("Session is null");
                 return Content("Session not found.");
             }
 
