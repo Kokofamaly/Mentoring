@@ -24,6 +24,7 @@ namespace BrainstormSessions.Controllers
         public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Entered Index");
+            
             var sessionList = await _sessionRepository.ListAsync();
 
             var model = sessionList.Select(session => new StormSessionViewModel()

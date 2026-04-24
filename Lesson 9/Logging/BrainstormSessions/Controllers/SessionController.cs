@@ -20,6 +20,7 @@ namespace BrainstormSessions.Controllers
         public async Task<IActionResult> Index(int? id)
         {
             _logger.LogInformation("Entered Index");
+
             if (!id.HasValue)
             {
                 _logger.LogDebug("Id doesn't have value");
