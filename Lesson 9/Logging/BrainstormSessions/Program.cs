@@ -10,9 +10,15 @@ namespace BrainstormSessions
     {
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration().CreateLogger();
-
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+                Log.Logger = new LoggerConfiguration().CreateLogger();
+                CreateHostBuilder(args).Build().Run();
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
