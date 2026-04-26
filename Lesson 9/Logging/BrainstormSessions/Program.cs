@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog.Extensions.Logging;
 using Serilog.AspNetCore;
+using Serilog.Debugging;
 using Serilog;
 
 namespace BrainstormSessions
@@ -13,6 +14,7 @@ namespace BrainstormSessions
             try
             {
                 Log.Logger = new LoggerConfiguration().CreateLogger();
+                
                 CreateHostBuilder(args).Build().Run();
             }
             finally
