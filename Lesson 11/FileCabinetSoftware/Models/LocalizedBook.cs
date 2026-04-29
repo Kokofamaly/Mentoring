@@ -1,6 +1,9 @@
-namespace FileCabinetSoftware.Interfaces;
+using FileCabinetSoftware.Abstractions;
+using FileCabinetSoftware.Enums;
 
-interface ILocalizedBook : IDocument
+namespace FileCabinetSoftware.Models;
+
+public class LocalizedBook : Document
 {
     public string ISBN { get; set; }
     public List<string> Authors { get; set; }
@@ -8,4 +11,6 @@ interface ILocalizedBook : IDocument
     public string OriginalPublisher { get; set; }
     public string CountryOfLocalization { get; set; }
     public string LocalPublisher { get; set; }
+    public override DocumentType Type => DocumentType.LocalizedBook;
+
 }
