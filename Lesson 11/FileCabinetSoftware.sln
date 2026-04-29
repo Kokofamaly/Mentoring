@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileCabinetSoftware", "FileCabinetSoftware\FileCabinetSoftware.csproj", "{28C23115-D615-401F-95B5-5DF0C0BC9DD1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileCabinetSoftware.Tests", "FileCabinetSoftware.Tests\FileCabinetSoftware.Tests.csproj", "{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{28C23115-D615-401F-95B5-5DF0C0BC9DD1}.Release|x64.Build.0 = Release|Any CPU
 		{28C23115-D615-401F-95B5-5DF0C0BC9DD1}.Release|x86.ActiveCfg = Release|Any CPU
 		{28C23115-D615-401F-95B5-5DF0C0BC9DD1}.Release|x86.Build.0 = Release|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Debug|x64.Build.0 = Debug|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Debug|x86.Build.0 = Debug|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Release|x64.ActiveCfg = Release|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Release|x64.Build.0 = Release|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Release|x86.ActiveCfg = Release|Any CPU
+		{BEC619AD-EEFB-47C0-8CA8-64C7B167E035}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

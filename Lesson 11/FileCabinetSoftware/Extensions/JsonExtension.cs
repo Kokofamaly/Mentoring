@@ -19,7 +19,7 @@ public static class JsonExtension
     {
         using var doc = JsonDocument.Parse(json);
 
-        var typeString = doc.RootElement.GetProperty("type").GetString();
+        var typeString = doc.RootElement.GetProperty("Type").GetString();
 
         if (!Enum.TryParse<DocumentType>(typeString, true, out var type))
             return null;

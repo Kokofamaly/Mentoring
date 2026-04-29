@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FileCabinetSoftware.Enums;
 
 namespace FileCabinetSoftware.Abstractions;

@@ -3,11 +3,17 @@ using FileCabinetSoftware.Abstractions;
 using FileCabinetSoftware.Enums;
 using System.Text.Json;
 using FileCabinetSoftware.Extensions;
+using System.Text.Json.Serialization;
 
 namespace FileCabinetSoftware.Repository;
 
 public class FileRepository : IDocumentRepository
 {
+    private readonly JsonSerializerOptions jsOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Converters = {new JsonStringEnumConverter()}
+        };
     private readonly string _path;
     public FileRepository() : this(Path.Combine(Directory.GetCurrentDirectory(), "Storage")){}
     public FileRepository(string path)
@@ -19,16 +25,14 @@ public class FileRepository : IDocumentRepository
     {
         ArgumentNullException.ThrowIfNull(item);
         
+        item.Id = GetNextId(item.Type);
         var fileName = $"{item.Type.ToString().ToLowerInvariant()}_#{item.Id}.json";
         var filePath = Path.Combine(_path, fileName);
 
         if(File.Exists(filePath)) 
             throw new InvalidOperationException($"The file already exists: \n{fileName}");
 
-        var json = JsonSerializer.Serialize(item, new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
+        var json = JsonSerializer.Serialize(item, item.GetType() ,jsOptions);
         File.WriteAllText(filePath, json);
     }
     public IEnumerable<Document> SearchById(int id)
@@ -99,5 +103,27 @@ public class FileRepository : IDocumentRepository
             return false;
 
         return true;
+    }
+
+    private int GetNextId(DocumentType type)
+    {
+        var files = Directory.GetFiles(_path, $"{type.ToString().ToLowerInvariant()}_#*.json");
+
+        int max = 0;
+
+        foreach (var file in files)
+        {
+            var name = Path.GetFileNameWithoutExtension(file);
+            var typeAndId = name.Split("_#");
+
+            if (typeAndId.Length != 2)
+                continue;
+
+            if (int.TryParse(typeAndId[1], out var id))
+                if (id > max)
+                    max = id;
+        }
+
+        return max + 1;
     }
 }

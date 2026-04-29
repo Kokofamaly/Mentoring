@@ -2,7 +2,7 @@ using FileCabinetSoftware.Enums;
 
 namespace FileCabinetSoftware.Abstractions.Interfaces;
 
-interface IDocumentRepository
+public interface IDocumentRepository
 {
     public void Save(Document item);
     public IEnumerable<Document> SearchById(int id);
