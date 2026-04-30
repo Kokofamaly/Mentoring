@@ -1,8 +1,11 @@
-﻿using FileCabinetSoftware.Abstractions;
+﻿using System.Diagnostics;
+using FileCabinetSoftware.Abstractions;
 using FileCabinetSoftware.Abstractions.Interfaces;
+using FileCabinetSoftware.Caching;
 using FileCabinetSoftware.Models;
 using FileCabinetSoftware.Repository;
 using FileCabinetSoftware.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FileCabinetSoftware;
 
@@ -11,15 +14,16 @@ public class Program
     public static void Main(string[] args)
     {
 
-        var service = new DocumentService(new FileRepository());
-        Document mag = service.GetDocument(Enums.DocumentType.Magazine, 1);
+        var services = new ServiceCollection();
+        services.AddMemoryCache();
+        services.AddSingleton<ICachePolicy, CachePolicy>();
+        services.AddSingleton<IDocumentRepository, FileRepository>();
+        services.AddSingleton<DocumentService>();
 
-        if(mag == null) throw new Exception();
+        var documentService = services.BuildServiceProvider().GetRequiredService<DocumentService>();
 
-        var props = mag.GetType().GetProperties();
-        foreach(var prop in props)
-        {
-            Console.WriteLine(prop.Name + ": " + prop.GetValue(mag));
-        }
+        var book = documentService.GetDocument(Enums.DocumentType.Book, 1);
+
+
     }
 }

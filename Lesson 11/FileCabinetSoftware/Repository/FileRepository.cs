@@ -4,6 +4,7 @@ using FileCabinetSoftware.Enums;
 using System.Text.Json;
 using FileCabinetSoftware.Extensions;
 using System.Text.Json.Serialization;
+using System.Drawing;
 
 namespace FileCabinetSoftware.Repository;
 
@@ -79,6 +80,7 @@ public class FileRepository : IDocumentRepository
     }
     public Document? GetDocument(DocumentType type, int id)
     {
+
         var filePath = Path.Combine(_path, $"{type.ToString().ToLowerInvariant()}_#{id}.json");
         
         return File.Exists(filePath) 
