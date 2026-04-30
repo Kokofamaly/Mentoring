@@ -26,7 +26,7 @@ public class DocumentService
         var key = $"{docType}_#{id}";
         
 
-        if(_cache.TryGetValue(key, out Document cachedDocument))
+        if(_cache.TryGetValue(key, out Document? cachedDocument))
         {
             return cachedDocument;
         }

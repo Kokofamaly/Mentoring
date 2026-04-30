@@ -10,7 +10,7 @@ namespace FileCabinetSoftware.Repository;
 
 public class FileRepository : IDocumentRepository
 {
-    private readonly JsonSerializerOptions jsOptions = new JsonSerializerOptions
+    private readonly JsonSerializerOptions _jsOptions = new JsonSerializerOptions
         {
             WriteIndented = true,
             Converters = {new JsonStringEnumConverter()}
@@ -33,7 +33,7 @@ public class FileRepository : IDocumentRepository
         if(File.Exists(filePath)) 
             throw new InvalidOperationException($"The file already exists: \n{fileName}");
 
-        var json = JsonSerializer.Serialize(item, item.GetType() ,jsOptions);
+        var json = JsonSerializer.Serialize(item, item.GetType() ,_jsOptions);
         File.WriteAllText(filePath, json);
     }
     public IEnumerable<Document> SearchById(int id)
