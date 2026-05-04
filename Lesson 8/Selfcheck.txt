@@ -1,13 +1,22 @@
 What is the difference between primary and secondary keys? How many primary keys are available for the table? How many secondary keys are available for the table?
+    Primary key must be unique and not null. Secondary key used for searching and indexing, it doesn't have to be unique or not null. There can be only one primary key and many secondary keys.
 
 What is the difference between clustered and non-clustered indexes?
+    Clustered index determines the physical order of date in the table, which means that the table is stored in that order; it can be only one clustered index per table.
+    Non-clustered indexes are a separate structures that stores points to the data rows. There can be multiply non-clustered indexes.
 
 What is a transaction?
+    A transaction is a set of database actions, executed as a single unit of work.
 
 What is a trigger? How to create a trigger?
+    A trigger is an SQL code that runs automatically when something happens in a table.
 
 What is the difference between INNER JOIN, RIGHT JOIN and LEFT JOIN?
+    INNER JOIN returns rows that match in both tables. RIGHT JOIN joins the table to FROM table and matches the data, unmatched rows show null.
+    LEFT JOIN joins FROM table to another one and matches the data in the same way the RIGHT JOIN does.
 
 What is a stored procedure? How to create a SP?
+    A stored procedure is a saved set of SQL commands stored in the database that you can run anytime.
 
 What is a view? How to create a view? What is the difference between view and table?
+    A view is a virtual table based on a SQL query. It doesn’t store data itself, unlike the table, — it just shows data from one or more tables.
