@@ -1,17 +1,31 @@
 What is logging?  
+    Logging is recording information about what an application is doing (events, errors, actions) for debugging and monitoring.
 
 What information needs to be logged? 
+    Important events, errors, warnings, user actions, and system behavior.
 
 What log levels do you know and how do they differ from each other? 
+    Trace - very detailed, for debugging
+    Debug - useful for development
+    Information - general app flow
+    Warning - something unexpected but not critical
+    Error - a failure occurred
+    Critical - serious failure, app may stop
 
 What is ILogger in .NET Core? 
+    ILogger is an interface used for logging in .NET Core. It provides methods to write logs with different levels.
 
 Is it possible to stop logging with Serilog? If "yes", how can you do it? 
+    Yes. You can set the minimum log level (for example to Fatal) or remove/disable sinks so logs are not written.
 
 What information is good to include in a log message? 
+    Timestamp, log level, message, exception details, and useful context (like user ID or request ID).
 
 How can Exceptions be logged? 
+    By passing the exception object to the logger.
 
 What is the default log level? 
+    Information
 
 Where can custom logging provider and corresponding logger be registered? 
+    In Program.cs (or Startup.cs in older versions) when configuring services and logging.
