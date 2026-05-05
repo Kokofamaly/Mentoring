@@ -1,7 +1,23 @@
 What are the four principles of object-oriented programming? Can you explain each in your own words? 
+    Abstraction, Encapsulation, Inheritance, Polymorphism.
+    Encapsulation - hiding internal data and exposing only what is needed (using properties/methods)
+    Inheritance - creating new classes based on existing ones to reuse code
+    Polymorphism - one interface, many implementations (same method behaves differently)
+    Abstraction - showing only essential details, hiding complexity
 
 What is multiple inheritance? How are we able to achieve it in .NET? 
+    It is when class inherits from more than one class. In C# multiple inheritance is only achievable with interfaces.
 
 What do S.O.L.I.D. principles stand for? Can you decipher each letter? 
+    S - Single Responsibility Principle (one class = one responsibility)
+    O - Open/Closed Principle (open for extension, closed for modification)
+    L - Liskov Substitution Principle (subclasses should replace base classes safely)
+    I - Interface Segregation Principle (many small interfaces are better than one large)
+    D - Dependency Inversion Principle (depend on abstractions, not concrete classes)
 
 What other principles do you know, do they conflict or complement each other? 
+    DRY (Don’t Repeat Yourself) - avoid duplication
+    KISS (Keep It Simple, Stupid) - keep code simple
+    YAGNI (You Aren’t Gonna Need It) - don’t add unnecessary features
+
+    They usually complement SOLID, helping keep code clean and maintainable, not conflicting.

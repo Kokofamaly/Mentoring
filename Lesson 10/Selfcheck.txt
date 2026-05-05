@@ -1,7 +1,14 @@
 What is serialization?
+    Serialization is converting an object into a format (like JSON, XML, or binary) so it can be stored or sent, and later deserialized.
 
 Give examples where serialization is used?
+    Saving data to files, sending data over network (APIs), caching, storing session state.
 
 When binary/XML/Json serialization need to be used? What are the main advantages of binary/XML/Json serialization?
+    Binary is better to use when performance and compact size matter (fast, small, not human-readable)
+    XML is better to use when readability and strict structure are needed (self-descriptive, supports schemas)
+    JSON is better to use when working with web APIs (lightweight, easy to read, widely used)
 
 When is custom serialization needed? How can custom serialization be implemented?
+    Needed when default serialization is not enough (e.g. special formatting, security, ignoring fields).
+    It can be implemented by customizing serialization logic (e.g. attributes, custom converters, or implementing serialization interfaces).
