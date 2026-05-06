@@ -1,0 +1,1 @@
+﻿EXEC [dbo].[InsertEmployeeInfo] 'Saul Goodman', 'Saul', 'Goodman', 'AttorneyCorp.', 'Lawyer', 'Montgomery Blvd', 'Albuquerque', 'USA', '9800'
