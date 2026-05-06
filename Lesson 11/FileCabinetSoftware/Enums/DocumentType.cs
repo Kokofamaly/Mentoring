@@ -3,5 +3,6 @@ public enum DocumentType
 {
     Book,
     LocalizedBook,
-    Patent
+    Patent,
+    Magazine
 }

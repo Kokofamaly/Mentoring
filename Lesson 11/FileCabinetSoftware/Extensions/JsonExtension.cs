@@ -12,7 +12,8 @@ public static class JsonExtension
     {
         [DocumentType.Book] = typeof(Book),
         [DocumentType.LocalizedBook] = typeof(LocalizedBook),
-        [DocumentType.Patent] = typeof(Patent)
+        [DocumentType.Patent] = typeof(Patent),
+        [DocumentType.Magazine] = typeof(Magazine)
     };
 
     public static Document? DeserializeJsonDocument(this string json)
