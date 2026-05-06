@@ -4,12 +4,13 @@ using FileCabinetSoftware.Enums;
 using System.Text.Json;
 using FileCabinetSoftware.Extensions;
 using System.Text.Json.Serialization;
+using System.Drawing;
 
 namespace FileCabinetSoftware.Repository;
 
 public class FileRepository : IDocumentRepository
 {
-    private readonly JsonSerializerOptions jsOptions = new JsonSerializerOptions
+    private readonly JsonSerializerOptions _jsOptions = new JsonSerializerOptions
         {
             WriteIndented = true,
             Converters = {new JsonStringEnumConverter()}
@@ -32,7 +33,7 @@ public class FileRepository : IDocumentRepository
         if(File.Exists(filePath)) 
             throw new InvalidOperationException($"The file already exists: \n{fileName}");
 
-        var json = JsonSerializer.Serialize(item, item.GetType() ,jsOptions);
+        var json = JsonSerializer.Serialize(item, item.GetType() ,_jsOptions);
         File.WriteAllText(filePath, json);
     }
     public IEnumerable<Document> SearchById(int id)
@@ -79,6 +80,7 @@ public class FileRepository : IDocumentRepository
     }
     public Document? GetDocument(DocumentType type, int id)
     {
+
         var filePath = Path.Combine(_path, $"{type.ToString().ToLowerInvariant()}_#{id}.json");
         
         return File.Exists(filePath) 
