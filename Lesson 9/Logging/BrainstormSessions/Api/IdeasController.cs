@@ -6,15 +6,18 @@ using BrainstormSessions.ClientModels;
 using BrainstormSessions.Core.Interfaces;
 using BrainstormSessions.Core.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BrainstormSessions.Api
 {
     public class IdeasController : ControllerBase
     {
+        private readonly ILogger<IdeasController> _logger;
         private readonly IBrainstormSessionRepository _sessionRepository;
 
-        public IdeasController(IBrainstormSessionRepository sessionRepository)
+        public IdeasController(IBrainstormSessionRepository sessionRepository, ILogger<IdeasController> logger)
         {
+            _logger = logger; 
             _sessionRepository = sessionRepository;
         }
 
@@ -101,6 +104,7 @@ namespace BrainstormSessions.Api
         {
             if (!ModelState.IsValid)
             {
+                _logger.LogError("Model state is invalid");
                 return BadRequest(ModelState);
             }
 
