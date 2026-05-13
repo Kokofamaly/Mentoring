@@ -6,11 +6,42 @@ using FileCabinetSoftware.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Xunit;
+using Microsoft.Extensions.Options;
 
 public class DocumentServiceTests
 {
     private readonly MemoryCache _cache = new(new MemoryCacheOptions());
-    private readonly CachePolicy _policy = new();
+    // private readonly CachePolicy _policy = new();
+    private CachePolicy CreatePolicy()
+    {
+        var settings = new CacheSettings
+        {
+            CachePolicies = new()
+            {
+                ["Book"] = new CachePolicyOptions
+                {
+                    Mode = CacheMode.Absolute,
+                    Expiration = TimeSpan.FromMinutes(10)
+                },
+                ["LocalizedBook"] = new CachePolicyOptions
+                {
+                    Mode = CacheMode.Absolute,
+                    Expiration = TimeSpan.FromMinutes(10)
+                },
+                ["Magazine"] = new CachePolicyOptions
+                {
+                    Mode = CacheMode.Disabled
+                },
+                ["Patent"] = new CachePolicyOptions
+                {
+                    Mode = CacheMode.Infinite
+                }
+            }
+        };
+
+        return new CachePolicy(Options.Create(settings));
+    }
+    
 
     [Fact]
     public void GetDocument_ShouldCacheResult()
@@ -27,7 +58,7 @@ public class DocumentServiceTests
         mockRepo.Setup(r => r.GetDocument(DocumentType.Book, 1))
                 .Returns(book);
 
-        var service = new DocumentService(mockRepo.Object, _cache, _policy);
+        var service = new DocumentService(mockRepo.Object, _cache, CreatePolicy());
 
         var firstCall = service.GetDocument(DocumentType.Book, 1);
         var secondCall = service.GetDocument(DocumentType.Book, 1);
@@ -52,7 +83,7 @@ public class DocumentServiceTests
         mockRepo.Setup(r => r.GetDocument(DocumentType.Magazine, 1))
                 .Returns(magazine);
 
-        var service = new DocumentService(mockRepo.Object, _cache, _policy);
+        var service = new DocumentService(mockRepo.Object, _cache, CreatePolicy());
 
         service.GetDocument(DocumentType.Magazine, 1);
         service.GetDocument(DocumentType.Magazine, 1);
@@ -68,7 +99,7 @@ public class DocumentServiceTests
         mockRepo.Setup(r => r.GetDocument(It.IsAny<DocumentType>(), It.IsAny<int>()))
                 .Returns((Book?)null);
 
-        var service = new DocumentService(mockRepo.Object, _cache, _policy);
+        var service = new DocumentService(mockRepo.Object, _cache, CreatePolicy());
 
         var result = service.GetDocument(DocumentType.Book, 999);
 
