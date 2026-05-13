@@ -1,16 +1,31 @@
 using FileCabinetSoftware.Abstractions.Interfaces;
 using FileCabinetSoftware.Enums;
+using Microsoft.Extensions.Options;
 
 namespace FileCabinetSoftware.Caching;
 
 public class CachePolicy : ICachePolicy
 {
-    public TimeSpan? GetCacheTimeExpiration(DocumentType type) => type switch
+    private readonly CacheSettings _settings;
+
+    public CachePolicy(IOptions<CacheSettings> opt)
     {
-        DocumentType.Book => TimeSpan.FromMinutes(10),
-        DocumentType.LocalizedBook => TimeSpan.FromMinutes(10),
-        DocumentType.Patent => null,
-        DocumentType.Magazine => TimeSpan.Zero,
-        _ => TimeSpan.Zero
-    };
+        _settings = opt.Value;
+    }
+    public TimeSpan? GetCacheTimeExpiration(DocumentType type)
+    {
+        if (!_settings.CachePolicies.TryGetValue(type.ToString(), out var policy))
+        {
+            return TimeSpan.Zero;
+        }
+
+        return policy.Mode switch
+        {
+            CacheMode.Disabled => TimeSpan.Zero,
+            CacheMode.Infinite => null,
+            CacheMode.Absolute => policy.Expiration,
+            _ => TimeSpan.Zero
+        };
+    }
+
 }
