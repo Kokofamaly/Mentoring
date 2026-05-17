@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[InsertEmployeeInfo]
+﻿ CREATE PROCEDURE [dbo].[InsertEmployeeInfo]
 	@EmployeeName NVARCHAR(100) = NULL,
 	@FirstName NVARCHAR(50) = NULL,
 	@LastName NVARCHAR(50) = NULL,
