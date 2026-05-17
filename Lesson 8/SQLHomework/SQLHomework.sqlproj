@@ -64,8 +64,12 @@
     <Build Include="Company.sql" />
     <Build Include="EmployeeInfo.sql" />
     <Build Include="InsertEmployeeInfo.sql" />
+    <Build Include="trg_Employee_Insert_CreateCompany.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="InsertingEmployeeTrigger.sql" />
   </ItemGroup>
 </Project>
