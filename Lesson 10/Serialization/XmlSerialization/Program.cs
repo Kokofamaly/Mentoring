@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Xml.Serialization;
+using ClassesToSerialize;
 
 
 namespace XmlSerialization
@@ -29,28 +30,4 @@ namespace XmlSerialization
         }
     }
 
-    public class Employee
-    {
-        [XmlAttribute]
-        public string? EmployeeName { get; set; }
-    }
-
-    public class Department
-    {
-        [XmlElement("DeptName")]
-        public string? DepartmentName { get; set; }
-        [XmlArray("Employees")]
-        [XmlArrayItem("Employee")]
-        public List<Employee> Employees { get; set; } = new();
-        
-        public override string ToString()
-        {
-            var sb = new StringBuilder($"{DepartmentName}\nEmployees: \n");
-            foreach(var e in Employees)
-            {
-                sb.Append($"{e.EmployeeName}\n");
-            }
-            return sb.ToString();
-        }
-    }
 }

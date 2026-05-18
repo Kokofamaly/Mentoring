@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using ClassesToSerialize;
 
 namespace BinarySerialization
 {
@@ -15,6 +16,7 @@ namespace BinarySerialization
     {
         public static void Main(string[] args)
         {
+            
             Department department = new Department
             {
                 DepartmentName = "TestDepartment",
@@ -32,25 +34,5 @@ namespace BinarySerialization
 
         }
     }
-    [Serializable]
-    public class Employee
-    {
-        public string? EmployeeName { get; set; }
-    }
-    [Serializable]
-    public class Department
-    {
-        public string? DepartmentName { get; set; }
-
-        public List<Employee> Employees { get; set; } = new List<Employee>();
-        public override string ToString()
-        {
-            var sb = new StringBuilder($"{DepartmentName}\nEmployees: \n");
-            foreach(var e in Employees)
-            {
-                sb.Append($"{e.EmployeeName}\n");
-            }
-            return sb.ToString();
-        }
-    }
+    
 }
