@@ -41,7 +41,7 @@ namespace Task1
 
         public static IEnumerable<Customer> Linq3(IEnumerable<Customer> customers, decimal limit)
         {
-            var result = customers.Where(c => c.Orders.Sum(o => o.Total) > limit);
+            var result = customers.Where(c => c.Orders.Length > 0 && c.Orders.Sum(o => o.Total) > limit);
             return result;        
         }
 
@@ -49,10 +49,10 @@ namespace Task1
             IEnumerable<Customer> customers
         )
         {
-            var result = customers.Select(
+            var result = customers.Where(c => c.Orders.Length > 0).Select(
                 c => (
                     customer: c, 
-                    dateOfEntry: c.Orders.Any() ? c.Orders.Min(o => o.OrderDate) : default
+                    dateOfEntry: c.Orders.Min(o => o.OrderDate)
                     )
                 );
             
@@ -63,9 +63,10 @@ namespace Task1
             IEnumerable<Customer> customers
         )
         {
-            var result = customers.Select(c => (
+            var result = customers.Where(c => c.Orders.Length > 0)
+                .Select(c => (
                 customer: c, 
-                dateOfEntry: c.Orders.Any() ? c.Orders.Min(o => o.OrderDate) : default
+                dateOfEntry: c.Orders.Min(o => o.OrderDate)
                 )
             )
             .OrderBy(obj => obj.dateOfEntry.Year)
@@ -136,7 +137,7 @@ namespace Task1
             IEnumerable<Customer> customers
         )
         {
-            var result = customers.GroupBy(c => c.City).Select(g => (city: g.Key, averageIncome: (int)g.Average(c => c.Orders.Sum(o => o.Total)), averageIntensity: (int)g.Average(c => c.Orders.Count())));
+            var result = customers.GroupBy(c => c.City).Select(g => (city: g.Key, averageIncome: (int)Math.Round(g.Average(c => c.Orders.Sum(o => o.Total))), averageIntensity: (int)Math.Round(g.Average(c => c.Orders.Count()))));
             return result;
         }
 
