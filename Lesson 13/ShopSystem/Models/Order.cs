@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ShopSystem.Enum;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShopSystem
+namespace ShopSystem.Models
 {
     public class Order
     {
@@ -10,6 +11,7 @@ namespace ShopSystem
         public int ProductId { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
-        public Status OrderStatus { get; set; }
+        public OrderStatus Status { get; set; }
     }
 }
+ 

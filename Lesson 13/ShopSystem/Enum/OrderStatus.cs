@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShopSystem
+namespace ShopSystem.Enum
 {
-    public enum Status
+    public enum OrderStatus
     {
         NotStarted,
         Loading,
