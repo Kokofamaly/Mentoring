@@ -60,5 +60,7 @@
   <ItemGroup>
     <Build Include="Products.sql" />
     <Build Include="Orders.sql" />
+    <Build Include="sp_DeleteOrders.sql" />
+    <Build Include="sp_GetOrders.sql" />
   </ItemGroup>
 </Project>

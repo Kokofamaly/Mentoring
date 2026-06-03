@@ -58,7 +58,7 @@ namespace ShopSystem.Repositories
             using var conn = new SqlConnection(_connectionString);
             conn.Open();
 
-            using var cmd = new SqlCommand("sp_DeleteOrders", conn)
+            using var cmd = new SqlCommand("[dbo].[sp_DeleteOrders]", conn)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
@@ -88,7 +88,7 @@ namespace ShopSystem.Repositories
             using var conn = new SqlConnection(_connectionString);
             conn.Open();
 
-            using var cmd = new SqlCommand("sp_GetOrders", conn)
+            using var cmd = new SqlCommand("[dbo].[sp_GetOrders]", conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
