@@ -25,10 +25,7 @@ namespace ShopSystem.Repositories
 
             using var cmd = new SqlCommand("INSERT INTO [dbo].[Orders] (Status, CreatedDate, UpdatedDate, ProductId) VALUES (@Status, @CreatedDate, @UpdatedDate, @ProductId)", conn);
 
-            cmd.Parameters.AddWithValue("@Status", order.Status.ToString());
-            cmd.Parameters.AddWithValue("@CreatedDate", order.CreatedDate);
-            cmd.Parameters.AddWithValue("@UpdatedDate", order.UpdatedDate);
-            cmd.Parameters.AddWithValue("@ProductId", order.ProductId);
+            AddOrderParams(cmd, order);
 
             cmd.ExecuteNonQuery();
         }
@@ -40,11 +37,7 @@ namespace ShopSystem.Repositories
 
             using var cmd = new SqlCommand("UPDATE [dbo].[Orders] SET Status = @Status, CreatedDate = @CreatedDate, UpdatedDate = @UpdatedDate, ProductId = @ProductId WHERE Id = @Id", conn);
 
-            cmd.Parameters.AddWithValue("@Id", order.Id);
-            cmd.Parameters.AddWithValue("@Status", order.Status.ToString());
-            cmd.Parameters.AddWithValue("@CreatedDate", order.CreatedDate);
-            cmd.Parameters.AddWithValue("@UpdatedDate", order.UpdatedDate);
-            cmd.Parameters.AddWithValue("@ProductId", order.ProductId);
+            AddOrderParams(cmd, order);
 
             cmd.ExecuteNonQuery();
         }
@@ -69,10 +62,7 @@ namespace ShopSystem.Repositories
                 CommandType = System.Data.CommandType.StoredProcedure
             };
 
-            cmd.Parameters.AddWithValue("@Year", filter.Year ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("@Month", filter.Month ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("@Status", filter.Status.ToString() ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("@ProductId", filter.ProductId ?? (object)DBNull.Value);
+            AddFilterParams(cmd, filter);
 
             cmd.ExecuteNonQuery();
         }
@@ -86,15 +76,8 @@ namespace ShopSystem.Repositories
             cmd.Parameters.AddWithValue("@Id", id);
 
             using var reader = cmd.ExecuteReader();
-            
-            var order = new Order
-            {
-                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                ProductId = reader.GetInt32(reader.GetOrdinal("ProductId")),
-                CreatedDate = reader.GetDateTimeOffset(reader.GetOrdinal("CreatedDate")),
-                Status = System.Enum.Parse<OrderStatus>(reader.GetString(reader.GetOrdinal("Status"))),
-                UpdatedDate = reader.GetDateTimeOffset(reader.GetOrdinal("UpdatedDate"))
-            };
+
+            var order = MapOrder(reader);
 
             return order;
 
@@ -109,10 +92,7 @@ namespace ShopSystem.Repositories
                 CommandType = CommandType.StoredProcedure
             };
 
-            cmd.Parameters.AddWithValue("@Year", filter.Year ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("@Month", filter.Month ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("@Status", filter.Status.ToString() ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("@ProductId", filter.ProductId ?? (object)DBNull.Value);
+            AddFilterParams(cmd, filter);
 
             using var reader = cmd.ExecuteReader();
 
@@ -120,20 +100,43 @@ namespace ShopSystem.Repositories
 
             while (reader.Read()) {
 
-                var order = new Order
-                {
-                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                    ProductId = reader.GetInt32(reader.GetOrdinal("ProductId")),
-                    CreatedDate = reader.GetDateTimeOffset(reader.GetOrdinal("CreatedDate")),
-                    Status = System.Enum.Parse<OrderStatus>(reader.GetString(reader.GetOrdinal("Status"))),
-                    UpdatedDate = reader.GetDateTimeOffset(reader.GetOrdinal("UpdatedDate"))
-                };
+                var order = MapOrder(reader);
 
                 list.Add(order);
             
             }
 
             return list;
+        }
+
+        private static Order MapOrder(SqlDataReader reader)
+        {
+            return new Order
+            {
+                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                ProductId = reader.GetInt32(reader.GetOrdinal("ProductId")),
+                CreatedDate = reader.GetDateTimeOffset(reader.GetOrdinal("CreatedDate")),
+                Status = System.Enum.Parse<OrderStatus>(reader.GetString(reader.GetOrdinal("Status"))),
+                UpdatedDate = reader.GetDateTimeOffset(reader.GetOrdinal("UpdatedDate"))
+            };
+        }
+
+        private static void AddFilterParams(SqlCommand cmd, OrderFilter? filter)
+        {
+            cmd.Parameters.AddWithValue("@Year", filter.Year ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Month", filter.Month ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Status", filter.Status.ToString() ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@ProductId", filter.ProductId ?? (object)DBNull.Value);
+        }
+
+        private static void AddOrderParams(SqlCommand cmd, Order order) {
+
+            cmd.Parameters.AddWithValue("@Id", order.Id);
+            cmd.Parameters.AddWithValue("@Status", order.Status.ToString());
+            cmd.Parameters.AddWithValue("@CreatedDate", order.CreatedDate);
+            cmd.Parameters.AddWithValue("@UpdatedDate", order.UpdatedDate);
+            cmd.Parameters.AddWithValue("@ProductId", order.ProductId);
+
         }
     }
 }
