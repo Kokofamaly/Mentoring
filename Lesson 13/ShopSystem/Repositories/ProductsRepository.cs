@@ -13,6 +13,7 @@ namespace ShopSystem.Repositories
 
         public ProductsRepository(string connectionString)
         {
+            ArgumentNullException.ThrowIfNullOrEmpty(connectionString);
             _connectionString = connectionString;
         }
 

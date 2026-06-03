@@ -2,6 +2,7 @@
 using System.Data.Common;
 using ShopSystem.Models;
 using ShopSystem.Infrastructure.Interfaces;
+using ShopSystem.Infrastructure;
 
 namespace ShopSystem.Services
 {
@@ -13,10 +14,39 @@ namespace ShopSystem.Services
             _ordersRepository = repo;
         
         }
-        public void CreateOrder() { }
-        public IEnumerable<Order> GetOrders() { }
-        public Order GetOrder() { }
-        public void DeleteOrder() { }
-        public void UpdateOrder() { }
+        public void CreateOrder(Order? order) {
+
+            ArgumentNullException.ThrowIfNull(order);
+            _ordersRepository.Add(order);
+
+        }
+        public IEnumerable<Order> GetOrders(OrderFilter? filter) { 
+            
+           return _ordersRepository.GetAll(filter);
+
+        }
+        public Order GetOrder(int id) {
+
+            var order = _ordersRepository.GetById(id);
+            ArgumentNullException.ThrowIfNull(order);
+
+            return order;
+        }
+        public void DeleteOrder(Order? order) {
+
+            ArgumentNullException.ThrowIfNull(order);
+            _ordersRepository.Delete(order);
+
+        }
+        public void DeleteBulkOrders(OrderFilter filter)
+        {
+            _ordersRepository.DeleteBulk(filter);
+        }
+        public void UpdateOrder(Order? order) {
+
+            ArgumentNullException.ThrowIfNull(order);
+            _ordersRepository.Update(order);
+
+        }
     }
 }

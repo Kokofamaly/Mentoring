@@ -13,10 +13,33 @@ namespace ShopSystem.Services
         {
             _productsRepository = repo;
         }
-        public void CreateProduct() { }
-        public IEnumerable<Product> GetProducts() { }
-        public Product GetProduct() { }
-        public void DeleteProduct() { }
-        public void UpdateProduct() { }
+        public void CreateProduct(Product? product) {
+
+            ArgumentNullException.ThrowIfNull(product);
+            _productsRepository.Add(product);
+
+        }
+        public IEnumerable<Product> GetProducts() { 
+
+            return _productsRepository.GetAll();
+
+        }
+        public Product GetProduct(int id) {
+            
+            var product = _productsRepository.GetById(id);
+            ArgumentNullException.ThrowIfNull(product);
+            return product;
+
+        }
+        public void DeleteProduct(Product? product) {
+
+            ArgumentNullException.ThrowIfNull(product);
+            _productsRepository.Delete(product);
+
+        }
+        public void UpdateProduct(Product? product) {
+            ArgumentNullException.ThrowIfNull(product);
+            _productsRepository.Update(product);
+        }
     }
 }

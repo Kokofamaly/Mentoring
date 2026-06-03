@@ -15,6 +15,7 @@ namespace ShopSystem.Repositories
         private readonly string _connectionString;
         public OrdersRepository(string connectionString)
         {
+            ArgumentNullException.ThrowIfNullOrEmpty(connectionString);
             _connectionString = connectionString;
         }
 
