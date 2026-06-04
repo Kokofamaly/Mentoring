@@ -1,8 +1,9 @@
-﻿using ShopSystem.Infrastructure.Interfaces;
+﻿using Microsoft.Data.SqlClient;
+using ShopSystem.Infrastructure.Interfaces;
 using ShopSystem.Models;
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
+using System.Data;
 using System.Text;
 
 namespace ShopSystem.Repositories
@@ -91,7 +92,7 @@ namespace ShopSystem.Repositories
             {
                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                 Name = reader.GetString(reader.GetOrdinal("Name")),
-                Description = reader.GetString(reader.GetOrdinal("Description")),
+                Description = reader.IsDBNull(reader.GetString(reader.GetOrdinal("Description"))) ? null : reader.GetString(reader.GetOrdinal("Description")),
                 Weight = reader.GetDecimal(reader.GetOrdinal("Weight")),
                 Height = reader.GetDecimal(reader.GetOrdinal("Height")),
                 Width = reader.GetDecimal(reader.GetOrdinal("Width")),
