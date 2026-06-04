@@ -1,0 +1,35 @@
+What is LINQ? What is it used for? 
+    LINQ (Language Integrated Query) is a .NET feature that allows querying and 
+    manipulating data using a unified syntax directly in C#.
+
+When are query expressions executed? What is materialization in LINQ? Name query methods which lead to query execution. 
+    The query is not executed when it is defined. It is executed when the results are actually needed, such as during enumeration.
+    Materialization means executing the query and storing the results in memory.
+    Methods that lead to query execution: ToList(), ToArray(), ToDictionary(), ToHashSet().
+
+What is query syntax? What is the method syntax? 
+    Query syntax is SQL-like syntax: "var result = from n in numbers select n;"
+    Method syntax uses extension methods and lambda expressions: "var result = n.OrderBy(n => n);"
+
+When is query syntax converted to method calls? 
+    The C# compiler automatically translates query syntax into method syntax during compilation.
+
+If query expression syntax does not have some operations, for example Count or Max, how to combine query syntax with method calls? 
+    You can write a query using query syntax and then call LINQ methods on the result. 
+    Example:
+        int count = (from n in numbers
+                    where n > 10
+                    select n)
+                    .Count();
+
+Which are basic LINQ query operations? 
+    Basic LINQ operations: Where(), Select(), GroupBy(), Join(), Union().
+
+How do you transform data with LINQ? 
+    Data transformation is usually performed using Select().
+
+What is LINQ to Objects? 
+    LINQ to Objects is the LINQ implementation that works with in-memory collections implementing IEnumerable<T>.
+
+Can you project a query to an anonymous type?
+    Yes.
