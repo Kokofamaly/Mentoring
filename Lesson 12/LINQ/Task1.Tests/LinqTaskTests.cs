@@ -74,7 +74,7 @@ namespace Task1.Tests
         [TestCase(1, ExpectedResult = 5)]
         public int Linq3_Limit_ReturnsCustomersCount(decimal limit)
         {
-            // The data source contains 4 customers that exceed the limit of 800, not 4.
+            // The data source contains 4 customers that exceed the limit of 800, not 2.
             // Since Linq3 must return customers whose total order sum exceeds the limit, 
             // I assume the test failed due to an incorrect ExpectedResult rather than
             // the Linq3 implementation.
