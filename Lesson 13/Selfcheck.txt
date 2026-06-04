@@ -1,0 +1,19 @@
+What is ADO.NET? 
+    ADO.NET is a data access technology in the .NET Framework used to connect applications to databases, 
+    retrieve data, manipulate it, and update data sources such as SQL Server, Oracle, or XML files.
+
+Explain the difference between terms: connected model and disconnected model? 
+    Connected model maintains a continuous connection to the database, it is faster and uses less memory. 
+    Disconnected model downloads data, then uses local instance of this data, connection is opened only when data
+    retrieved or updated.
+
+When do we need to use a DataReader and a DataSet? 
+    Use DataReader for high perfomance, when you need only to get data.
+    Use DataSet when you need to insert, update or delete data.
+
+What do we need to use data providers for? 
+    Data providers are used to communicate with a specific type of data source. They contain classes for 
+    connecting to databases, executing commands, and retrieving data.
+
+What do we need to use transactions for?
+    When we need to guarantee that multiple operations are completed successfully as a single unit.
