@@ -72,7 +72,7 @@ namespace ShopSystem.Repositories
             using var conn = new SqlConnection(_connectionString);
             conn.Open();
 
-            using var cmd = new SqlCommand("SELECT * FROM [dbo].[Orders] WHERE Id = @Id", conn);
+            using var cmd = new SqlCommand("SELECT o.Id, o.ProductId, o.CreatedDate, o.UpdatedDate, o.Status FROM [dbo].[Orders] o WHERE Id = @Id", conn);
 
             cmd.Parameters.AddWithValue("@Id", id);
 
@@ -124,9 +124,18 @@ namespace ShopSystem.Repositories
 
         private static void AddFilterParams(SqlCommand cmd, OrderFilter? filter)
         {
+            if(filter == null)
+            {
+                cmd.Parameters.AddWithValue("@Year", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Month", DBNull.Value);
+                cmd.Parameters.AddWithValue("@Status", DBNull.Value);
+                cmd.Parameters.AddWithValue("@ProductId", DBNull.Value);
+                return;
+            }
+
             cmd.Parameters.AddWithValue("@Year", filter.Year ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@Month", filter.Month ?? (object)DBNull.Value);
-            cmd.Parameters.AddWithValue("@Status", filter.Status.ToString() ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Status", filter.Status?.ToString() ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@ProductId", filter.ProductId ?? (object)DBNull.Value);
         }
 

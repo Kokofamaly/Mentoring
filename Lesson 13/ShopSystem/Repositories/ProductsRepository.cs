@@ -56,7 +56,7 @@ namespace ShopSystem.Repositories
             using var conn = new SqlConnection(_connectionString);
             conn.Open();
 
-            using var cmd = new SqlCommand("SELECT * FROM [dbo].[Products] WHERE Id = @Id", conn);
+            using var cmd = new SqlCommand("SELECT p.Id, p.Name, p.Description, p.Weight, p.Height, p.Width, p.Length FROM [dbo].[Products] p WHERE Id = @Id", conn);
 
             cmd.Parameters.AddWithValue("@Id", id);
 
@@ -71,7 +71,7 @@ namespace ShopSystem.Repositories
             using var conn = new SqlConnection(_connectionString);
             conn.Open();
 
-            using var cmd = new SqlCommand("SELECT * FROM [dbo].[Products]", conn);
+            using var cmd = new SqlCommand("SELECT p.Id, p.Name, p.Description, p.Weight, p.Height, p.Width, p.Length FROM [dbo].[Products]", conn);
             using var reader = cmd.ExecuteReader();
 
             var products = new List<Product>();
