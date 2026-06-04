@@ -27,7 +27,8 @@ namespace ShopSystem.Services
         public Product GetProduct(int id) {
             
             var product = _productsRepository.GetById(id);
-            ArgumentNullException.ThrowIfNull(product);
+            if(product == null) throw new KeyNotFoundException();
+
             return product;
 
         }

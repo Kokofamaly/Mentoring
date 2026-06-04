@@ -28,7 +28,7 @@ namespace ShopSystem.Services
         public Order GetOrder(int id) {
 
             var order = _ordersRepository.GetById(id);
-            ArgumentNullException.ThrowIfNull(order);
+            if(order == null) throw new KeyNotFoundException();
 
             return order;
         }
