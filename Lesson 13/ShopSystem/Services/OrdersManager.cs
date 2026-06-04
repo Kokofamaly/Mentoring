@@ -1,6 +1,4 @@
-﻿using System.Data.SqlClient;
-using System.Data.Common;
-using ShopSystem.Models;
+﻿using ShopSystem.Models;
 using ShopSystem.Infrastructure.Interfaces;
 using ShopSystem.Infrastructure;
 
