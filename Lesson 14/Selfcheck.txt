@@ -1,0 +1,11 @@
+What is ORM? 
+
+What is the difference between micro and fully featured ORM? 
+
+When will you choose Dapper and when EF Core? 
+
+What is the deference between Code, Database and Model first approaches? 
+
+What is the purpose of ‘Unit of Work’ pattern? 
+
+ 

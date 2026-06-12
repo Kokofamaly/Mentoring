@@ -1,0 +1,9 @@
+What is HTTP?
+
+What is the header?
+
+What are Cookies, what types of cookies are there?
+
+What is the HTTP message status?
+
+What parts does a URL consist of? What can it contain?
