@@ -15,21 +15,26 @@ namespace ShopSystem.Services
 
         public async Task CreateOrderAsync(Order? order)
         {
-
+            ArgumentNullException.ThrowIfNull(order);
+            await _ordersRepository.AddAsync(order);
         }
 
         public async Task<IEnumerable<Order>> GetOrdersAsync(OrderFilter? filter)
         {
+            return await _ordersRepository.GetAllAsync(filter);
         }
 
         public async Task<Order> GetOrderAsync(int id)
         {
-
+            var order = await _ordersRepository.GetByIdAsync(id);
+            if(order == null) throw new KeyNotFoundException();
+            return order;
         }
 
         public async Task DeleteOrderAsync(Order? order)
         {
-
+            ArgumentNullException.ThrowIfNull(order);
+            await _ordersRepository.DeleteAsync(order);
         }
 
         public async Task DeleteBulkOrdersAsync(OrderFilter? filter)
@@ -38,7 +43,8 @@ namespace ShopSystem.Services
 
         public async Task UpdateOrderAsync(Order? order)
         {
-
+            ArgumentNullException.ThrowIfNull(order);
+            await _ordersRepository.UpdateAsync(order);
         }
     }
 }
