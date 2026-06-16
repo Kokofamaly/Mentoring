@@ -1,0 +1,48 @@
+What is a Data Structure?  
+    A data structure is a way of organizing and storing data so that it can be used efficiently. 
+    It defines how data is arranged in memory and how you can access or modify it.
+
+What are the various operations that can be performed on different Data Structures?  
+    Operations, that can be performed: Insertion, Deletion, Traversal, Searching, Sorting, Updating.
+
+
+How is an Array different from Linked List?  
+    Array has fixed size, and he provides fast access by index, but slow insertion and deletion of values.
+    Linked List has dynamic size, and elements of the list are stored as nodes connected by pointers.
+    Also, in Linked List it takes more time to get values, but it inserts and deletes elements fast.
+
+
+What is Stack and where can it be used? 
+    A stack is a data structure that follows LIFO (Last In, First Out).
+    It can be used in: undo/redo operations, function call stack(recursion), backtracking algorithms.
+
+
+What is a Queue, how it is different from the stack and how is it implemented?  
+    A queue is a data structure that follows FIFO (First In, First Out).
+    The main difference between stack and queue is in their ways to save data.
+    Stack saves data in LIFO way, and Queue saves data in FIFO way.
+    Queue is implemented by Queue<T> class.
+
+What is a Linked List and What are its types?  
+    A linked list is a collection of nodes where each node contains data and a reference to the next node.
+    Linked List types: singly linked list, doubly linked list, circular linked list – in one every node have 
+    reference to the next one, in the next one nodes have references to next and previous nodes, and in the last one
+    last node references to the first one.
+
+
+Which data structures C# have? 
+    C# have this data structures: Array, List, LinkedList, Stack, Queue, Dictionary, HashSet and more.
+
+List C# collections features. 
+    C# collections features: Generic, Dynamic sizing, Built-in methods, LINQ support for querying data.
+
+
+What is the algorithmic complexity of collections?  
+    It describes how fast operations are depending on input size (Big O notation).
+    Examples:
+    - Array/List access by index: O(1)
+    - List add (end): O(1)
+    - List insert/remove (middle): O(n)
+    - LinkedList add/remove: O(1)
+    - Search in list: O(n)
+    - Dictionary lookup: O(1)
