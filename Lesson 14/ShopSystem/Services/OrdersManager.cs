@@ -39,6 +39,7 @@ namespace ShopSystem.Services
 
         public async Task DeleteBulkOrdersAsync(OrderFilter? filter)
         {
+            await _ordersRepository.DeleteBulkAsync(filter);
         }
 
         public async Task UpdateOrderAsync(Order? order)
