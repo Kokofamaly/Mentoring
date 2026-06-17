@@ -37,14 +37,14 @@ namespace ShopSystem.Repositories
         {
             var query = _context.Orders.AsQueryable();
 
-            if(filter != null)
+                        if(filter != null)
             {
-                if(filter.Year.HasValue) query.Where(o => o.CreatedDate.Year == filter.Year.Value);
-                if(filter.Month.HasValue) query.Where(o => o.CreatedDate.Month == filter.Month.Value);
-                if(filter.ProductId.HasValue) query.Where(o => o.ProductId == filter.ProductId.Value);
-                if(filter.Status.HasValue) query.Where(o => o.Status == filter.Status.Value);
+                if(filter.Year.HasValue) query = query.Where(o => o.CreatedDate.Year == filter.Year.Value);
+                if(filter.Month.HasValue) query = query.Where(o => o.CreatedDate.Month == filter.Month.Value);
+                if(filter.ProductId.HasValue) query = query.Where(o => o.ProductId == filter.ProductId.Value);
+                if(filter.Status.HasValue) query = query.Where(o => o.Status == filter.Status.Value);
             }
-            
+
             var ordersToDelete = await query.ToListAsync();
             _context.Orders.RemoveRange(ordersToDelete);
             await _context.SaveChangesAsync();
@@ -61,10 +61,10 @@ namespace ShopSystem.Repositories
 
             if(filter != null)
             {
-                if(filter.Year.HasValue) query.Where(o => o.CreatedDate.Year == filter.Year.Value);
-                if(filter.Month.HasValue) query.Where(o => o.CreatedDate.Month == filter.Month.Value);
-                if(filter.ProductId.HasValue) query.Where(o => o.ProductId == filter.ProductId.Value);
-                if(filter.Status.HasValue) query.Where(o => o.Status == filter.Status.Value);
+                if(filter.Year.HasValue) query = query.Where(o => o.CreatedDate.Year == filter.Year.Value);
+                if(filter.Month.HasValue) query = query.Where(o => o.CreatedDate.Month == filter.Month.Value);
+                if(filter.ProductId.HasValue) query = query.Where(o => o.ProductId == filter.ProductId.Value);
+                if(filter.Status.HasValue) query = query.Where(o => o.Status == filter.Status.Value);
             }
 
             return await query.ToListAsync();
