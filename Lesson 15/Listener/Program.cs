@@ -47,6 +47,10 @@ while (true)
             await ServerError(context);
             break;
 
+        case "mynamebyheader":
+            await GetMyNameByHeader(context, name);
+            break;        
+
         case "exit":
             listener.Stop();
             listener.Close();
@@ -83,3 +87,10 @@ static Task Success(HttpListenerContext context) => SendStatus(context, HttpStat
 static Task Redirection(HttpListenerContext context) => SendStatus(context, HttpStatusCode.MovedPermanently);
 static Task ClientError(HttpListenerContext context) => SendStatus(context, HttpStatusCode.BadRequest);
 static Task ServerError(HttpListenerContext context) => SendStatus(context, HttpStatusCode.BadGateway);
+
+static Task GetMyNameByHeader(HttpListenerContext context, string name)
+{
+    context.Response.AddHeader("X-MyName", name);
+    context.Response.Close();
+    return Task.CompletedTask;
+}
