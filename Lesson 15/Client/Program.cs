@@ -1,9 +1,11 @@
-﻿using Microsoft.VisualBasic;
+﻿using System.Net;
 
-string url = "http://localhost:8888/";
-string[] requestStatuses = {"Success", "Redirection", "ClientError", "ServerError", "Information"};
+string url = "http://localhost:8888/MyNameByCookies/";
+
+var cookies = new CookieContainer();
 var handler = new HttpClientHandler()
 {
+    CookieContainer = cookies,
     AllowAutoRedirect = false
 };
 
@@ -11,10 +13,12 @@ using var client = new HttpClient(handler);
 
 try
 {
-    var response = await client.GetAsync($"{url}MyNameByHeader/");
-    if (response.Headers.TryGetValues("X-MyName", out var values))
+    var response = await client.GetAsync(url);
+    var cookie = cookies.GetCookies(new Uri(url))["MyName"];
+
+    if (cookie != null)
     {
-        Console.WriteLine(values.First());
+        Console.WriteLine(cookie.Value);
     }
 }
 catch(Exception ex)
