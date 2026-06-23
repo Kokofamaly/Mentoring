@@ -51,6 +51,10 @@ while (true)
             await GetMyNameByHeader(context, name);
             break;        
 
+        case "mynamebycookies":
+            await GetMyNameByCookies(context, name);
+            break;
+
         case "exit":
             listener.Stop();
             listener.Close();
@@ -91,6 +95,13 @@ static Task ServerError(HttpListenerContext context) => SendStatus(context, Http
 static Task GetMyNameByHeader(HttpListenerContext context, string name)
 {
     context.Response.AddHeader("X-MyName", name);
+    context.Response.Close();
+    return Task.CompletedTask;
+}
+static Task GetMyNameByCookies(HttpListenerContext context, string name)
+{
+    var cookie = new Cookie("MyName", name);
+    context.Response.SetCookie(cookie);
     context.Response.Close();
     return Task.CompletedTask;
 }
