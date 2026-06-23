@@ -11,10 +11,10 @@ using var client = new HttpClient(handler);
 
 try
 {
-    foreach(var status in requestStatuses)
+    var response = await client.GetAsync($"{url}MyNameByHeader/");
+    if (response.Headers.TryGetValues("X-MyName", out var values))
     {
-        var response = await client.GetAsync($"{url}{status}/");
-        Console.WriteLine((int)response.StatusCode);
+        Console.WriteLine(values.First());
     }
 }
 catch(Exception ex)
