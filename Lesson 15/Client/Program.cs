@@ -1,11 +1,21 @@
-﻿string url = "http://localhost:8888/MyName/";
+﻿using Microsoft.VisualBasic;
 
-var client = new HttpClient();
+string url = "http://localhost:8888/";
+string[] requestStatuses = {"Success", "Redirection", "ClientError", "ServerError", "Information"};
+var handler = new HttpClientHandler()
+{
+    AllowAutoRedirect = false
+};
+
+using var client = new HttpClient(handler);
 
 try
 {
-    string response = await client.GetStringAsync(url);
-    Console.WriteLine(response);
+    foreach(var status in requestStatuses)
+    {
+        var response = await client.GetAsync($"{url}{status}/");
+        Console.WriteLine((int)response.StatusCode);
+    }
 }
 catch(Exception ex)
 {

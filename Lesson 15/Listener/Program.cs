@@ -27,6 +27,26 @@ while (true)
             await GetMyName(context, name);
             break;
 
+        case "information":
+            await Information(context);
+            break;
+
+        case "success":
+            await Success(context);
+            break;
+
+        case "redirection":
+            await Redirection(context);
+            break;
+
+        case "clienterror":
+            await ClientError(context);
+            break;
+
+        case "servererror":
+            await ServerError(context);
+            break;
+
         case "exit":
             listener.Stop();
             listener.Close();
@@ -50,3 +70,16 @@ static async Task GetMyName(HttpListenerContext context, string name)
 
     context.Response.Close();
 }
+
+static Task SendStatus(HttpListenerContext context, HttpStatusCode statusCode)
+{
+    context.Response.StatusCode = (int)statusCode;
+    context.Response.Close();
+    return Task.CompletedTask;
+}
+
+static Task Information(HttpListenerContext context) => SendStatus(context, HttpStatusCode.Processing);
+static Task Success(HttpListenerContext context) => SendStatus(context, HttpStatusCode.OK);
+static Task Redirection(HttpListenerContext context) => SendStatus(context, HttpStatusCode.MovedPermanently);
+static Task ClientError(HttpListenerContext context) => SendStatus(context, HttpStatusCode.BadRequest);
+static Task ServerError(HttpListenerContext context) => SendStatus(context, HttpStatusCode.BadGateway);
