@@ -1,11 +1,28 @@
 What is ORM? 
+    ORM (Object-Relational Mapping) is a technique that maps database tables to C# objects, 
+    allowing developers to work with data using objects instead of writing raw SQL.
 
 What is the difference between micro and fully featured ORM? 
+    Micro ORM: 
+    - lightweight and fast;
+    - executes SQL and maps results to objects;
+    - no change tracking, migrations or LINQ support.
+    Fully featured ORM:
+    - provides change tracking, LINQ, migrations and relationship management;
+    - reduces the amount of SQL you need to write;
+    - easier development but with some perfomance overhead.
 
 When will you choose Dapper and when EF Core? 
+    if perfomance is critical and I need full control over SQL queries, I'll choose Dapper.
+    I'll choose EF Core, when the app contains many CRUD operations and I need features like migrations, change tracking and LINQ.
 
 What is the deference between Code, Database and Model first approaches? 
+    Code first: starts with C# classes, the database schema generated from the code.
+    Database first: starts with existing database, C# entities generated from database schema.
+    Model first: statrs with visual model/design, both the database and code are generated from the model, common in older EF versions.
 
 What is the purpose of ‘Unit of Work’ pattern? 
-
+    The Unit of Work pattern groups multiple database operations into a single transaction 
+    and ensures that all changes are committed or rolled back together. It helps maintain data consistency 
+    and reduces the number of database transactions.
  

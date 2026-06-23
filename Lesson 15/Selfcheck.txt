@@ -1,9 +1,22 @@
 What is HTTP?
+    HTTP (HyperText Transfer Protocol) is a stateless application-layer protocol used for communication between clients 
+    and servers on the web.
 
 What is the header?
+    An HTTP header is a key-value pair that provides metadata about a request or response.
 
 What are Cookies, what types of cookies are there?
+    Cookies are small pieces of data stored in the user's browser and sent with HTTP requests.
 
 What is the HTTP message status?
+    HTTP status codes indicate the result of a request.
+    Common categories:
+        1xx – Informational.
+        2xx – Success.
+        3xx – Redirection.
+        4xx – Client errors.
+        5xx – Server errors.
 
 What parts does a URL consist of? What can it contain?
+    A URL typically consists of:
+    Scheme/Protocol, Host/Domain, Port(optional), Path, Query string, Fragment
