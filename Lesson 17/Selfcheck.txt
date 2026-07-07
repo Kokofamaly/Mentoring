@@ -1,0 +1,9 @@
+What is API? What is WebAPI? 
+
+What is the difference between ASP.NET Core MVC and ASP.NET Core Web API? 
+
+What does RESTful mean? Are there any constraints?  
+
+What is considered as a resource in REST API? 
+
+For what tasks PATCH method could be used in a RESTful world? 
