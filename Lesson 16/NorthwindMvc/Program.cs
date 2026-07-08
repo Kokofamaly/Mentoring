@@ -6,7 +6,7 @@ string connectionString = "Data Source=(localdb)\\\\MSSQLLocalDB;Initial Catalog
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connectionString));
-);
+
 
 var app = builder.Build();
 
