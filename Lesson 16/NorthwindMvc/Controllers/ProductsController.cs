@@ -7,14 +7,23 @@ namespace NorthwindMvc.Controllers
     public class ProductsController : Controller
     {
         private readonly NorthwindContext _context;
-        public ProductsController(NorthwindContext context)
+        private readonly IConfiguration _configuration;
+        public ProductsController(NorthwindContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         public IActionResult Index()
         {
-            var products = _context.Products.Include(s => s.Supplier).Include(s => s.Category).ToList();
-            return View(products);
+            int maxShownProducts = _configuration.GetValue<int>("MaxShownProducts");
+
+            var productsQuery = _context.Products.Include(s => s.Supplier).Include(s => s.Category);
+            if (maxShownProducts > 0) { 
+                var productsLimited = productsQuery.Take(maxShownProducts).ToList();
+                return View(productsLimited);
+            }
+            var productsAll = productsQuery.ToList();
+            return View(productsAll);
         }
     }
 }
