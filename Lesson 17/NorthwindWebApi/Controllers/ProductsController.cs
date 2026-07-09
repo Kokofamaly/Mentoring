@@ -13,12 +13,21 @@ public class ProductsController : ControllerBase
         _context = context;
     }
 
-    // GET: api/Product
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProductResponseDto>>> GetProduct()
+    public async Task<ActionResult<IEnumerable<ProductResponseDto>>> GetProduct([FromQuery] ProductQueryParams queryParams)
     {
-        return await _context.Products.Select(p => 
-            new ProductResponseDto { 
+        if (queryParams.PageNumber < 1) queryParams.PageNumber = 1;
+        if(queryParams.PageSize < 1 || queryParams.PageSize > 100) queryParams.PageSize = 10;
+        
+        var productsQuery = _context.Products.AsQueryable();
+
+        if(queryParams.CategoryIdFilter.HasValue && queryParams.CategoryIdFilter > 0) productsQuery = productsQuery.Where(p => p.CategoryId == queryParams.CategoryIdFilter);
+
+        
+        var productsDto = await productsQuery.OrderBy(p => p.ProductId).Skip(queryParams.PageSize * (queryParams.PageNumber - 1)).Take(queryParams.PageSize).Select(p =>
+            new ProductResponseDto
+            {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 QuantityPerUnit = p.QuantityPerUnit,
@@ -29,7 +38,9 @@ public class ProductsController : ControllerBase
                 Discontinued = p.Discontinued,
                 SupplierName = p.Supplier != null ? p.Supplier.CompanyName : "Unknown",
                 CategoryName = p.Category != null ? p.Category.CategoryName : "No Category"
-        }).ToListAsync();
+            }).ToListAsync();
+
+        return Ok(productsDto);
     }
 
     // GET: api/Product/5
