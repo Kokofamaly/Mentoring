@@ -12,30 +12,28 @@ try
 {
     var response = await client.GetAsync("api/products");
 
-    if (response.IsSuccessStatusCode)
+    response.EnsureSuccessStatusCode();
+
+    var prods = await response.Content.ReadFromJsonAsync<IEnumerable<ProductModel>>();
+    
+    if(prods == null || !prods.Any()) return;
+
+    foreach(var p in prods)
     {
-        var prods = await response.Content.ReadFromJsonAsync<IEnumerable<ProductModel>>();
-        foreach(var p in prods)
-        {
-            Console.WriteLine(p.ProductName);
-        }
-
-        var prod = prods.FirstOrDefault();
-
-        if (prod == null) return;
-
-        prod.ProductName = prod.ProductName.Replace("- old", "- updated");
-
-        response = await client.PutAsJsonAsync("api/products/" + prod.ProductId, prod);
-        
-        Console.WriteLine(response.StatusCode);
-
-        var updatedProd = await (await client.GetAsync($"api/products/{prod.ProductId}")).Content.ReadFromJsonAsync<ProductModel>();
-
-        Console.WriteLine(updatedProd?.ProductName);
-
-
+        Console.WriteLine(p.ProductName);
     }
+
+    var prodToUpdate = prods.First();
+
+    prodToUpdate.ProductName = "Updated Name";
+
+    var updateResponse = await client.PutAsJsonAsync("api/products/" + prodToUpdate.ProductId, prodToUpdate);
+    
+    updateResponse.EnsureSuccessStatusCode();
+
+    var updatedProd = await client.GetFromJsonAsync<ProductModel>($"api/products/{prodToUpdate.ProductId}");
+
+    Console.WriteLine(updatedProd?.ProductName);
 }
 catch(Exception ex)
 {
