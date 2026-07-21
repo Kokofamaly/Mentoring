@@ -1,7 +1,17 @@
 What is the difference between ASP.NET Core and ASP.NET Core MVC? 
+    ASP.NET Core is the web framework for building web apps, APIs, and services.
+    ASP.NET Core MVC is a framework within ASP.NET Core that implements the Model-View-Controller pattern for building web applications
 
 What is MVC? What are the responsibilities  of the models, views, and controllers? 
+    MVC (Model-View-Controller) is an architectural pattern that separates an application into three parts:
+    Model – stores data and business logic.
+    View – displays the UI to the user.
+    Controller – handles requests, processes input, interacts with the model, and returns a view or response.
 
 What is middleware in ASP.NET Core MVC? Is it possible to create your own middleware? 
+    Middleware is software that processes HTTP requests and responses in the application's request pipeline.
+    Yes, you can create custom middleware by implementing a class with an Invoke or InvokeAsync method.
 
 How to validate models in ASP.NET Core MVC?  
+    Use Data Annotations on model properties.
+    Check ModelState.IsValid in the controller before processing the data.
