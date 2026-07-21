@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="../../../../../../Desktop/Mentorstvo/Lesson 16/NorthwindDb/NorthwindDb.sqlproj" Id="391c8588-200f-4104-814b-86a7a4c5250b">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="../NorthwindMvc/NorthwindMvc.csproj" Id="8ed42a37-40a2-42cb-a74e-0d361393a156" />
+</Solution>

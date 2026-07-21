@@ -1,0 +1,15 @@
+﻿@model IEnumerable<NorthwindMvc.Models.Category>
+@{
+    ViewData["Title"] = "Categories List";
+}
+
+<div>
+    <h1>Categories</h1>
+</div>
+
+<ul>
+    @foreach(var item in Model)
+    {
+        <li><strong>@item.CategoryId. @item.CategoryName:</strong> @item.Description</li>
+    }
+</ul>

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<NorthwindMvc.Models.Product>
+@{
+    ViewData["Title"] = "Products";
+}
+<div>
+    <h1>Products</h1>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Product Name</th>
+            <th>Category Name</th>
+            <th>Supplier Name</th>
+            <th>Qty Per Unit</th>
+            <th>Unit Price</th>
+            <th>In Stock</th>
+            <th>On Order</th>
+            <th>Reorder Level</th>
+            <th>Discontinued</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductId</td>
+                <td>@item.ProductName</td>
+                <td>@(item.Category.CategoryName ?? "No Category")</td>
+                <td>@(item.Supplier.CompanyName ?? "Unknown")</td>
+                <td>@item.QuantityPerUnit</td>
+                <td>@item.UnitPrice</td>
+                <td>@item.UnitsInStock</td>
+                <td>@item.UnitsOnOrder</td>
+                <td>@item.ReorderLevel</td>
+                <td>@item.Discontinued</td>
+            </tr>
+        }
+    </tbody>
+</table>
