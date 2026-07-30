@@ -41,6 +41,7 @@ namespace NorthwindMvc.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Update(int id, Product product) {
             if(id != product.ProductId) return BadRequest();
 
@@ -67,13 +68,27 @@ namespace NorthwindMvc.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Product product) {
             if (!ModelState.IsValid)
             {
                 PopulateDropDowns(product);
                 return View(product);
             }
-            _context.Products.Add(product);
+
+            var productToAdd = new Product { 
+                ProductName = product.ProductName,
+                SupplierId = product.SupplierId,
+                CategoryId = product.CategoryId,
+                QuantityPerUnit = product.QuantityPerUnit,
+                UnitPrice = product.UnitPrice,
+                UnitsInStock = product.UnitsInStock,
+                UnitsOnOrder = product.UnitsOnOrder,
+                ReorderLevel = product.ReorderLevel,
+                Discontinued = product.Discontinued
+                        };
+
+            _context.Products.Add(productToAdd);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
