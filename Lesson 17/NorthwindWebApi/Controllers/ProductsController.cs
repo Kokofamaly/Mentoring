@@ -27,8 +27,8 @@ public class ProductsController : ControllerBase
                 UnitsOnOrder = p.UnitsOnOrder,
                 ReorderLevel = p.ReorderLevel,
                 Discontinued = p.Discontinued,
-                SupplierName = p.Supplier != null ? p.Supplier.CompanyName : "Unknown",
-                CategoryName = p.Category != null ? p.Category.CategoryName : "No Category"
+                SupplierName = p.Supplier != null ? p.Supplier.CompanyName : null,
+                CategoryName = p.Category != null ? p.Category.CategoryName : null
         }).ToListAsync();
     }
 
@@ -47,8 +47,8 @@ public class ProductsController : ControllerBase
                 UnitsOnOrder = p.UnitsOnOrder,
                 ReorderLevel = p.ReorderLevel,
                 Discontinued = p.Discontinued,
-                SupplierName = p.Supplier != null ? p.Supplier.CompanyName : "Unknown",
-                CategoryName = p.Category != null ? p.Category.CategoryName : "No Category"
+                SupplierName = p.Supplier != null ? p.Supplier.CompanyName : null,
+                CategoryName = p.Category != null ? p.Category.CategoryName : null
             }).SingleOrDefaultAsync();
 
         if (productDto == null)
@@ -66,6 +66,10 @@ public class ProductsController : ControllerBase
     {
         if (productid != updateProduct.ProductId) return BadRequest("Id mismatch");
 
+        var product = await _context.Products.FindAsync(productid);
+
+        if (product == null) return NotFound();
+
         if (updateProduct.SupplierId.HasValue && !await _context.Suppliers.AnyAsync(s => s.SupplierId == updateProduct.SupplierId))
         {
             return BadRequest("Supplier does not exist");
@@ -74,10 +78,6 @@ public class ProductsController : ControllerBase
         {
             return BadRequest("Category does not exist");
         }
-
-        var product = await _context.Products.FindAsync(productid);
-
-        if (product == null) return NotFound();
 
         product.ProductName = updateProduct.ProductName;
         product.SupplierId = updateProduct.SupplierId;
@@ -135,8 +135,8 @@ public class ProductsController : ControllerBase
                 UnitsOnOrder = p.UnitsOnOrder,
                 ReorderLevel = p.ReorderLevel,
                 Discontinued = p.Discontinued,
-                SupplierName = p.Supplier != null ? p.Supplier.CompanyName : "Unknown",
-                CategoryName = p.Category != null ? p.Category.CategoryName : "No Category"
+                SupplierName = p.Supplier != null ? p.Supplier.CompanyName : null,
+                CategoryName = p.Category != null ? p.Category.CategoryName : null
             })
             .SingleOrDefaultAsync();
 
