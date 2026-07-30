@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using NorthwindMvc;
 using NorthwindMvc.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-string connectionString = builder.Configuration.GetConnectionString("NorthwindConnection");
+string connectionString = builder.Configuration.GetConnectionString("NorthwindConnection") ?? throw new InvalidOperationException("Connection string 'NorthwindConnection' not found.");
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connectionString));
+builder.Services.Configure<AppSettings>(builder.Configuration);
 
 
 var app = builder.Build();

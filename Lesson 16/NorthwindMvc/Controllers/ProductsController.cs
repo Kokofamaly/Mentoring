@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using NorthwindMvc.Models;
 
 namespace NorthwindMvc.Controllers
@@ -7,23 +8,21 @@ namespace NorthwindMvc.Controllers
     public class ProductsController : Controller
     {
         private readonly NorthwindContext _context;
-        private readonly IConfiguration _configuration;
-        public ProductsController(NorthwindContext context, IConfiguration configuration)
+        private readonly AppSettings _settings;
+        public ProductsController(NorthwindContext context, IOptions<AppSettings> options)
         {
             _context = context;
-            _configuration = configuration;
+            _settings = options.Value;
         }
         public IActionResult Index()
         {
-            int maxShownProducts = _configuration.GetValue<int>("MaxShownProducts");
+            int maxShownProducts = _settings.MaxShownProducts;
+
 
             var productsQuery = _context.Products.Include(s => s.Supplier).Include(s => s.Category);
-            if (maxShownProducts > 0) { 
-                var productsLimited = productsQuery.Take(maxShownProducts).ToList();
-                return View(productsLimited);
-            }
-            var productsAll = productsQuery.ToList();
-            return View(productsAll);
+            var products = maxShownProducts > 0 ? productsQuery.Take(maxShownProducts).ToList() : productsQuery.ToList();
+
+            return View(products);
         }
     }
 }
