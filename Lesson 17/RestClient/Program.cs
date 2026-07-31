@@ -18,22 +18,40 @@ try
     
     if(prods == null || !prods.Any()) return;
 
+
     foreach(var p in prods)
     {
-        Console.WriteLine(p.ProductName);
+        Console.WriteLine("Product name \t---->\t" + p.ProductName + "\n");
     }
 
-    var prodToUpdate = prods.First();
+    var prodToUpdate = prods.Select(p => new ProductUpdateModel
+    {
+        ProductId = p.ProductId,
+        ProductName = p.ProductName,
+        SupplierId = null,
+        CategoryId = null,
+        QuantityPerUnit = p.QuantityPerUnit,
+        UnitPrice = p.UnitPrice,
+        UnitsInStock = p.UnitsInStock,
+        UnitsOnOrder = p.UnitsOnOrder,
+        ReorderLevel = p.ReorderLevel,
+        Discontinued = p.Discontinued
+    }).FirstOrDefault();
 
-    prodToUpdate.ProductName = "Updated Name";
+    if (prodToUpdate == null) return;
 
-    var updateResponse = await client.PutAsJsonAsync("api/products/" + prodToUpdate.ProductId, prodToUpdate);
-    
-    updateResponse.EnsureSuccessStatusCode();
+        
 
-    var updatedProd = await client.GetFromJsonAsync<ProductModel>($"api/products/{prodToUpdate.ProductId}");
+    prodToUpdate.ProductName = Guid.NewGuid().ToString();
 
-    Console.WriteLine(updatedProd?.ProductName);
+    response = await client.PutAsJsonAsync("api/products/" + prodToUpdate.ProductId, prodToUpdate);
+        
+    var updatedProd = await (await client.GetAsync($"api/products/{prodToUpdate.ProductId}")).Content.ReadFromJsonAsync<ProductModel>();
+
+    Console.WriteLine("Updated Product name \t---->\t" + updatedProd?.ProductName + "\n\n");
+
+
+
 }
 catch(Exception ex)
 {

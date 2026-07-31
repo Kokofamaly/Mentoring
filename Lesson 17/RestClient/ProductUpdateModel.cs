@@ -4,11 +4,15 @@ using System.Text;
 
 namespace RestClient
 {
-    public class ProductModel
+    public class ProductUpdateModel
     {
         public int ProductId { get; set; }
 
         public string ProductName { get; set; } = null!;
+
+        public int? SupplierId { get; set; }
+
+        public int? CategoryId { get; set; }
 
         public string? QuantityPerUnit { get; set; }
 
@@ -21,7 +25,5 @@ namespace RestClient
         public short? ReorderLevel { get; set; }
 
         public bool Discontinued { get; set; }
-        public string? SupplierName { get; set; }
-        public string? CategoryName { get; set; }
     }
 }
