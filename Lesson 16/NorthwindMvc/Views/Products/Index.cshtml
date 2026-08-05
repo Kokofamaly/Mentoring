@@ -2,8 +2,14 @@
 @{
     ViewData["Title"] = "Products";
 }
-<div>
-    <h1>Products</h1>
+<h1>Products</h1>
+
+<div class="mb-3">
+    <a class="btn btn-primary"
+       asp-controller="Products"
+       asp-action="Create">
+        Create Product
+    </a>
 </div>
 
 <table class="table table-striped">
@@ -19,6 +25,7 @@
             <th>On Order</th>
             <th>Reorder Level</th>
             <th>Discontinued</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -27,14 +34,18 @@
             <tr>
                 <td>@item.ProductId</td>
                 <td>@item.ProductName</td>
-                <td>@(item.Category.CategoryName ?? "No Category")</td>
-                <td>@(item.Supplier.CompanyName ?? "Unknown")</td>
+                <td>@(item.Category?.CategoryName ?? "No Category")</td>
+                <td>@(item.Supplier?.CompanyName ?? "Unknown")</td>
                 <td>@item.QuantityPerUnit</td>
                 <td>@item.UnitPrice</td>
                 <td>@item.UnitsInStock</td>
                 <td>@item.UnitsOnOrder</td>
                 <td>@item.ReorderLevel</td>
                 <td>@item.Discontinued</td>
+                <td>
+                    <a asp-action="Update" asp-route-id="@item.ProductId" class="btn btn-sm btn-secondary">Edit Product</a>
+
+                </td>
             </tr>
         }
     </tbody>
