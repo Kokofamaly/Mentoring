@@ -34,8 +34,8 @@
             <tr>
                 <td>@item.ProductId</td>
                 <td>@item.ProductName</td>
-                <td>@(item.Category.CategoryName ?? "No Category")</td>
-                <td>@(item.Supplier.CompanyName ?? "Unknown")</td>
+                <td>@(item.Category?.CategoryName ?? "No Category")</td>
+                <td>@(item.Supplier?.CompanyName ?? "Unknown")</td>
                 <td>@item.QuantityPerUnit</td>
                 <td>@item.UnitPrice</td>
                 <td>@item.UnitsInStock</td>
