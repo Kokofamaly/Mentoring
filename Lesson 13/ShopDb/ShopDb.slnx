@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="../ShopSystem.Tests/ShopSystem.Tests.csproj" />
+  <Project Path="../ShopSystem/ShopSystem.csproj" />
+  <Project Path="ShopDb.sqlproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>
