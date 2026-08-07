@@ -1,9 +1,19 @@
 using System.IO;
+using FileSystemProject.Task2;
 
 public class FileSystemVisitor
 {
+    private bool _abort;
+    public event EventHandler? Started;
+    public event EventHandler? Finished;
+    public event EventHandler<FileSystemVisitorEventArgs>? DirectoryFound;
+    public event EventHandler<FileSystemVisitorEventArgs>? FileFound;
+    public event EventHandler<FileSystemVisitorEventArgs>? FilteredDirectoryFound;
+    public event EventHandler<FileSystemVisitorEventArgs>? FilteredFileFound;
+
     private Predicate<FileSystemInfo> _filter;
     private DirectoryInfo _directoryInfo;
+
     public FileSystemVisitor()
     {
         _directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
@@ -16,29 +26,78 @@ public class FileSystemVisitor
         _filter = fs => true;
     }
 
+    public FileSystemVisitor(Predicate<FileSystemInfo> filter)
+    {
+        
+        _directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
+        _filter = filter;
+    }
     public FileSystemVisitor(string path, Predicate<FileSystemInfo> filter)
     {
+        
         _directoryInfo = new DirectoryInfo(path);
         _filter = filter;
     }
 
     public IEnumerable<FileSystemInfo> Traverse(DirectoryInfo currentDirectory = null!)
     {
-        if(currentDirectory == null) 
-            currentDirectory = _directoryInfo;
+        if(currentDirectory == null) currentDirectory = _directoryInfo;
+
+        Started?.Invoke(this, EventArgs.Empty);
+
+        foreach(var fs in TraverseInternal(currentDirectory)){
+            if(_abort) yield break;
+            yield return fs;
+        }
+
+        Finished?.Invoke(this, EventArgs.Empty);
+
+    }
+
+
+
+    private IEnumerable<FileSystemInfo> TraverseInternal(DirectoryInfo currentDirectory)
+    {
         
         foreach(var fs in currentDirectory.GetFileSystemInfos())
         {
-            if(_filter(fs)) 
-                yield return fs;
+            FileSystemVisitorEventArgs args = new FileSystemVisitorEventArgs(fs);
+
+            if(fs is DirectoryInfo)
+                DirectoryFound?.Invoke(this, args);
+            else
+                FileFound?.Invoke(this, args);
+
+            if(_filter(fs))
+            {
+                if(fs is DirectoryInfo)
+                    FilteredDirectoryFound?.Invoke(this, args);
+                else
+                    FilteredFileFound?.Invoke(this, args);
+
+                if(!args.Exclude)
+                    yield return fs;
+
+                if(args.Abort)
+                    _abort = true;
+                    
+                if(_abort)
+                {
+                    yield break;
+                }
+            }
             
             if(fs is DirectoryInfo directory) 
-                foreach(var item in Traverse(directory))
+                foreach(var item in TraverseInternal(directory))
                 {
+                    if(_abort) yield break;
+                    
                     yield return item;
                 }
 
             
         }
+
+
     }
 }
