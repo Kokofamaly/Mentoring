@@ -1,0 +1,47 @@
+What is the purpose of Exception Handling in C#?
+   To handle runtime errors and prevent application crashes.
+
+Can a try block have multiple catch blocks? 
+   Yes, it can handle different exception types.
+
+Describe a flow how exceptions are handled? 
+    The try block executes first. Then the program looks for a matching catch block. 
+    If no matching catch is found, the program moves to the next level up and looks for a catch there.
+    Regardless of whether a catch is found or not, the finally block will execute if it exists.
+
+What is the base class from which all exceptions are derived? 
+   The base class is Exception class.
+
+What is the difference between Exception and Inner Exception? 
+   Exception is current error
+   InnerException is original cause of the error
+
+What is the difference between throw ex; and throw; statements?  
+    Throw rethrows the same exception without changing anything.
+    Throw ex throws the exception again as if it started here.
+
+
+What is the purpose of finally statement? 
+    To cleanup, regardless of whether a code runs successfully or not.
+
+What predefined .NET Exceptions do you know? 
+NullReferenceException
+IndexOutOfRangeException
+ArgumentException
+ArgumentNullException
+ArgumentOutOfRangeException
+InvalidOperationException
+DivideByZeroException
+FormatException
+OverflowException
+OutOfMemoryException
+StackOverflowException
+FileNotFoundException
+DirectoryNotFoundException
+DllNotFoundException
+InvalidCastException
+MulticastNotSupportedException
+UnauthorizedAccessException
+
+Is there a way to create a custom exception?
+   Yes, by creating a class that inherits from Exception.
