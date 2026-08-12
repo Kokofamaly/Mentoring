@@ -1,13 +1,34 @@
 What is JavaScript? What are the advantages of JS? 
+JavaScript is a high-level, interpreted programming language mainly used to make web pages interactive and dynamic.
+Advantages:
+    Fast and lightweight
+    Runs directly in browsers
+    Easy to learn
+    Supports dynamic/interactive web pages
+    Works on both frontend and backend (Node.js)
+    Large ecosystem and community
 
 What are JS data types? 
+String, Number, BigInt, Boolean, Undefined, Null, Symbol, Object
 
 What are the pros of including 'use strict' at the beginning of JS source file? 
+Catches common coding mistakes
+Prevents accidental global variables
+Makes code safer and easier to debug
+Disallows some unsafe/obsolete features
 
 What is variable scope? What are global variables? How are these variables declared? 
+Scope defines where a variable can be accessed.
+Global variables can be accessed from almost anywhere in the program. 
+They can be declared outside functions/blocks using var, let, or const.
 
 What is the difference between == and === operators? 
+'==' – compares values after type conversion
+'===' – compares value and type (strict equality)
 
 What would be the result of 3+2+”7″? 
+"57"
 
 What is the difference between null and undefined in JS? 
+undefined – variable exists but has no assigned value.
+null – represents an intentional empty/no value.
