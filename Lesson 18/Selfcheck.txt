@@ -1,0 +1,13 @@
+What is JavaScript? What are the advantages of JS? 
+
+What are JS data types? 
+
+What are the pros of including 'use strict' at the beginning of JS source file? 
+
+What is variable scope? What are global variables? How are these variables declared? 
+
+What is the difference between == and === operators? 
+
+What would be the result of 3+2+”7″? 
+
+What is the difference between null and undefined in JS? 
