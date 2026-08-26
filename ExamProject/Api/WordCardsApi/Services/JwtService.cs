@@ -3,29 +3,36 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using WordCardsApi.Models;
 using System.Text;
+using Microsoft.Extensions.Options;
+using WordCardsApi.Infrastructure.Settings;
 
 namespace WordCardsApi.Services;
 
 public class JwtService
 {
-
+    private readonly JwtSettings _jwtSettings;
+    public JwtService(IOptions<JwtSettings> jwtSettings)
+    {
+        _jwtSettings = jwtSettings.Value;
+    }
     public string GenerateToken(User user)
     {
         var claims = new List<Claim>
         {
-            
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role)
         };
         
-        var identity = new ClaimsIdentity(claims);
         var credentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)), 
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SignKey)), 
             SecurityAlgorithms.HmacSha256
             );
 
-        var token = JwtSecurityToken(            
-            issuer: issuer,
-            audience: audience,
-            claims: identity.Claims,
+        var token = new JwtSecurityToken(            
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
+            claims: claims,
             expires: DateTime.UtcNow.AddMinutes(15),
             signingCredentials: credentials
         );
@@ -35,4 +42,5 @@ public class JwtService
         return tokenString;
 
     }
+
 }
