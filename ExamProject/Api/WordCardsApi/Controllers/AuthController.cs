@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
 
         if(loggedInUser == null) return NotFound("User does not exist.");
 
-        var userResponse = new UserResponseDto{ Email = loggedInUser.Email};
+        var userResponse = new UserResponseDto{ Email = loggedInUser.Email, Name = loggedInUser.Name };
 
         var accessToken = _jwt.GenerateToken(loggedInUser);
         var result = new { user = userResponse, accessToken = accessToken};
@@ -44,7 +44,7 @@ public class AuthController : ControllerBase
 
         if(createdUser == null) return BadRequest("Failed to register user.");
 
-        var userResponse = new UserResponseDto{ Email = createdUser.Email};
+        var userResponse = new UserResponseDto{ Email = createdUser.Email, Name = createdUser.Name };
 
         var accessToken = _jwt.GenerateToken(createdUser);
         var result = new { user = userResponse, accessToken = accessToken};
