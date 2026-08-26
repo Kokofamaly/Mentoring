@@ -1,9 +1,23 @@
 What is API? What is WebAPI? 
+    API (Application Programming Interface) is a set of rules that allows different applications to communicate.
+    Web API is an API that uses HTTP to enable communication between clients and servers over the web.
 
 What is the difference between ASP.NET Core MVC and ASP.NET Core Web API? 
+    ASP.NET Core MVC is used to build web applications with views (HTML pages).
+    ASP.NET Core Web API is used to build RESTful APIs that return data, usually in JSON, instead of HTML.
 
 What does RESTful mean? Are there any constraints?  
+    RESTful means an API follows the REST architectural style.
+    Main REST constraints:
+    Client-server architecture
+    Stateless communication
+    Cacheable responses
+    Uniform interface
+    Layered system
+    (Optional) Code on demand
 
 What is considered as a resource in REST API? 
+    A resource is any object or data exposed by the API, identified by a unique URI.
 
 For what tasks PATCH method could be used in a RESTful world? 
+    PATCH is used to partially update a resource.
