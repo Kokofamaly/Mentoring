@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using MongoDB.Driver;
 using WordCardsApi.Models;
+using WordCardsApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<AuthService>();
 
 var connectionString = builder.Configuration.GetConnectionString("MongoDb") ?? throw new InvalidConfigurationException("Connection string not found.");
 var mongoClient = new MongoClient(connectionString);
