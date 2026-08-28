@@ -14,4 +14,16 @@ public class LearningSessionProvider
     {
         _sessions = context.LearningSessions;
     }
+
+    public async Task<LearningSession> CreateSessionAsync(LearningSession session)
+    {
+        await _sessions.InsertOneAsync(session);
+        return session;
+    }
+
+    public async Task<LearningSession?> GetSessionAsync(string sessionId, string userId) 
+    => await _sessions.Find(s => s.Id == sessionId && s.UserId == userId).FirstOrDefaultAsync();
+
+    public async Task DeleteSessionAsync(string sessionId, string userId) 
+    => await _sessions.DeleteOneAsync(s => s.Id == sessionId && s.UserId == userId);
 }

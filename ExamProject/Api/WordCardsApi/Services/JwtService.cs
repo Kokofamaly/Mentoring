@@ -5,16 +5,22 @@ using WordCardsApi.Models;
 using System.Text;
 using Microsoft.Extensions.Options;
 using WordCardsApi.Infrastructure.Settings;
+using WordCardsApi.Infrastructure.Providers;
 
 namespace WordCardsApi.Services;
 
 public class JwtService
 {
     private readonly JwtSettings _jwtSettings;
-    public JwtService(IOptions<JwtSettings> jwtSettings)
+    private readonly UserProvider _userProvider;
+    public JwtService(IOptions<JwtSettings> jwtSettings, UserProvider userProvider)
     {
         _jwtSettings = jwtSettings.Value;
+        _userProvider = userProvider;
     }
+
+    public async Task<string> GenerateToken(string userId) 
+    => GenerateToken((await _userProvider.GetUserByIdAsync(userId))!);
     public string GenerateToken(User user)
     {
         var claims = new List<Claim>

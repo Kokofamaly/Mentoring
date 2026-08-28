@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -12,27 +13,34 @@ public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;
     private readonly JwtService _jwt;
+    private readonly ILogger<AuthController> _logger;
+    private readonly RefreshTokenService _refreshTokenService;
 
-
-    public AuthController(AuthService authService, JwtService jwt)
+    public AuthController(AuthService authService, JwtService jwt, ILogger<AuthController> logger, RefreshTokenService refreshTokenService)
     {
         _authService = authService;
         _jwt = jwt;
+        _logger = logger;
+        _refreshTokenService = refreshTokenService;
     }
 
     [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login(UserLoginDto userLoginDto)
     {
-        var loggedInUser = await _authService.LoginUserAsync(userLoginDto);
-
-        if(loggedInUser == null) return NotFound("User does not exist.");
-
-        var userResponse = new UserResponseDto{ Email = loggedInUser.Email, Name = loggedInUser.Name };
-
-        var accessToken = _jwt.GenerateToken(loggedInUser);
-        var result = new { user = userResponse, accessToken = accessToken};
+        var userToLogin = await _authService.LoginUserAsync(userLoginDto);
         
+        if(userToLogin == null) return BadRequest("Failed to login");
+
+        var userResponse = new UserResponseDto{ Email = userToLogin.Email, Name = userToLogin.Name };
+
+        var refreshToken = await _refreshTokenService.GenerateTokenAsync(userToLogin.Id);
+        SetRefreshTokenCookies(refreshToken);
+
+        var accessToken = _jwt.GenerateToken(userToLogin);
+        var result = new { user = userResponse, accessToken = accessToken};
+
+        _logger.LogInformation($"{userToLogin.Email}:{userToLogin.Id} logged in.");
         return Ok(result);
     }
 
@@ -46,6 +54,9 @@ public class AuthController : ControllerBase
 
         var userResponse = new UserResponseDto{ Email = createdUser.Email, Name = createdUser.Name };
 
+        var refreshToken = await _refreshTokenService.GenerateTokenAsync(createdUser.Id);
+        SetRefreshTokenCookies(refreshToken);
+        
         var accessToken = _jwt.GenerateToken(createdUser);
         var result = new { user = userResponse, accessToken = accessToken};
 
@@ -54,14 +65,38 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("refresh")]
-    public async Task<IActionResult> RefreshToken()
+    public async Task<IActionResult> RefreshAccessToken()
     {
-        var refreshToken = HttpContext.Request.Cookies["refreshToken"];
+        if(!HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken)) return Unauthorized();
+
+        var token = await _refreshTokenService.ValidateTokenAsync(refreshToken);
+
+        if(token == null) return Unauthorized();
+
+        var accessToken = _jwt.GenerateToken(token.UserId);
+
+        return Ok(new {accessToken = accessToken});
     }
 
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
+        if(HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken)) 
+            await _refreshTokenService.RevokeTokenAsync(refreshToken);
         
+        Response.Cookies.Delete("refreshToken");
+
+        return NoContent();
+    }
+
+    private void SetRefreshTokenCookies(string refreshToken)
+    {
+        Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTimeOffset.UtcNow.AddDays(30)
+        });
     }
 }

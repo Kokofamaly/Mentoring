@@ -18,4 +18,6 @@ public class MongoDbContext
     public IMongoCollection<User> Users => _database.GetCollection<User>("users");
     public IMongoCollection<UserWord> UserWords => _database.GetCollection<UserWord>("userWords");
     public IMongoCollection<LearningSession> LearningSessions => _database.GetCollection<LearningSession>("learningSessions");
+    public IMongoCollection<RefreshToken> RefreshTokens => _database.GetCollection<RefreshToken>("refreshTokens");
+    public IMongoCollection<SessionWord> SessionWords => _database.GetCollection<SessionWord>("sessionWords");
 }

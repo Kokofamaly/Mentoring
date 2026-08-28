@@ -14,4 +14,26 @@ public class UserProvider
     {
         _users = context.Users;
     }
+
+    public async Task<User?> GetUserAsync(string email)
+    => await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
+     public async Task<User?> GetUserByIdAsync(string id)
+    => await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
+    
+
+    public async Task<User> CreateUserAsync(User user)
+    {
+        await _users.InsertOneAsync(user);
+        return user;
+    }
+
+    public async Task<User> UpdateUserAsync(User updatedUser)
+    {
+        // TODO;
+    }
+    public async Task DeleteUserAsync(string userId)
+    => await _users.DeleteOneAsync(u => u.Id == userId);
+    
+
+
 }

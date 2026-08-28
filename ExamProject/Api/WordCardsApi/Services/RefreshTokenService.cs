@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using WordCardsApi.Infrastructure.Providers;
 using WordCardsApi.Models;
 
@@ -11,25 +13,47 @@ public class RefreshTokenService
         _refreshProvider = refreshProvider;
     }
 
-    public async Task<string> GenerateTokenAsync()
+    public async Task<string> GenerateTokenAsync(string userId)
     {
-        string refreshToken;
+        var bytes = RandomNumberGenerator.GetBytes(32);
+        var token = Convert.ToBase64String(bytes);
 
-        return refreshToken;
+        var hashedToken = HashToken(token);
+        var refreshToken = new RefreshToken
+        {
+            HashedToken = hashedToken,
+            UserId = userId,
+            CreatedAt = DateTimeOffset.UtcNow,
+            ExpiresAt = DateTimeOffset.UtcNow.AddDays(30)
+        };
+
+        await _refreshProvider.CreateTokenAsync(refreshToken);
+
+        return token;
     }
 
-    public async Task<bool> ValidateTokenAsync(string providedToken)
+    public async Task<RefreshToken?> ValidateTokenAsync(string providedToken)
     {
-        var actualToken = await _refreshProvider.GetTokenAsync(providedToken);
+        var hashedProvidedToken = HashToken(providedToken);
+        var token = await _refreshProvider.GetTokenAsync(hashedProvidedToken);
 
-        if(actualToken == null) return false;
+        if(token == null || token.IsExpired || token.IsRevoked) return null;
         
-        return providedToken == actualToken.Token;
+        return token;
     }
 
     public async Task RevokeTokenAsync(string providedToken)
     {
-        
+        var hashedProvidedToken = HashToken(providedToken);
+        await _refreshProvider.RevokeTokenAsync(hashedProvidedToken);
+    }
+
+    private string HashToken(string token)
+    {
+        var bytes = Encoding.UTF8.GetBytes(token);
+        var hash = SHA256.HashData(bytes);
+
+        return Convert.ToBase64String(hash);
     }
 
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using WordCardsApi.DTOs;
+using WordCardsApi.Infrastructure.Providers;
 using WordCardsApi.Models;
 
 namespace WordCardsApi.Services;
@@ -7,27 +8,31 @@ namespace WordCardsApi.Services;
 public class AuthService
 {
     private readonly IPasswordHasher<User> _hasher;
+    private readonly UserProvider _userProvider;
 
-    public AuthService(IPasswordHasher<User> hasher)
+    public AuthService(IPasswordHasher<User> hasher, UserProvider userProvider)
     {
         _hasher = hasher;
+        _userProvider = userProvider;
     }
 
     public async Task<User?> LoginUserAsync(UserLoginDto userDto)
     {
-        var user 
+        var user = await _userProvider.GetUserAsync(userDto.Email);
+
+        if(user == null) return null;
+
         var passwordVerification = _hasher.VerifyHashedPassword(user, user.HashedPassword, userDto.Password);
 
-        if(passwordVerification == PasswordVerificationResult.Failed){
-
-        }
+        if(passwordVerification == PasswordVerificationResult.Failed) return null;
         
+        return user;
         
     }
 
     public async Task<User?> RegisterUserAsync(UserRegisterDto userDto)
     {
-        var user
+        var user = _userProvider
         var hashedPassword = _hasher.HashPassword(user, userDto.Password);
     }
 }
