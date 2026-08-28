@@ -56,5 +56,12 @@ public class AuthController : ControllerBase
     [HttpPost("refresh")]
     public async Task<IActionResult> RefreshToken()
     {
+        var refreshToken = HttpContext.Request.Cookies["refreshToken"];
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        
     }
 }
