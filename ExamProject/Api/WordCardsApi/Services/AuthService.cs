@@ -32,7 +32,19 @@ public class AuthService
 
     public async Task<User?> RegisterUserAsync(UserRegisterDto userDto)
     {
-        var user = _userProvider
-        var hashedPassword = _hasher.HashPassword(user, userDto.Password);
+        if(userDto == null || String.IsNullOrEmpty(userDto.Name) || String.IsNullOrEmpty(userDto.Email) || String.IsNullOrEmpty(userDto.Password))
+            return null;
+        
+        var userToRegister = new User
+        {
+            Name = userDto.Name,
+            Email = userDto.Email,
+            HashedPassword = string.Empty
+        };
+        userToRegister.HashedPassword = _hasher.HashPassword(userToRegister, userDto.Password);
+        
+
+        return await _userProvider.CreateUserAsync(userToRegister);
+
     }
 }

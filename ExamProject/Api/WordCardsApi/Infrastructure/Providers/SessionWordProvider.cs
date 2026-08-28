@@ -19,4 +19,17 @@ public class SessionWordProvider
         await _sessionWords.InsertManyAsync(sessionWords);
         return sessionWords;
     }
+    public async Task<SessionWord?> SetCorrectAsync(string id, bool isCorrect)
+    => await _sessionWords.FindOneAndUpdateAsync(
+        w => w.Id == id, 
+        Builders<SessionWord>.Update.Set(w => w.isCorrect, isCorrect), 
+        new FindOneAndUpdateOptions<SessionWord>
+        {
+            ReturnDocument = ReturnDocument.After
+        });
+
+    public async Task DeleteSessionWordsAsync(string sessionId)
+    {
+        await _sessionWords.DeleteManyAsync(w => w.SessionId == sessionId);
+    }
 }

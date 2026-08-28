@@ -24,8 +24,8 @@ public class UserWordProvider
     public async Task<IEnumerable<UserWord>> GetUserWordsByUserIdAsync(string userId) 
     => await _userWords.Find(w => w.UserId == userId).ToListAsync();
     
-    public async Task<UserWord?> GetUserWordAsync(string wordId, string userId)
-    => await _userWords.Find(w => w.Id == wordId && w.UserId == userId).FirstOrDefaultAsync();
+    public async Task<UserWord?> GetUserWordAsync(string wordId)
+    => await _userWords.Find(w => w.Id == wordId).FirstOrDefaultAsync();
     
 
     public async Task DeleteUserWordAsync(string wordId, string userId)

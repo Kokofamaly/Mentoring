@@ -10,5 +10,4 @@ public class LearningSession
     public string? Language { get; set; }
     public string? Category { get; set; }
 
-
 }

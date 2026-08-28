@@ -21,12 +21,23 @@ public class LearningSessionService
         if(String.IsNullOrEmpty(userId)) return null;
 
         var words = await _userWordProvider.GetUserWordsByUserIdAsync(userId);
-        var selectedWords = words.Where(w => w.DifficultyLevel > 0).OrderBy(_ => Random.Shared.Next()).Take(100).ToList();
+        var selectedWordsQuery = words.Where(w => w.DifficultyLevel > 0);
+
+        if(category != null) selectedWordsQuery = selectedWordsQuery.Where(w => w.Category == category);
+        if(language != null) selectedWordsQuery = selectedWordsQuery.Where(w => w.Language == language);
+
+        var selectedWords = selectedWordsQuery.OrderBy(_ => Random.Shared.Next()).Take(100).ToList();
 
         if(selectedWords.Count < 100)
         {
-            var toTake = 100 - selectedWords.Count();
-            var remainingWords = words.Where(w => w.DifficultyLevel == 0).OrderBy(_ => Random.Shared.Next()).Take(toTake);
+            var toTake = 100 - selectedWords.Count;
+            var remainingWordsQuery = words.Where(w => w.DifficultyLevel == 0);
+
+            if(category != null) remainingWordsQuery = remainingWordsQuery.Where(w => w.Category == category);
+            if(language != null) remainingWordsQuery = remainingWordsQuery.Where(w => w.Language == language);
+
+            var remainingWords = remainingWordsQuery.OrderBy(_ => Random.Shared.Next()).Take(toTake);
+
             selectedWords.AddRange(remainingWords);
         }
 
@@ -43,5 +54,15 @@ public class LearningSessionService
         await _sessionWordProvider.CreateSessionWordsAsync(selectedWords, result.Id);
         
         return result;
+    }
+
+    public async Task<LearningSession?> GetLearningSessionAsync(string sessionId)
+    => await _learningSessionProvider.GetSessionAsync(sessionId);
+    
+    public async Task DeleteSessionAsync(LearningSession session)
+    {
+        await _learningSessionProvider.DeleteSessionAsync(session.Id, session.UserId);
+        await _sessionWordProvider.DeleteSessionWordsAsync(session.Id);
+        
     }
 }
