@@ -1,5 +1,9 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Protocols.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using WordCardsApi.Infrastructure.Data;
 using WordCardsApi.Infrastructure.Providers;
@@ -28,6 +32,43 @@ builder.Services.AddScoped<SessionWordProvider>();
 builder.Services.AddScoped<UserProvider>();
 builder.Services.AddScoped<UserWordProvider>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", 
+    policy => 
+        policy
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
+
+    var jwtSettings = builder.Configuration
+        .GetSection("JwtSettings")
+        .Get<JwtSettings>()!;
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SignKey)),
+            ClockSkew = TimeSpan.FromSeconds(30),
+            
+            
+    };
+
+
+});
+builder.Services.AddAuthorizationBuilder()
+.AddPolicy("UserOnly", p => p.RequireRole("User"))
+.SetFallbackPolicy(new AuthorizationPolicyBuilder()
+.RequireAuthenticatedUser()
+.Build());
 
 
 // Add services to the container.
@@ -46,7 +87,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseCors("Frontend");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
