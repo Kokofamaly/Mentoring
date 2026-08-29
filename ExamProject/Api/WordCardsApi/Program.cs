@@ -20,6 +20,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<LearningSessionService>();
 builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<UserWordService>();
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddScoped<LearningSessionProvider>();
 builder.Services.AddScoped<RefreshTokenProvider>();
@@ -49,5 +50,10 @@ app.UseAuthorization();
 app.UseAuthorization();
 
 app.MapControllers();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapGet("/users", async (MongoDbContext context) => await context.Users.Find(x => true).ToListAsync()).AllowAnonymous();
+}
 
 app.Run();

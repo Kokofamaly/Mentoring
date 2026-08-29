@@ -1,22 +1,13 @@
-using System.ComponentModel.DataAnnotations;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
-namespace WordCardsApi.Models;
+namespace WordCardsApi.DTOs;
 
-public class SessionWord
+public class SessionWordResponseDto
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
-    [Required]
     public string SessionId { get; set; }
-    [Required]
     public string UserWordId { get; set; }
     public bool? isCorrect { get; set; }
-    [Required]
     public string Word { get; set; }
-    [Required]
     public string Translation { get; set; }
     public string? UsageExample { get; set; }
 }

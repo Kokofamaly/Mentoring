@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WordCardsApi.DTOs;
 using WordCardsApi.Models;
 using WordCardsApi.Services;
+using WordCardsApi.Infrastructure.Providers;
 
 namespace WordCardsApi.Controllers;
 
@@ -11,9 +12,13 @@ namespace WordCardsApi.Controllers;
 public class LearningSessionController : ControllerBase
 {
     private readonly LearningSessionService _learningSessionService;
-    public LearningSessionController(LearningSessionService learningSessionService)
+    private readonly SessionWordProvider _sessionWordProvider;
+    private readonly UserWordService _userWordService;
+    public LearningSessionController(LearningSessionService learningSessionService, SessionWordProvider sessionWordProvider, UserWordService userWordService)
     {
         _learningSessionService = learningSessionService;
+        _sessionWordProvider = sessionWordProvider;
+        _userWordService = userWordService;
     }
 
     [HttpGet]
@@ -41,7 +46,18 @@ public class LearningSessionController : ControllerBase
 
         var sessionDto = MapResponseDto(session);
 
-        return Ok(sessionDto);
+        var sessionWords = await _sessionWordProvider.GetSessionWordsAsync(session.Id);
+        var sessionWordsDto = sessionWords.Select(w => new SessionWordResponseDto
+        {
+            SessionId = w.SessionId,
+            UserWordId = w.UserWordId,
+            isCorrect = w.isCorrect,
+            Word = w.Word,
+            Translation = w.Translation,
+            UsageExample = w.UsageExample
+        });
+
+        return Ok(new {session = sessionDto, words = sessionWordsDto});
 
     }
 
@@ -58,6 +74,21 @@ public class LearningSessionController : ControllerBase
         var sessionDto = MapResponseDto(session);
 
         return Ok(sessionDto);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> SessionWordAnswer(string id, SessionWordAnswerDto answerDto)
+    {
+        if(id != answerDto.SessionId) return BadRequest();
+
+        await _sessionWordProvider.SetCorrectAsync(answerDto.Id, answerDto.isCorrect);
+
+        if(answerDto.isCorrect)
+            await _userWordService.UpUserWordDifficultyLevelAsync(answerDto.UserWordId);
+        else
+            await _userWordService.ResetUserWordDifficultyLevelAsync(answerDto.UserWordId);
+
+        return NoContent();
     }
 
     [HttpDelete("{id}")]

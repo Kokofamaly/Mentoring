@@ -15,7 +15,7 @@ public class SessionWordProvider
 
     public async Task<IEnumerable<SessionWord>> CreateSessionWordsAsync(IEnumerable<UserWord> words, string sessionId)
     {
-        var sessionWords = words.Select(w => new SessionWord{ SessionId = sessionId, UserWordId = w.Id}).ToList();
+        var sessionWords = words.Select(w => new SessionWord{ SessionId = sessionId, UserWordId = w.Id, Translation = w.Translation, Word = w.Word, UsageExample = w.UsageExample}).ToList();
         await _sessionWords.InsertManyAsync(sessionWords);
         return sessionWords;
     }
@@ -27,7 +27,8 @@ public class SessionWordProvider
         {
             ReturnDocument = ReturnDocument.After
         });
-
+    public async Task<IEnumerable<SessionWord>> GetSessionWordsAsync(string sessionId)
+    => await _sessionWords.Find(w => w.SessionId == sessionId).ToListAsync();
     public async Task DeleteSessionWordsAsync(string sessionId)
     {
         await _sessionWords.DeleteManyAsync(w => w.SessionId == sessionId);

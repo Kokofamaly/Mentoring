@@ -32,6 +32,10 @@ public class UserWordProvider
     public async Task DeleteUserWordAsync(string wordId)
     => await _userWords.DeleteOneAsync(w => w.Id == wordId);
     
+    public async Task UpUserWordDifficultyLevelAsync(string wordId)
+    => await _userWords.UpdateOneAsync(w => w.Id == wordId, Builders<UserWord>.Update.Set(w => w.DifficultyLevel, 1));
+    public async Task ResetUserWordDifficultyLevelAsync(string wordId)
+    => await _userWords.UpdateOneAsync(w => w.Id == wordId, Builders<UserWord>.Update.Set(w => w.DifficultyLevel, 0));
 
     public async Task<UserWord?> UpdateUserWordAsync(UserWord oldWord, UserWordUpdateDto newWord)
     {

@@ -44,6 +44,12 @@ public class UserWordService
         return word;
     }
 
+    public async Task UpUserWordDifficultyLevelAsync(string wordId)
+    => await _userWordProvider.UpUserWordDifficultyLevelAsync(wordId);
+
+    public async Task ResetUserWordDifficultyLevelAsync(string wordId) 
+    => await _userWordProvider.ResetUserWordDifficultyLevelAsync(wordId);
+
     public async Task DeleteUserWordAsync(UserWord userWord)
     => await _userWordProvider.DeleteUserWordAsync(userWord.Id);
     

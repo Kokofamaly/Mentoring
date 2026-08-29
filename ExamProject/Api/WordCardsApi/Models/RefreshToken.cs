@@ -1,7 +1,12 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace WordCardsApi.Models;
 
 public class RefreshToken
 {
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
     public string HashedToken { get; set; } = string.Empty;
     public string UserId { get; set; } = string.Empty;
