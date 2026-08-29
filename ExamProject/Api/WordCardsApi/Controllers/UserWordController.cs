@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using WordCardsApi.DTOs;
+using WordCardsApi.Models;
 using WordCardsApi.Services;
 
 namespace WordCardsApi.Controllers;
@@ -25,15 +26,7 @@ public class UserWordController : ControllerBase
 
         if(words == null) return BadRequest();
 
-        var result = words.Select(w => new UserWordResponseDto
-        {
-            Id = w.Id,
-            Word = w.Word,
-            Translation = w.Translation,
-            Language = w.Language,
-            Category = w.Category,
-            UsageExample = w.UsageExample
-        });
+        var result = words.Select(w => MapResponseDto(w));
 
         return Ok(result);
     }
@@ -48,6 +41,8 @@ public class UserWordController : ControllerBase
         if(word == null) return NotFound();
         if(word.UserId != userId) return Forbid();
 
+        var wordResponseDto = MapResponseDto(word);
+
         return Ok(word);
     }
 
@@ -55,10 +50,12 @@ public class UserWordController : ControllerBase
     public async Task<IActionResult> CreateWord(UserWordCreateDto wordCreateDto)
     {
         var userId = GetUserId();
+        
+        if(userId == null) return Unauthorized();
 
-        var word = await _userWordService.CreateUserWordAsync(wordCreateDto, userId!);
-
-        return Ok(word);
+        var word = await _userWordService.CreateUserWordAsync(wordCreateDto, userId);
+        var wordResponseDto = MapResponseDto(word);
+        return Ok(wordResponseDto);
     }
 
     [HttpPut("{id}")]
@@ -90,6 +87,21 @@ public class UserWordController : ControllerBase
     private string? GetUserId()
     {
         return HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+    }
+
+    private UserWordResponseDto MapResponseDto(UserWord word)
+    {
+        var wordDto = new UserWordResponseDto
+        {
+            Id = word.Id,
+            Word = word.Word,
+            Translation = word.Translation,
+            Language = word.Language,
+            Category = word.Category,
+            UsageExample = word.UsageExample
+        };
+
+        return wordDto;
     }
 
 }

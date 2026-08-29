@@ -21,6 +21,8 @@ public class LearningSessionProvider
         return session;
     }
 
+    public async Task<IEnumerable<LearningSession>> GetSessionsByUserIdAsync(string userId)
+    => await _sessions.Find(s => s.UserId == userId).ToListAsync();
     public async Task<LearningSession?> GetSessionAsync(string sessionId) 
     => await _sessions.Find(s => s.Id == sessionId).FirstOrDefaultAsync();
 

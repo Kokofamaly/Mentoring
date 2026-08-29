@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using WordCardsApi.DTOs;
 using WordCardsApi.Infrastructure.Data;
 using WordCardsApi.Infrastructure.Settings;
 using WordCardsApi.Models;
@@ -27,10 +28,18 @@ public class UserProvider
         return user;
     }
 
-    // public async Task<User> UpdateUserAsync(User updatedUser)
-    // {
+    public async Task<User> UpdateUserAsync(UserUpdateDto updatedUser, string userId)
+    {
+        var user = await _users.FindOneAndUpdateAsync(
+            u => u.Id == userId, 
+            Builders<User>.Update
+                .Set(u => u.Email, updatedUser.Email)
+                .Set(u => u.Name, updatedUser.Name), 
+            new FindOneAndUpdateOptions<User>
+                { ReturnDocument = ReturnDocument.After});
         
-    // }
+        return user;
+    }
     public async Task DeleteUserAsync(string userId)
     => await _users.DeleteOneAsync(u => u.Id == userId);
     
