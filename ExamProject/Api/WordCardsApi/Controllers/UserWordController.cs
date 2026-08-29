@@ -70,17 +70,21 @@ public class UserWordController : ControllerBase
         if(updatedWord == null) return BadRequest();
         if(updatedWord.UserId != userId) return Forbid();
 
-        var result = new UserWordResponseDto
-        {
-            Id = updatedWord.Id,
-            Word = updatedWord.Word,
-            Translation = updatedWord.Translation,
-            Language = updatedWord.Language,
-            Category = updatedWord.Category,
-            UsageExample = updatedWord.UsageExample
-        };
+        return NoContent();
+    }
 
-        return Ok(result);
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteWord(string id)
+    {
+        var userId = GetUserId();
+        var word = await _userWordService.GetUserWordAsync(id);
+
+        if(word == null) return NotFound();
+        if(word.UserId != userId) return Forbid();
+
+        await _userWordService.DeleteUserWordAsync(word);
+
+        return NoContent();
     }
 
     private string? GetUserId()
