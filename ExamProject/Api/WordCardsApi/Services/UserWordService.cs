@@ -1,3 +1,4 @@
+using WordCardsApi.DTOs;
 using WordCardsApi.Infrastructure.Providers;
 using WordCardsApi.Models;
 
@@ -12,8 +13,19 @@ public class UserWordService
         _userWordProvider = userWordProvider;
     }
 
-    public async Task<UserWord> CreateUserWordAsync(UserWord userWord)
-    => await _userWordProvider.CreateUserWordAsync(userWord);
+    public async Task<UserWord> CreateUserWordAsync(UserWordCreateDto wordDto, string userId)
+    {
+        var userWord = new UserWord
+        {
+            Word = wordDto.Word,
+            Translation = wordDto.Translation,
+            UserId = userId,
+            Language = wordDto.Language,
+            Category = wordDto.Category,
+            UsageExample = wordDto.UsageExample
+        };
+        return await _userWordProvider.CreateUserWordAsync(userWord);
+    }
 
     public async Task<IEnumerable<UserWord>> GetUserWordsByUserIdAsync(string userId)
     => await _userWordProvider.GetUserWordsByUserIdAsync(userId);
@@ -22,9 +34,13 @@ public class UserWordService
     => await _userWordProvider.GetUserWordAsync(wordId);
 
 
-    public async Task<UserWord?> UpdateUserWordAsync(UserWord oldWord, UserWord updatedWord)
+    public async Task<UserWord?> UpdateUserWordAsync(string wordId, UserWordUpdateDto wordUpdateDto)
     {
-        var word = await _userWordProvider.UpdateUserWordAsync(oldWord, updatedWord);
+        var oldWord = await _userWordProvider.GetUserWordAsync(wordId);
+        
+        if(oldWord == null) return null;
+
+        var word = await _userWordProvider.UpdateUserWordAsync(oldWord, wordUpdateDto);
         return word;
     }
 

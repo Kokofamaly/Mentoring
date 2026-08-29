@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using WordCardsApi.DTOs;
 using WordCardsApi.Infrastructure.Data;
 using WordCardsApi.Infrastructure.Settings;
 using WordCardsApi.Models;
@@ -32,7 +33,7 @@ public class UserWordProvider
     => await _userWords.DeleteOneAsync(w => w.Id == wordId);
     
 
-    public async Task<UserWord?> UpdateUserWordAsync(UserWord oldWord, UserWord newWord)
+    public async Task<UserWord?> UpdateUserWordAsync(UserWord oldWord, UserWordUpdateDto newWord)
     {
         var update = Builders<UserWord>.Update
         .Set(w => w.Word, newWord.Word)
