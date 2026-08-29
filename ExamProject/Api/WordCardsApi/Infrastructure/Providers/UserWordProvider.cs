@@ -28,14 +28,25 @@ public class UserWordProvider
     => await _userWords.Find(w => w.Id == wordId).FirstOrDefaultAsync();
     
 
-    public async Task DeleteUserWordAsync(string wordId, string userId)
-    => await _userWords.DeleteOneAsync(w => w.Id == wordId && w.UserId == userId);
+    public async Task DeleteUserWordAsync(string wordId)
+    => await _userWords.DeleteOneAsync(w => w.Id == wordId);
     
 
-    // public async Task<UserWord> UpdateUserWordAsync(string wordId, UserWord newWord)
-    // {
-    //     newWord.Id = wordId;
-    //     await _userWords.ReplaceOneAsync(w => w.Id == wordId, newWord);
-    //     return newWord;
-    // }
+    public async Task<UserWord?> UpdateUserWordAsync(UserWord oldWord, UserWord newWord)
+    {
+        var update = Builders<UserWord>.Update
+        .Set(w => w.Word, newWord.Word)
+        .Set(w => w.Translation, newWord.Translation)
+        .Set(w => w.Language, newWord.Language)
+        .Set(w => w.Category, newWord.Category)
+        .Set(w => w.UsageExample, newWord.UsageExample);
+
+        var result = await _userWords.FindOneAndUpdateAsync(
+            w => w.Id == oldWord.Id, 
+            update, 
+            new FindOneAndUpdateOptions<UserWord>
+            { ReturnDocument = ReturnDocument.After});
+        
+        return result;
+    }
 }
