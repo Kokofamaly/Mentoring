@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
+import {type User} from './UserContext'
 
-function Login(){
+
+interface LoginProps {
+  setUser: (user: User | null) => void;
+}
+
+export function Login({setUser} : LoginProps){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     
     function handleLogin(e : React.SubmitEvent){
         e.preventDefault();
-        
     }
 
     return(<>
