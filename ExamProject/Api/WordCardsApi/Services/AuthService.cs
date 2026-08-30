@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Identity;
+using MongoDB.Driver;
+using WordCardsApi.CustomExceptions;
 using WordCardsApi.DTOs;
 using WordCardsApi.Infrastructure.Providers;
 using WordCardsApi.Models;
@@ -32,19 +34,26 @@ public class AuthService
 
     public async Task<User?> RegisterUserAsync(UserRegisterDto userDto)
     {
-        if(userDto == null || String.IsNullOrEmpty(userDto.Name) || String.IsNullOrEmpty(userDto.Email) || String.IsNullOrEmpty(userDto.Password))
-            return null;
-        
-        var userToRegister = new User
+        try{
+            if(userDto == null || String.IsNullOrEmpty(userDto.Name) || String.IsNullOrEmpty(userDto.Email) || String.IsNullOrEmpty(userDto.Password))
+                return null;
+            
+            var userToRegister = new User
+            {
+                Name = userDto.Name,
+                Email = userDto.Email,
+                HashedPassword = string.Empty
+            };
+            userToRegister.HashedPassword = _hasher.HashPassword(userToRegister, userDto.Password);
+            
+                var user = await _userProvider.CreateUserAsync(userToRegister);
+            
+            return user;
+        }
+        catch(MongoWriteException ex) when (ex.WriteError?.Category == ServerErrorCategory.DuplicateKey)
         {
-            Name = userDto.Name,
-            Email = userDto.Email,
-            HashedPassword = string.Empty
-        };
-        userToRegister.HashedPassword = _hasher.HashPassword(userToRegister, userDto.Password);
-        
-
-        return await _userProvider.CreateUserAsync(userToRegister);
+            throw new EmailAlreadyExistsException(userDto.Email);
+        }
 
     }
 }

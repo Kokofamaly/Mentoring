@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using WordCardsApi.Infrastructure.Data;
 using WordCardsApi.Infrastructure.Providers;
 using WordCardsApi.Infrastructure.Settings;
+using WordCardsApi.Middleware;
 using WordCardsApi.Models;
 using WordCardsApi.Services;
 
@@ -58,17 +59,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             ValidAudience = jwtSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SignKey)),
             ClockSkew = TimeSpan.FromSeconds(30),
-            
-            
     };
-
-
 });
 builder.Services.AddAuthorizationBuilder()
-.AddPolicy("UserOnly", p => p.RequireRole("User"))
-.SetFallbackPolicy(new AuthorizationPolicyBuilder()
-.RequireAuthenticatedUser()
-.Build());
+    .AddPolicy("UserOnly", p => p.RequireRole("User"))
+    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+    .RequireAuthenticatedUser()
+    .Build());
 
 
 // Add services to the container.
@@ -78,6 +75,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

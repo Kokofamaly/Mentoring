@@ -13,6 +13,11 @@ public class MongoDbContext
     {
         var client = new MongoClient(mongoDbSettings.Value.ConnectionURI);
         _database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
+
+        var indexModel = new CreateIndexModel<User>(Builders<User>.IndexKeys.Descending(u => u.Email),
+            new CreateIndexOptions { Unique = true });
+        Users.Indexes.CreateOne(indexModel);
+
     }
 
     public IMongoCollection<User> Users => _database.GetCollection<User>("users");
