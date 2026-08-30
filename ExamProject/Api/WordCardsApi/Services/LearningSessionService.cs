@@ -1,3 +1,4 @@
+using WordCardsApi.CustomExceptions;
 using WordCardsApi.DTOs;
 using WordCardsApi.Infrastructure.Providers;
 using WordCardsApi.Models;
@@ -41,6 +42,7 @@ public class LearningSessionService
 
             selectedWords.AddRange(remainingWords);
         }
+        if(selectedWords.Count < 100) throw new NotEnoughWordsException(selectedWords.Count);
 
         var session = new LearningSession
         {

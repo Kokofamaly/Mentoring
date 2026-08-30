@@ -25,7 +25,7 @@ public class ExceptionHandlingMiddleware
         }
         catch(EmailAlreadyExistsException ex)
         {
-            context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";
 
             var response = new
@@ -35,11 +35,23 @@ public class ExceptionHandlingMiddleware
 
             await context.Response.WriteAsJsonAsync(response);
         }
+        catch (NotEnoughWordsException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+            context.Response.ContentType = "application/json";
+
+            var response = new
+            {
+                message = ex.Message
+            };
+
+            await context.Response.WriteAsJsonAsync(response);        
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception");
 
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";
 
             var response = new
