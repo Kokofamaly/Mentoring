@@ -10,6 +10,16 @@
     padding: 10px;
 }
 
+.session.card button{
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.session.card:hover button,
+.session.card:focus button{
+    opacity: 1;
+}
+
 .sessions.area ul{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

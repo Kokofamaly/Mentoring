@@ -33,12 +33,17 @@ builder.Services.AddScoped<SessionWordProvider>();
 builder.Services.AddScoped<UserProvider>();
 builder.Services.AddScoped<UserWordProvider>();
 
+var allowedOrigins = 
+    builder.Configuration.GetSection("CorsAllowedOrigins").Get<string[]>() 
+    ?? throw new InvalidOperationException("Failed to configure allowed cors origins");
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", 
     policy => 
         policy
-        .AllowAnyOrigin()
+        .WithOrigins(allowedOrigins)
+        .AllowCredentials()
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
