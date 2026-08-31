@@ -25,8 +25,8 @@ public class LearningSessionService
         var words = await _userWordProvider.GetUserWordsByUserIdAsync(userId);
         var selectedWordsQuery = words.Where(w => w.DifficultyLevel > 0);
 
-        if(sessionDto.Category != null) selectedWordsQuery = selectedWordsQuery.Where(w => w.Category == sessionDto.Category);
-        if(sessionDto.Language != null) selectedWordsQuery = selectedWordsQuery.Where(w => w.Language == sessionDto.Language);
+        if(!string.IsNullOrEmpty(sessionDto.Category)) selectedWordsQuery = selectedWordsQuery.Where(w => w.Category == sessionDto.Category);
+        if(!string.IsNullOrEmpty(sessionDto.Language)) selectedWordsQuery = selectedWordsQuery.Where(w => w.Language == sessionDto.Language);
 
         var selectedWords = selectedWordsQuery.OrderBy(_ => Random.Shared.Next()).Take(100).ToList();
 
@@ -35,8 +35,8 @@ public class LearningSessionService
             var toTake = 100 - selectedWords.Count;
             var remainingWordsQuery = words.Where(w => w.DifficultyLevel == 0);
 
-            if(sessionDto.Language != null) remainingWordsQuery = remainingWordsQuery.Where(w => w.Category == sessionDto.Language);
-            if(sessionDto.Language != null) remainingWordsQuery = remainingWordsQuery.Where(w => w.Language == sessionDto.Language);
+            if(!string.IsNullOrEmpty(sessionDto.Category)) remainingWordsQuery = remainingWordsQuery.Where(w => w.Category == sessionDto.Category);
+            if(!string.IsNullOrEmpty(sessionDto.Language)) remainingWordsQuery = remainingWordsQuery.Where(w => w.Language == sessionDto.Language);
 
             var remainingWords = remainingWordsQuery.OrderBy(_ => Random.Shared.Next()).Take(toTake);
 

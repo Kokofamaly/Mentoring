@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useOptimistic, useState, useTransition } from "react";
+import { startTransition, useEffect, useOptimistic, useState, useTransition } from "react";
 import "./Sessions.css";
 import { apiFetch } from "./api/apiFetch";
 
@@ -20,11 +20,31 @@ interface SessionCardProps{
 export function Sessions(){
     const [sessionList, setSessionList] = useState<Array<Session>>([]);
     const [optimisticSessionList, setOptimisticSessionList] = useOptimistic(sessionList);
+    const [isAdding, setIsAdding] = useState(false);
+    const [newSession, setNewSession] = useState<Omit<Session, "id" | "createdAt">>({language: "", category: ""});
+    const [isPending, startTransition] = useTransition();
 
-    const getSessionsQuery = useQuery({queryKey: ['sessions'], queryFn:});
+    const getSessionsQuery = useQuery({
+        queryKey: ['sessions'], 
+        queryFn: async () => {
+            const response = await apiFetch("/learningsession");
+            const data = await response.json();
+            if(!response.ok){
+                throw new Error(data.message);
+            }
+            return data as Array<Session>;
+        }
+    });
+
+    useEffect(() =>{
+        if(getSessionsQuery.data){
+            setSessionList(getSessionsQuery.data);
+        }
+    }, [getSessionsQuery.data]);
+
     
     const addSessionMutation = useMutation({
-        mutationFn:,
+        mutationFn: addSession,
         onSuccess: (data) => setSessionList(prev => [...prev, data as Session]),
         onError: (error) => alert(error.message)
     });
@@ -33,17 +53,53 @@ export function Sessions(){
     //     queryKey: ['sessionList'],
     //     queryFn: () => fetch("/learningsession").then(res => res.json())
     // });
+    async function addSession(newSession: Omit<Session, "id" | "createdAt">){
+        const response = await apiFetch("/learningsession", {
+            method: "POST",
+            body: JSON.stringify(newSession)
+        });
 
-    function handleAdd(newSession: Session){}
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(data.message);
+        }
+
+        return data;
+    }
+
+    function handleAdd(newSession: Omit<Session, "id" | "createdAt">){
+        startTransition(() => {
+            setOptimisticSessionList(prev => [...prev, {...newSession, createdAt: new Date().toISOString(), id: crypto.randomUUID()}]);
+            addSessionMutation.mutate(newSession);
+        });
+    }
 
     return (
         <div className="sessions area">
-            <button>Add</button>
+            { isAdding 
+            ? <form onSubmit={(e) => {
+                e.preventDefault();
+                handleAdd(newSession);
+                setIsAdding(false);
+            }}>
+
+                <label>Category</label>
+                <input type="text" value={newSession.category} onChange={(e) => setNewSession(s => ({...s, category: e.target.value}))} />
+
+                <label>Language</label>
+                <input type="text" value={newSession.language} onChange={(e) => setNewSession(s => ({...s, language: e.target.value}))} />
+
+                <button type="submit" disabled={addSessionMutation.isPending}>Confirm</button>
+                <button type="button" onClick={() => setIsAdding(false)}>Close</button>
+                
+            </form> 
+            : <><button onClick={() => setIsAdding(true)}>Add</button>
             <ul>{[...optimisticSessionList]
                 .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
                 .map(s => 
                     <SessionCard session={s} setSessionList={setSessionList} setOptimisticSessionList={setOptimisticSessionList}/>
-            )}</ul>
+            )}</ul></>}
         </div>
     );
 }

@@ -24,7 +24,7 @@ function App() {
               <Route path="/login" element={<Login setUser={setUser}/>} />
               <Route path="/register" element={<Register setUser={setUser}/>} />
               <Route element={<ProtectedRoute />}>
-                <Route path="/word-cards-app" element={<WordCardsApp />} />
+                <Route path="/" element={<WordCardsApp />} />
               </Route>
             </Route>
           </Routes>

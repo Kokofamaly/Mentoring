@@ -46,9 +46,9 @@ export function Login({setUser} : LoginProps){
     return(<>
         <form onSubmit={handleLogin}>
             <label>Email</label>
-            <input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} disabled={mutation.isPending}/>
+            <input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} disabled={mutation.isPending} required/>
             <label>Password</label>
-            <input type="password" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} disabled={mutation.isPending}/>
+            <input type="password" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} disabled={mutation.isPending} required/>
             <button type="submit" disabled={mutation.isPending}>Login</button>
         </form>
     </>)

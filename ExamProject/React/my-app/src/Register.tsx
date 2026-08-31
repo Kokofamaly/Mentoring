@@ -52,7 +52,8 @@ export function Register({setUser} : LoginProps){
                 placeholder="Enter your name" 
                 value={name} 
                 onChange={e => setName(e.target.value)} 
-                disabled={mutation.isPending}/>
+                disabled={mutation.isPending}
+                required/>
 
             <label>Email</label>
             <input 
@@ -60,7 +61,8 @@ export function Register({setUser} : LoginProps){
                 placeholder="Enter your email" 
                 value={email} 
                 onChange={e => setEmail(e.target.value)} 
-                disabled={mutation.isPending}/>
+                disabled={mutation.isPending}
+                required/>
 
             <label>Password</label>
             <input 
@@ -68,7 +70,8 @@ export function Register({setUser} : LoginProps){
                 placeholder="Enter your password" 
                 value={password} 
                 onChange={e => setPassword(e.target.value)} 
-                disabled={mutation.isPending}/>
+                disabled={mutation.isPending}
+                required/>
 
             <button type="submit" disabled={mutation.isPending}>Register</button>
         </form>
