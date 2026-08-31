@@ -1,0 +1,18 @@
+.sessions.area{
+    background-color: darkgray;
+    width: 70vw;
+    padding: 1.5rem;
+}
+
+.session.card{
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.sessions.area ul{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    list-style: none;
+    gap: 10px;
+}
