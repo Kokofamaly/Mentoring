@@ -40,7 +40,7 @@ public class AuthController : ControllerBase
         var accessToken = _jwt.GenerateToken(userToLogin);
         var result = new { user = userResponse, accessToken = accessToken};
 
-        _logger.LogInformation($"{userToLogin.Email}:{userToLogin.Id} logged in.");
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: {userToLogin.Email}:{userToLogin.Id} logged in.");
         return Ok(result);
     }
 
@@ -60,6 +60,8 @@ public class AuthController : ControllerBase
         var accessToken = _jwt.GenerateToken(createdUser);
         var result = new { user = userResponse, accessToken = accessToken};
 
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: {createdUser.Email}:{createdUser.Id} registered.");
+
         return Ok(result);
     }
 
@@ -75,6 +77,8 @@ public class AuthController : ControllerBase
 
         var accessToken = _jwt.GenerateToken(token.UserId);
 
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: Refresh token response.");
+
         return Ok(new {accessToken = accessToken});
     }
 
@@ -85,6 +89,8 @@ public class AuthController : ControllerBase
             await _refreshTokenService.RevokeTokenAsync(refreshToken);
         
         Response.Cookies.Delete("refreshToken");
+
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: User:{HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)} logged out;");
 
         return NoContent();
     }

@@ -11,10 +11,12 @@ namespace WordCardsApi.Controllers;
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
+    private readonly ILogger<UserController> _logger;
 
-    public UserController(UserService userService)
+    public UserController(UserService userService, ILogger<UserController> logger)
     {
         _userService = userService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -28,6 +30,7 @@ public class UserController : ControllerBase
         
         var userResponseDto = MapResponseDto(user);
 
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: User:{user.Id} gets profile data");
         return Ok(userResponseDto);
 
     }
@@ -41,6 +44,7 @@ public class UserController : ControllerBase
         var user = await _userService.UpdateUserAsync(userId, userUpdateDto);
         if(user == null) return BadRequest();
 
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: User:{user.Id} updates profile data");
         return NoContent();
     }
 
@@ -53,6 +57,8 @@ public class UserController : ControllerBase
         if(!Request.Cookies.TryGetValue("refreshToken", out var token)) return BadRequest();
 
         await _userService.DeleteUserAsync(userId, token);
+
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: User:{userId} deletes profile");
 
         return NoContent();
     }

@@ -14,11 +14,17 @@ public class LearningSessionController : ControllerBase
     private readonly LearningSessionService _learningSessionService;
     private readonly SessionWordProvider _sessionWordProvider;
     private readonly UserWordService _userWordService;
-    public LearningSessionController(LearningSessionService learningSessionService, SessionWordProvider sessionWordProvider, UserWordService userWordService)
+    private readonly ILogger<LearningSessionController> _logger;
+    public LearningSessionController(
+        LearningSessionService learningSessionService, 
+        SessionWordProvider sessionWordProvider, 
+        UserWordService userWordService,
+        ILogger<LearningSessionController> logger)
     {
         _learningSessionService = learningSessionService;
         _sessionWordProvider = sessionWordProvider;
         _userWordService = userWordService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -31,6 +37,8 @@ public class LearningSessionController : ControllerBase
         var sessions = await _learningSessionService.GetLearningSessionsByUserIdAsync(userId);
 ;
         var sessionsDto = sessions.Select(s => MapResponseDto(s));
+
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: user:{userId} gets {sessionsDto.Count()} sessions");
 
         return Ok(sessionsDto);
     }
@@ -56,6 +64,8 @@ public class LearningSessionController : ControllerBase
             Translation = w.Translation,
             UsageExample = w.UsageExample
         });
+        
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: user:{userId} gets session{sessionDto.Id}");
 
         return Ok(new {session = sessionDto, words = sessionWordsDto});
 
@@ -73,6 +83,8 @@ public class LearningSessionController : ControllerBase
 
         var sessionDto = MapResponseDto(session);
 
+        _logger.LogInformation($"${DateTimeOffset.UtcNow}: user:{userId} creates session{sessionDto.Id}");
+
         return Ok(sessionDto);
     }
 
@@ -88,6 +100,8 @@ public class LearningSessionController : ControllerBase
         else
             await _userWordService.ResetUserWordDifficultyLevelAsync(answerDto.UserWordId);
 
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: session answer");
+
         return NoContent();
     }
 
@@ -101,6 +115,8 @@ public class LearningSessionController : ControllerBase
         if(session.UserId != userId) return Forbid();
 
         await _learningSessionService.DeleteSessionAsync(session);
+        
+        _logger.LogInformation($"${DateTimeOffset.UtcNow}: user:{userId} deletes session{session.Id}");
 
         return NoContent();
     }

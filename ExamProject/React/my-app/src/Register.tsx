@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {UserContext, type User} from './UserContext'
 import { useMutation } from '@tanstack/react-query';
-import { data } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 
 interface LoginProps {
   setUser: (user: User | null) => void;
@@ -11,6 +11,7 @@ export function Register({setUser} : LoginProps){
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationFn: registerUser,
@@ -42,6 +43,7 @@ export function Register({setUser} : LoginProps){
     function handleRegister(e : React.SubmitEvent){
         e.preventDefault();
         mutation.mutate();
+        navigate("/");
     }
 
     return(<>

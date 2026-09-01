@@ -30,6 +30,8 @@ public class UserWordController : ControllerBase
 
         var result = words.Select(w => MapResponseDto(w));
 
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}:Returning ok(wordlist items:{result.Count()}) from get word method");
+
         return Ok(result);
     }
 
@@ -45,6 +47,8 @@ public class UserWordController : ControllerBase
 
         var wordResponseDto = MapResponseDto(word);
 
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}:Returning ok(word:{wordResponseDto.Word}) from get word method");
+
         return Ok(wordResponseDto);
     }
 
@@ -57,6 +61,9 @@ public class UserWordController : ControllerBase
 
         var word = await _userWordService.CreateUserWordAsync(wordCreateDto, userId);
         var wordResponseDto = MapResponseDto(word);
+
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}:Returning ok(word:{wordResponseDto.Word}) from create word method");
+
         return Ok(wordResponseDto);
     }
 
@@ -68,6 +75,8 @@ public class UserWordController : ControllerBase
 
         if(updatedWord == null) return BadRequest();
         if(updatedWord.UserId != userId) return Forbid();
+
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}:Returning no content from update word method");
 
         return NoContent();
     }
@@ -82,7 +91,9 @@ public class UserWordController : ControllerBase
         if(word.UserId != userId) return Forbid();
 
         await _userWordService.DeleteUserWordAsync(word);
-        _logger.LogInformation("\n\nreturning no content from delete word method\n\n");
+
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}:Returning no content from delete word method");
+
         return NoContent();
     }
 
