@@ -2,6 +2,7 @@ import { useDeferredValue, useOptimistic, useState, useTransition } from "react"
 import "./Words.css";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { apiFetch } from "./api/apiFetch";
+import { jsx } from "react/jsx-runtime";
 
 interface Word{
     id: string,
@@ -84,14 +85,21 @@ export function Words(){
             editWordMutation.mutate({updatedWord, wordId});
         })
     }
-    
+
     function handleDelete(wordId: string){
         startTransition(() =>{
             setOptimisticWordList(prev => prev.filter(w => w.id !== wordId));
             deleteWordMutation.mutate(wordId);
         });
     }
-
+    function handleSelect(wordId: string){
+        if(mode === "editing") return;
+        if(selectedWordId === wordId) {
+            setSelectedWordId(null);
+            return;
+        }
+        setSelectedWordId(wordId);
+    }
 
     return(
         <aside className="words area">
@@ -103,9 +111,9 @@ export function Words(){
                 <input type="text" placeholder="search..." value={searchWord} onChange={e => setSearchWord(e.target.value)}/>
                 <ul>
                     {searchWord 
-                    ? filteredWordList.map(w => <li onClick={() => setSelectedWordId(w.id)}>{w.word}</li>) 
+                    ? filteredWordList.map(w => <li key={w.id} onClick={() => handleSelect(w.id)}>{w.word}</li>) 
                     : optimisticWordList.map(w => selectedWord === w 
-                        ? mode === "editing" ? <li>
+                        ? mode === "editing" ? <li key={w.id}>
                                 <input type="text" value={editedWord!.word} onChange={(e) => setEditedWord({...editedWord!, word: e.target.value})}/>
                                 <input type="text" value={editedWord!.translation} onChange={(e) => setEditedWord({...editedWord!, translation: e.target.value})}/>
                                 <input type="text" value={editedWord!.language} onChange={(e) => setEditedWord({...editedWord!, language: e.target.value})}/>
@@ -114,19 +122,23 @@ export function Words(){
                                 <button onClick={() => handleEdit(selectedWordId!, editedWord!)}>Confirm</button>
                                 <button onClick={() => setMode(null)}>Close</button>
                             </li>
-                            : <li className="wordcard selected" onClick={() => setSelectedWordId(null)}>
+                            : <li key={w.id} className="wordcard selected" onClick={() => handleSelect(w.id)}>
                                 <span>{w.word}</span>
                                 <span>{w.translation}</span>
                                 <span>{w.language}</span>
                                 {w.category && <span>{w.category}</span>}
                                 {w.usageExample && <span>{w.usageExample}</span>}
-                                <button onClick={() => {
+                                <button onClick={(e) => {
+                                    e.stopPropagation();
                                     setMode("editing");
                                     setEditedWord(selectedWord);
                                     }}>Edit</button>
-                                <button onClick={() => handleDelete(w.id)}>Delete</button>
+                                <button onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(w.id);
+                                    }}>Delete</button>
                             </li> 
-                        : <li className="wordcard" onClick={() => setSelectedWordId(w.id)}>{w.word}</li>)}
+                        : <li key={w.id} className="wordcard" onClick={() => handleSelect(w.id)}>{w.word}</li>)}
                 </ul>
             </>}
 

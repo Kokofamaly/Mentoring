@@ -11,10 +11,12 @@ namespace WordCardsApi.Controllers;
 public class UserWordController : ControllerBase
 {
     private readonly UserWordService _userWordService;
+    private readonly ILogger<UserWordController> _logger;
 
-    public UserWordController(UserWordService userWordService)
+    public UserWordController(UserWordService userWordService, ILogger<UserWordController> logger)
     {
         _userWordService = userWordService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -43,7 +45,7 @@ public class UserWordController : ControllerBase
 
         var wordResponseDto = MapResponseDto(word);
 
-        return Ok(word);
+        return Ok(wordResponseDto);
     }
 
     [HttpPost]
@@ -80,7 +82,7 @@ public class UserWordController : ControllerBase
         if(word.UserId != userId) return Forbid();
 
         await _userWordService.DeleteUserWordAsync(word);
-
+        _logger.LogInformation("\n\nreturning no content from delete word method\n\n");
         return NoContent();
     }
 

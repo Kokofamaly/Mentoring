@@ -9,6 +9,7 @@
     display: grid;
     width: 100%;
     column-gap: 10px;
+    list-style: none;;
 }
 
 .wordcard, .wordcard.selected{
