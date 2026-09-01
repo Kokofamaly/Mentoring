@@ -4,9 +4,9 @@ import { Words } from "./Words";
 
 
 export function WordCardsApp(){
-    return(<>
+    return(<div className="app page">
             <Sessions />
             <Words />
-        </>
+        </div>
     );
 }

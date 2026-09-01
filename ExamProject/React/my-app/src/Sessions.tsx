@@ -76,7 +76,7 @@ export function Sessions(){
     }
 
     return (
-        <div className="sessions area">
+        <section className="sessions area">
             { isAdding 
             ? <form onSubmit={(e) => {
                 e.preventDefault();
@@ -100,7 +100,7 @@ export function Sessions(){
                 .map(s => 
                     <SessionCard session={s} setSessionList={setSessionList} setOptimisticSessionList={setOptimisticSessionList}/>
             )}</ul></>}
-        </div>
+        </section>
     );
 }
 

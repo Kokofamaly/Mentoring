@@ -93,3 +93,11 @@ form input:last-of-type{
 form input{
   margin-bottom: 10px;
 }
+
+.app.page{
+    display: grid;
+    grid-template-columns: 7fr 3fr;
+    gap: 20px;
+    height: calc(100vh - 60px);
+    padding: 20px;
+}

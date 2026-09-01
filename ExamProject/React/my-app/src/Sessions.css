@@ -1,7 +1,7 @@
 .sessions.area{
     background-color: darkgray;
-    width: 70vw;
     padding: 1.5rem;
+    min-width: 0;
 }
 
 .session.card{

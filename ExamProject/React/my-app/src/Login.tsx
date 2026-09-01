@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {type User} from './UserContext'
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 
 interface LoginProps {
@@ -10,12 +11,14 @@ interface LoginProps {
 export function Login({setUser} : LoginProps){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationFn: loginUser,
         onSuccess: (data) =>{
             setUser(data.user);
             localStorage.setItem("accessToken", data.accessToken);
+            navigate("/")
         },
         onError: (error) => alert(error.message)
     });

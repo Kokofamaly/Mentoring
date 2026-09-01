@@ -1,5 +1,7 @@
-import { useDeferredValue, useOptimistic, useState } from "react";
+import { useDeferredValue, useOptimistic, useState, useTransition } from "react";
 import "./Words.css";
+import { useMutation, type UseMutationResult } from "@tanstack/react-query";
+import { apiFetch } from "./api/apiFetch";
 
 interface Word{
     id: string,
@@ -19,22 +21,82 @@ export function Words(){
     const [mode, setMode] = useState<"editing" | "adding" | null>(null);
     const [editedWord, setEditedWord] = useState<Word | null>(null);
 
+    const [isPending, startTransition] = useTransition();
+
+    const addWordMutation = useMutation({
+        mutationFn: async (newWord: Omit<Word, "id">) => {
+            const response = await apiFetch("/userword", {
+                method: "POST",
+                body: JSON.stringify(newWord)
+            });
+
+            const data = await response.json();
+
+            if(!response.ok){
+                throw new Error(data.message);
+            }
+
+            return data;
+        },
+        onSuccess: (data) => setWordList(prev => [...prev, data]),
+        onError: (error) => alert(error.message),
+    });
+
+    const editWordMutation = useMutation({
+        mutationFn: async ({wordId, updatedWord}:{wordId: string, updatedWord: Omit<Word, "id">}) => {
+            const response = await apiFetch(`/userword/${wordId}`, {
+                method: "PUT",
+                body: JSON.stringify(updatedWord)
+            });
+            
+            if(!response.ok){
+                const data = await response.json();
+                throw new Error(data.message);
+            }
+            return updatedWord;
+        },
+        onSuccess: (updatedWord: Omit<Word, "id">, variables) => setWordList(prev => prev.map(w => w.id === variables.wordId ? {id: variables.wordId, ...updatedWord} : w)),
+        onError: error => alert(error.message)
+    });
+
+    const deleteWordMutation = useMutation({
+        mutationFn: async (wordId: string) => {
+            const response = await apiFetch(`/userword/${wordId}`, { method: "DELETE" });
+
+            if(!response.ok){
+                const data = await response.json();
+                throw new Error(data.message);
+            }
+            return wordId;
+        },
+        onSuccess: wordId => setWordList(prev => prev.filter(w => w.id !== wordId)),
+        onError: error => alert(error.message)
+    });
+
     const selectedWord = optimisticWordList.find(w => w.id === selectedWordId);
     const filteredWordList: Array<Word> = wordList.filter(w => w.word.toLowerCase().startsWith(searchWord.toLowerCase()));
     
-    function handleEdit(wordId: string, updatedWord: Word){
+    function handleEdit(wordId: string, updatedWord: Omit<Word, "id">){
         setMode(null);
         setEditedWord(null);
+        startTransition(() =>{
+            setOptimisticWordList(prev => prev.map(w => w.id === wordId ? {id: wordId, ...updatedWord} : w));
+            editWordMutation.mutate({updatedWord, wordId});
+        })
     }
+    
     function handleDelete(wordId: string){
-
+        startTransition(() =>{
+            setOptimisticWordList(prev => prev.filter(w => w.id !== wordId));
+            deleteWordMutation.mutate(wordId);
+        });
     }
 
 
     return(
-        <div className="words area">
+        <aside className="words area">
             { mode === "adding" 
-            ? <AddForm setMode={setMode}/> 
+            ? <AddForm setMode={setMode} addWordMutation={addWordMutation} setOptimisticWordList={setOptimisticWordList}/> 
             :
             <>
                 <button onClick={() => setMode("adding")}>Add word</button>
@@ -68,14 +130,19 @@ export function Words(){
                 </ul>
             </>}
 
-        </div>);
+        </aside>);
 }
 
-function AddForm({ setMode } : {setMode: (mode: "editing" | "adding" | null) => void}){
+function AddForm({ setMode, addWordMutation, setOptimisticWordList } : {setMode: (mode: "editing" | "adding" | null) => void, addWordMutation: UseMutationResult<unknown, Error, Omit<Word, "id">, unknown>, setOptimisticWordList: (action: Word[] | ((pendingState: Word[]) => Word[])) => void}){
     const [addedWord, setAddedWord] = useState<Omit<Word, "id">>({word:"", translation:"", language:"", category:"", usageExample:""});
+    const [isPending, startTransition] = useTransition();
     
     function handleAdd(newWord: Omit<Word, "id">){
         setMode(null);
+        startTransition(() =>{
+            setOptimisticWordList(prev => [...prev, {...newWord, id: crypto.randomUUID()}]);
+            addWordMutation.mutate(newWord);
+        });
     }
 
     return (<form onSubmit={() => handleAdd(addedWord)}>
@@ -95,7 +162,7 @@ function AddForm({ setMode } : {setMode: (mode: "editing" | "adding" | null) => 
                 <label>Usage example</label>
                 <input type="text" value={addedWord.usageExample} onChange={e => setAddedWord({...addedWord, usageExample: e.target.value})} />
 
-                <button type="submit">Confirm</button>
-                <button onClick={() => setMode(null)}>Close</button>
+                <button type="submit" disabled={addWordMutation.isPending}>Confirm</button>
+                <button type="button" onClick={() => setMode(null)}>Close</button>
             </form> );
 }
