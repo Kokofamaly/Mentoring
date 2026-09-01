@@ -15,6 +15,7 @@ public class MongoDbContext
     {
         var client = new MongoClient(mongoDbSettings.Value.ConnectionURI);
         _database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
+        _hasher = hasher;
 
         var indexModel = new CreateIndexModel<User>(Builders<User>.IndexKeys.Descending(u => u.Email),
             new CreateIndexOptions { Unique = true });
@@ -33,7 +34,6 @@ public class MongoDbContext
         }
         var user = new User
         {
-            Id = "1",
             Name = "test user",
             Email = "test@gmail.com",
             HashedPassword = "12345"
@@ -48,14 +48,13 @@ public class MongoDbContext
 
         for(int i = 0; i <= 99; i++)
         {
-            var w = new UserWord()
+            userWords.Add(new UserWord()
             {
                 UserId = user.Id,
                 Word = words[i],
                 Translation = translations[i],
                 Language = "english",
-            };
-            userWords.Add(w);
+            });
         }
 
         UserWords.InsertMany(userWords);

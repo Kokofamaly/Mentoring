@@ -110,7 +110,7 @@ function SessionCard({ session, setSessionList, setOptimisticSessionList } : Ses
 
     const deleteSessionMutation = useMutation({
         mutationFn: deleteSession,
-        onSuccess: (_, sessionId) => { setSessionList(prev => prev.filter(s => s.id !== sessionId)) },
+        onSuccess: (sessionId) => { setSessionList(prev => prev.filter(s => s.id !== sessionId)) },
         onError: error => alert(error.message)
     });
 
@@ -118,13 +118,14 @@ function SessionCard({ session, setSessionList, setOptimisticSessionList } : Ses
             const response = await apiFetch(`/learningsession/${sessionId}`, {
                 method: "DELETE"
             });
-            const data = await response.json();
+            
 
             if(!response.ok){
+                const data = await response.json();
                 throw new Error(data.message);
             }
 
-            return data;
+            return sessionId;
     }
     function handleDelete(sessionId: string){
         startTransition(() => {

@@ -1,6 +1,6 @@
-import { useDeferredValue, useOptimistic, useState, useTransition } from "react";
+import { useDeferredValue, useEffect, useOptimistic, useState, useTransition } from "react";
 import "./Words.css";
-import { useMutation, type UseMutationResult } from "@tanstack/react-query";
+import { useMutation, useQuery, type UseMutationResult } from "@tanstack/react-query";
 import { apiFetch } from "./api/apiFetch";
 import { jsx } from "react/jsx-runtime";
 
@@ -23,6 +23,26 @@ export function Words(){
     const [editedWord, setEditedWord] = useState<Word | null>(null);
 
     const [isPending, startTransition] = useTransition();
+
+    const getWordsQuery = useQuery({
+        queryKey: ["words"],
+        queryFn: async () => {
+            const response = await apiFetch("/userword");
+            const data = await response.json();
+
+            if(!response.ok){
+                throw new Error(data.message);
+            }
+
+            return data;
+        }
+    });
+
+    useEffect(() =>{
+    if(getWordsQuery.data){
+        setWordList(getWordsQuery.data);
+    }
+    }, [getWordsQuery.data]);
 
     const addWordMutation = useMutation({
         mutationFn: async (newWord: Omit<Word, "id">) => {
