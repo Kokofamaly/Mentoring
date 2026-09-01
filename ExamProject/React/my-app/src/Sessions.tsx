@@ -136,12 +136,14 @@ function SessionCard({ session, setSessionList, setOptimisticSessionList } : Ses
     }
 
     return(
-        <li className="session card">
-            <span className="id">{session.id}</span>
-            <span className="date">{sessionCreatedAt.getDate()}.{sessionCreatedAt.getMonth() + 1}.{sessionCreatedAt.getFullYear()}</span>
-            {session.language && <span className="language">{session.language}</span>}
-            {session.category && <span className="category">{session.category}</span>}
-            <button onClick={() => handleDelete(session.id)} disabled={deleteSessionMutation.isPending}>Delete</button>
+        <li>
+            <div className="session card">
+                <span className="id">{session.id}</span>
+                <span className="date">{sessionCreatedAt.getDate()}.{sessionCreatedAt.getMonth() + 1}.{sessionCreatedAt.getFullYear()}</span>
+                {session.language && <span className="language">{session.language}</span>}
+                {session.category && <span className="category">{session.category}</span>}
+                <button onClick={() => handleDelete(session.id)} disabled={deleteSessionMutation.isPending}>Delete</button>
+            </div>
         </li>
     );
 }

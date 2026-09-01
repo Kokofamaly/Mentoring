@@ -1,28 +1,55 @@
-.sessions.area{
-    background-color: darkgray;
+.sessions.area {
+    background-color: rgb(222, 221, 221);
     padding: 1.5rem;
     min-width: 0;
+    width: 100%;
+    border-radius: 16px;
+    height: 80vh;
+    overflow: scroll;
 }
 
-.session.card{
+.sessions.area ul {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+
+    width: 100%;
+    padding: 0;
+    margin: 30px auto;
+    list-style: none;
+}
+
+.session.card {
+    min-width: 0;
     background-color: white;
     border-radius: 10px;
-    padding: 10px;
+    padding: 20px;
+    position: relative;
+    height: 150px;
+    
+}
+
+.session.card .id{
+    font-size: 10px;
+    font-style: italic;
+    opacity: .5;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
+
+.session.card .id::before{
+    content: "ID:";
 }
 
 .session.card button{
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: 0.2s ease;
+    position: absolute;
+    right: 20px;
+    top: 20px;
 }
 
-.session.card:hover button,
-.session.card:focus button{
+.session.card:hover button{
     opacity: 1;
-}
-
-.sessions.area ul{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    list-style: none;
-    gap: 10px;
 }

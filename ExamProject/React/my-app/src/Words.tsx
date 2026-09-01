@@ -131,7 +131,7 @@ export function Words(){
                 <input type="text" placeholder="search..." value={searchWord} onChange={e => setSearchWord(e.target.value)}/>
                 <ul>
                     {searchWord 
-                    ? filteredWordList.map(w => <li key={w.id} onClick={() => handleSelect(w.id)}>{w.word}</li>) 
+                    ? filteredWordList.map(w => <li key={w.id} className="wordcard" onClick={() => handleSelect(w.id)}>{w.word}</li>) 
                     : optimisticWordList.map(w => selectedWord === w 
                         ? mode === "editing" ? <li key={w.id}>
                                 <input type="text" value={editedWord!.word} onChange={(e) => setEditedWord({...editedWord!, word: e.target.value})}/>

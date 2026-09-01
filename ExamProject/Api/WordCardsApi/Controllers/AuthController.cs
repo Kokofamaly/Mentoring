@@ -75,9 +75,10 @@ public class AuthController : ControllerBase
 
         if(token == null) return Unauthorized();
 
-        var accessToken = _jwt.GenerateToken(token.UserId);
+        var accessToken = await _jwt.GenerateTokenAsync(token.UserId);
 
         _logger.LogInformation($"{DateTimeOffset.UtcNow}: Refresh token response.");
+        _logger.LogInformation($"{accessToken}");
 
         return Ok(new {accessToken = accessToken});
     }

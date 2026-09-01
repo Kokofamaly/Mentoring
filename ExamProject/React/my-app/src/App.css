@@ -9,6 +9,7 @@ html{
 
 body{
   width: 100vw;
+  background-color: #fbfbf0;
 }
 
 form label{
@@ -50,7 +51,7 @@ header {
   justify-content: flex-end;
   height: 40px;
   align-items: center;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
 }
 

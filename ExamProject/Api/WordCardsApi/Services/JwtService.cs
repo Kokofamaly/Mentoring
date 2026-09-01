@@ -19,7 +19,7 @@ public class JwtService
         _userProvider = userProvider;
     }
 
-    public async Task<string> GenerateToken(string userId) 
+    public async Task<string> GenerateTokenAsync(string userId) 
     => GenerateToken((await _userProvider.GetUserByIdAsync(userId))!);
     public string GenerateToken(User user)
     {
