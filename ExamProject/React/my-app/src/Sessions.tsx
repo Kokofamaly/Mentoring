@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { startTransition, useEffect, useOptimistic, useState, useTransition } from "react";
+import { startTransition, useContext, useEffect, useOptimistic, useState, useTransition } from "react";
 import "./Sessions.css";
 import { apiFetch } from "./api/apiFetch";
+import { UserContext } from "./UserContext";
 
 interface Session{
     id: string,
@@ -18,6 +19,7 @@ interface SessionCardProps{
 }
 
 export function Sessions(){
+    const user = useContext(UserContext);
     const [sessionList, setSessionList] = useState<Array<Session>>([]);
     const [optimisticSessionList, setOptimisticSessionList] = useOptimistic(sessionList);
     const [isAdding, setIsAdding] = useState(false);
@@ -25,7 +27,7 @@ export function Sessions(){
     const [isPending, startTransition] = useTransition();
 
     const getSessionsQuery = useQuery({
-        queryKey: ['sessions'], 
+        queryKey: ['sessions', user?.email], 
         queryFn: async () => {
             const response = await apiFetch("/learningsession");
             const data = await response.json();
@@ -75,10 +77,21 @@ export function Sessions(){
         });
     }
 
+    if(getSessionsQuery.isPending){
+        return (
+            <section className="sessions area">
+                <h2>Learning sessions:</h2>
+                <button onClick={() => setIsAdding(true)}>Add session</button>
+                <hr />
+                <p>Loading...</p>
+            </section>
+        )
+    }
+
     return (
         <section className="sessions area">
             <h2>Learning sessions:</h2>
-            <button onClick={() => setIsAdding(true)}>Add</button>
+            <button onClick={() => setIsAdding(true)}>Add session</button>
             <hr />
             { isAdding 
             ? <form onSubmit={(e) => {
@@ -94,12 +107,15 @@ export function Sessions(){
                 <input type="text" value={newSession.language} onChange={(e) => setNewSession(s => ({...s, language: e.target.value}))} />
 
                 <button type="submit" disabled={addSessionMutation.isPending}>Confirm</button>
-                <button type="button" onClick={() => setIsAdding(false)}>Close</button>
+                <button type="button" onClick={() => {
+                    setIsAdding(false);
+                    setNewSession({language: "", category: ""})
+                    }}>Close</button>
                 
             </form> 
             : <>
             <ul>{[...optimisticSessionList]
-                .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                 .map(s => 
                     <SessionCard session={s} setSessionList={setSessionList} setOptimisticSessionList={setOptimisticSessionList}/>
             )}</ul></>}
@@ -139,13 +155,16 @@ function SessionCard({ session, setSessionList, setOptimisticSessionList } : Ses
     }
 
     return(
-        <li>
+        <li key={session.id}>
             <div className="session card">
                 <span className="id">{session.id}</span>
                 <span className="date">{sessionCreatedAt.getDate()}.{sessionCreatedAt.getMonth() + 1}.{sessionCreatedAt.getFullYear()}</span>
                 {session.language && <span className="language">{session.language}</span>}
                 {session.category && <span className="category">{session.category}</span>}
-                <button onClick={() => handleDelete(session.id)} disabled={deleteSessionMutation.isPending}>Delete</button>
+                <div className="card button">
+                    <button disabled={deleteSessionMutation.isPending}>Start</button>
+                    <button onClick={() => handleDelete(session.id)} disabled={deleteSessionMutation.isPending}>Delete</button>
+                </div>
             </div>
         </li>
     );

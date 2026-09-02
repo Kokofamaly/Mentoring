@@ -1,8 +1,9 @@
-import { useDeferredValue, useEffect, useOptimistic, useState, useTransition } from "react";
+import { useContext, useDeferredValue, useEffect, useOptimistic, useState, useTransition } from "react";
 import "./Words.css";
 import { useMutation, useQuery, type UseMutationResult } from "@tanstack/react-query";
 import { apiFetch } from "./api/apiFetch";
 import { jsx } from "react/jsx-runtime";
+import { UserContext } from "./UserContext";
 
 interface Word{
     id: string,
@@ -15,6 +16,7 @@ interface Word{
 
 
 export function Words(){
+    const user = useContext(UserContext);
     const [wordList, setWordList] = useState<Array<Word>>([]);
     const [optimisticWordList, setOptimisticWordList] = useOptimistic(wordList);
     const [searchWord, setSearchWord] = useState<string>("");
@@ -25,7 +27,7 @@ export function Words(){
     const [isPending, startTransition] = useTransition();
 
     const getWordsQuery = useQuery({
-        queryKey: ["words"],
+        queryKey: ["words", user?.email],
         queryFn: async () => {
             const response = await apiFetch("/userword");
             const data = await response.json();
@@ -120,16 +122,28 @@ export function Words(){
         }
         setSelectedWordId(wordId);
     }
+    if(getWordsQuery.isPending){
+        return (
+            <aside className="words area">
+                <h2>Words:</h2>
+                <button onClick={() => setMode("adding")} disabled={mode === "adding"}>Add word</button>
+                <hr />
+                <p>Loading...</p>
+            </aside>
+        )
+    }
 
     return(
         <aside className="words area">
+
             <h2>Words:</h2>
+            <button onClick={() => setMode("adding")} disabled={mode === "adding"}>Add word</button>
             <hr />
             { mode === "adding" 
             ? <AddForm setMode={setMode} addWordMutation={addWordMutation} setOptimisticWordList={setOptimisticWordList}/> 
             :
             <>
-                <button onClick={() => setMode("adding")}>Add word</button>
+                
                 <input type="text" placeholder="search..." value={searchWord} onChange={e => setSearchWord(e.target.value)}/>
                 <ul>
                     {searchWord 

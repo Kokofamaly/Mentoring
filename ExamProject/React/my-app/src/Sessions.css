@@ -8,6 +8,29 @@
     overflow: scroll;
 }
 
+hr{
+    margin: 5px auto;
+}
+
+h2, h2 + button{
+    display: inline;
+    margin: 0 10px;
+}
+
+.sessions.area h2 + button{
+    flex-wrap: wrap;
+    padding: 16px;
+    color: rgb(0 0 0 / .8);
+    background-color: rgb(0 0 0 / .0);
+    text-decoration: underline;
+}
+
+.sessions.area h2 + button:hover, 
+.sessions.area h2 + button:focus{
+    background-color: rgb(0 0 0 / .0);
+    text-decoration: none;
+    cursor: pointer;
+}
 .sessions.area ul {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -42,14 +65,23 @@
     content: "ID:";
 }
 
-.session.card button{
+.session.card .card.button{
+    display: grid;
     opacity: 0;
     transition: 0.2s ease;
     position: absolute;
     right: 20px;
     top: 20px;
+
 }
 
-.session.card:hover button{
+.session.card:hover .card.button{
     opacity: 1;
+    
+}
+
+.session.card .card.button button{
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
 }

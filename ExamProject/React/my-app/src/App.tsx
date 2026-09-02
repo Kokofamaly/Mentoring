@@ -20,7 +20,7 @@ function App() {
       <UserContext value={user}>
         <BrowserRouter>
           <Routes>
-            <Route element={<Header />}>
+            <Route element={<Header setUser={setUser}/>}>
               <Route path="/login" element={<Login setUser={setUser}/>} />
               <Route path="/register" element={<Register setUser={setUser}/>} />
               <Route element={<ProtectedRoute setUser={setUser}/>}>
