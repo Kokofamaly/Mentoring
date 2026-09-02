@@ -17,10 +17,11 @@ form label{
   font-style: italic;
   color: #9ca3af;
   text-align: left;
-  margin-bottom: -5px;
 
 }
-
+form label + input{
+  margin-top: auto;
+}
 input{
   border: 1px solid #f0f0f0;
   border-radius: 10px;

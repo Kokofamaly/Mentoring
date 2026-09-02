@@ -77,6 +77,9 @@ export function Sessions(){
 
     return (
         <section className="sessions area">
+            <h2>Learning sessions:</h2>
+            <button onClick={() => setIsAdding(true)}>Add</button>
+            <hr />
             { isAdding 
             ? <form onSubmit={(e) => {
                 e.preventDefault();
@@ -94,7 +97,7 @@ export function Sessions(){
                 <button type="button" onClick={() => setIsAdding(false)}>Close</button>
                 
             </form> 
-            : <><button onClick={() => setIsAdding(true)}>Add</button>
+            : <>
             <ul>{[...optimisticSessionList]
                 .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
                 .map(s => 

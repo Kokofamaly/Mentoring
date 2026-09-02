@@ -1,42 +1,148 @@
-.words.area{
-    background-color: darkgray;
-    padding: 0.75rem 1.25rem;
+
+.words.area {
+    background-color: rgb(222, 221, 221);
+    padding: 1.5rem;
     min-width: 0;
     border-radius: 16px;
     height: 80vh;
-    overflow: scroll;
+    overflow: auto;
+
+    box-sizing: border-box;
 }
 
-.words.area ul{
+
+/* =========================
+   Top controls
+   ========================= */
+
+.words.area > button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.words.area > input {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    border: 2px solid lightblue;
+}
+
+
+
+/* =========================
+   Word list
+   ========================= */
+
+.words.area ul {
     display: grid;
     width: 100%;
-    column-gap: 10px;
+    padding: 0;
+    margin: 0;
+
+    row-gap: 10px;
     list-style: none;
-    gap: 10px;
 }
 
-.wordcard{
+
+/* =========================
+   Word card
+   ========================= */
+
+.wordcard {
     text-align: center;
     padding: 1rem;
-}
 
-.wordcard, .wordcard.selected{
+    box-sizing: border-box;
+
     background-color: white;
     border-radius: 10px;
+
+
+    cursor: pointer;
 }
 
-.wordcard.selected{
+.wordcard.selected {
     border: 3px solid rgb(255, 200, 0);
 }
 
-.wordcard button{
-    margin: 10px 10px;
-    width: 30%;
-    max-width: none;
-    
-}
-.wordcard span{
-    display: flex;
-    margin: auto;
+
+/* Word information */
+
+.wordcard span {
+    display: block;
+    margin: 5px 0;
+
     text-align: center;
 }
+
+
+/* =========================
+   Card buttons
+   ========================= */
+
+.wordcard button {
+    width: calc(50% - 5px);
+    margin: 10px 2.5px 0;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   Edit form inside card
+   ========================= */
+
+.wordcard input,
+.words.area li > input {
+    display: block;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    margin: 8px 0;
+    padding: 8px;
+}
+
+
+/* Edit form buttons */
+
+.words.area li > button {
+    width: calc(50% - 5px);
+    margin: 10px 2.5px 0;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   Add form
+   ========================= */
+
+.words.area form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.words.area form label {
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.words.area form input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 8px;
+}
+
+.words.area form button {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.words.area form button + button {
+    margin-top: 0;
+}
+

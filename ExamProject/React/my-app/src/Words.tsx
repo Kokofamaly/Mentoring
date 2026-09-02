@@ -123,6 +123,8 @@ export function Words(){
 
     return(
         <aside className="words area">
+            <h2>Words:</h2>
+            <hr />
             { mode === "adding" 
             ? <AddForm setMode={setMode} addWordMutation={addWordMutation} setOptimisticWordList={setOptimisticWordList}/> 
             :
@@ -131,14 +133,40 @@ export function Words(){
                 <input type="text" placeholder="search..." value={searchWord} onChange={e => setSearchWord(e.target.value)}/>
                 <ul>
                     {searchWord 
-                    ? filteredWordList.map(w => <li key={w.id} className="wordcard" onClick={() => handleSelect(w.id)}>{w.word}</li>) 
+                    ? filteredWordList.map(w => selectedWord === w 
+                        ? mode === "editing" ? <li key={w.id}>
+                                <input type="text" placeholder="word" value={editedWord!.word} onChange={(e) => setEditedWord({...editedWord!, word: e.target.value})}/>
+                                <input type="text" placeholder="translation" value={editedWord!.translation} onChange={(e) => setEditedWord({...editedWord!, translation: e.target.value})}/>
+                                <input type="text" placeholder="language" value={editedWord!.language} onChange={(e) => setEditedWord({...editedWord!, language: e.target.value})}/>
+                                <input type="text" placeholder="category" value={editedWord!.category} onChange={(e) => setEditedWord({...editedWord!, category: e.target.value})}/>
+                                <input type="text" placeholder="usage example" value={editedWord!.usageExample} onChange={(e) => setEditedWord({...editedWord!, usageExample: e.target.value})}/>
+                                <button onClick={() => handleEdit(selectedWordId!, editedWord!)}>Confirm</button>
+                                <button onClick={() => setMode(null)}>Close</button>
+                            </li>
+                            : <li key={w.id} className="wordcard selected" onClick={() => handleSelect(w.id)}>
+                                <span>{w.word}</span>
+                                <span>{w.translation}</span>
+                                <span>{w.language}</span>
+                                {w.category && <span>{w.category}</span>}
+                                {w.usageExample && <span>{w.usageExample}</span>}
+                                <button onClick={(e) => {
+                                    e.stopPropagation();
+                                    setMode("editing");
+                                    setEditedWord(selectedWord);
+                                    }}>Edit</button>
+                                <button onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(w.id);
+                                    }}>Delete</button>
+                            </li> 
+                        : <li key={w.id} className="wordcard" onClick={() => handleSelect(w.id)}>{w.word}</li>) 
                     : optimisticWordList.map(w => selectedWord === w 
                         ? mode === "editing" ? <li key={w.id}>
-                                <input type="text" value={editedWord!.word} onChange={(e) => setEditedWord({...editedWord!, word: e.target.value})}/>
-                                <input type="text" value={editedWord!.translation} onChange={(e) => setEditedWord({...editedWord!, translation: e.target.value})}/>
-                                <input type="text" value={editedWord!.language} onChange={(e) => setEditedWord({...editedWord!, language: e.target.value})}/>
-                                <input type="text" value={editedWord!.category} onChange={(e) => setEditedWord({...editedWord!, category: e.target.value})}/>
-                                <input type="text" value={editedWord!.usageExample} onChange={(e) => setEditedWord({...editedWord!, usageExample: e.target.value})}/>
+                                <input type="text" placeholder="word" value={editedWord!.word} onChange={(e) => setEditedWord({...editedWord!, word: e.target.value})}/>
+                                <input type="text" placeholder="translation" value={editedWord!.translation} onChange={(e) => setEditedWord({...editedWord!, translation: e.target.value})}/>
+                                <input type="text" placeholder="language" value={editedWord!.language} onChange={(e) => setEditedWord({...editedWord!, language: e.target.value})}/>
+                                <input type="text" placeholder="category" value={editedWord!.category} onChange={(e) => setEditedWord({...editedWord!, category: e.target.value})}/>
+                                <input type="text" placeholder="usage example" value={editedWord!.usageExample} onChange={(e) => setEditedWord({...editedWord!, usageExample: e.target.value})}/>
                                 <button onClick={() => handleEdit(selectedWordId!, editedWord!)}>Confirm</button>
                                 <button onClick={() => setMode(null)}>Close</button>
                             </li>

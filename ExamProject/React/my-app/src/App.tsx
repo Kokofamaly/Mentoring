@@ -23,7 +23,7 @@ function App() {
             <Route element={<Header />}>
               <Route path="/login" element={<Login setUser={setUser}/>} />
               <Route path="/register" element={<Register setUser={setUser}/>} />
-              <Route element={<ProtectedRoute />}>
+              <Route element={<ProtectedRoute setUser={setUser}/>}>
                 <Route path="/" element={<WordCardsApp />} />
               </Route>
             </Route>

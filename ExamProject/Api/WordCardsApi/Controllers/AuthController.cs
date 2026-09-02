@@ -15,13 +15,15 @@ public class AuthController : ControllerBase
     private readonly JwtService _jwt;
     private readonly ILogger<AuthController> _logger;
     private readonly RefreshTokenService _refreshTokenService;
+    private readonly UserService _userService;
 
-    public AuthController(AuthService authService, JwtService jwt, ILogger<AuthController> logger, RefreshTokenService refreshTokenService)
+    public AuthController(AuthService authService, JwtService jwt, ILogger<AuthController> logger, RefreshTokenService refreshTokenService, UserService userService)
     {
         _authService = authService;
         _jwt = jwt;
         _logger = logger;
         _refreshTokenService = refreshTokenService;
+        _userService = userService;
     }
 
     [AllowAnonymous]
@@ -82,6 +84,31 @@ public class AuthController : ControllerBase
 
         return Ok(new {accessToken = accessToken});
     }
+
+    [AllowAnonymous]
+    [HttpGet("me")]
+    public async Task<IActionResult> DefaultAuth()
+    {
+        var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if(userId == null) return Unauthorized();
+
+        var user = await _userService.GetUserAsync(userId);
+
+        if(user == null) return BadRequest();
+
+        var userDto = new UserResponseDto
+        {
+            Name = user.Name,
+            Email = user.Email
+        };
+        
+
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: default auth for:");
+        _logger.LogInformation($"{user.Id}");
+
+        return Ok(userDto);
+    }
+
 
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
