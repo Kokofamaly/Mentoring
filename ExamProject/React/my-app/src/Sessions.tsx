@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { startTransition, useContext, useEffect, useOptimistic, useState, useTransition } from "react";
+import { startTransition, useContext, useEffect, useOptimistic, useRef, useState, useTransition } from "react";
 import "./Sessions.css";
 import { apiFetch } from "./api/apiFetch";
 import { UserContext } from "./UserContext";
+import { jsx } from "react/jsx-runtime";
 
 interface Session{
     id: string,
@@ -15,7 +16,9 @@ interface Session{
 interface SessionCardProps{
     session: Session,
     setSessionList: React.Dispatch<React.SetStateAction<Session[]>>,
-    setOptimisticSessionList: (action: Session[] | ((pendingState: Session[]) => Session[])) => void
+    setOptimisticSessionList: (action: Session[] | ((pendingState: Session[]) => Session[])) => void,
+    setStartedSessionId: React.Dispatch<React.SetStateAction<string | null>>,
+    startedSessionId: string | null
 }
 
 export function Sessions(){
@@ -25,6 +28,10 @@ export function Sessions(){
     const [isAdding, setIsAdding] = useState(false);
     const [newSession, setNewSession] = useState<Omit<Session, "id" | "createdAt">>({language: "", category: ""});
     const [isPending, startTransition] = useTransition();
+    const [startedSessionId, setStartedSessionId] = useState<string | null>(null);
+
+    const sessionDrawerRef = useRef<HTMLDialogElement | null>(null);
+
 
     const getSessionsQuery = useQuery({
         queryKey: ['sessions', user?.email], 
@@ -37,6 +44,35 @@ export function Sessions(){
             return data as Array<Session>;
         }
     });
+
+    const startSessionMutation = useMutation(
+        {
+            mutationFn: (id: string) => {
+                const response = await apiFetch(`/learningsession/${id}`);
+                const data = await response.json();
+
+                if(!response.ok){
+                    throw new Error(data.message);
+                }
+
+                return data;
+            },
+            onSuccess: ,
+            onError: data => alert(data.message)
+        }
+    );
+
+    useEffect(() => {
+        const modal = sessionDrawerRef.current;
+        if(!modal) return;
+        if(!startedSessionId){
+            modal.showModal();
+            startSessionMutation.mutate(startedSessionId as string)
+        }
+        else{
+            modal.close();
+        }
+    }, [startedSessionId]);
 
     useEffect(() =>{
         if(getSessionsQuery.data){
@@ -77,6 +113,9 @@ export function Sessions(){
         });
     }
 
+    const session = startSessionMutation.data.session;
+    const sessionWords = startSessionMutation.data.words;
+
     if(getSessionsQuery.isPending){
         return (
             <section className="sessions area">
@@ -93,6 +132,10 @@ export function Sessions(){
             <h2>Learning sessions:</h2>
             <button onClick={() => setIsAdding(true)}>Add session</button>
             <hr />
+            {startedSessionId && 
+            <dialog ref={sessionDrawerRef}>
+                <Session session={session} sessionWords={sessionWords} startedSessionId={startedSessionId} setStartedSessionId={setStartedSessionId}/>
+            </dialog>}
             { isAdding 
             ? <form onSubmit={(e) => {
                 e.preventDefault();
@@ -117,13 +160,13 @@ export function Sessions(){
             <ul>{[...optimisticSessionList]
                 .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                 .map(s => 
-                    <SessionCard session={s} setSessionList={setSessionList} setOptimisticSessionList={setOptimisticSessionList}/>
+                    <SessionCard session={s} setSessionList={setSessionList} setOptimisticSessionList={setOptimisticSessionList} setStartedSessionId={setStartedSessionId} startedSessionId={startedSessionId}/>
             )}</ul></>}
         </section>
     );
 }
 
-function SessionCard({ session, setSessionList, setOptimisticSessionList } : SessionCardProps){
+function SessionCard({ session, setSessionList, setOptimisticSessionList, setStartedSessionId, startedSessionId } : SessionCardProps){
     const sessionCreatedAt = new Date(session.createdAt);
     const [isPending, startTransition] = useTransition();
 
@@ -162,10 +205,41 @@ function SessionCard({ session, setSessionList, setOptimisticSessionList } : Ses
                 {session.language && <span className="language">{session.language}</span>}
                 {session.category && <span className="category">{session.category}</span>}
                 <div className="card button">
-                    <button disabled={deleteSessionMutation.isPending}>Start</button>
-                    <button onClick={() => handleDelete(session.id)} disabled={deleteSessionMutation.isPending}>Delete</button>
+                    <button onClick={() => {
+                        setStartedSessionId(session.id)
+                    }} disabled={deleteSessionMutation.isPending || (startedSessionId ? true : false)}>Start</button>
+                    <button onClick={() => handleDelete(session.id)} 
+                    disabled={deleteSessionMutation.isPending || (startedSessionId ? true : false)}>Delete</button>
                 </div>
             </div>
         </li>
     );
+}
+
+function Session({ session, sessionWords, startedSessionId, setStartedSessionId }){
+
+    const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false);
+    const [currentWord, setCurrentWord] = useState();
+
+    setCurrentWord(sessionWords.find(w => w.isCorrect === null))
+
+    function handleTrueAnswer(){}
+    function handleFalseAnswer(){}
+    function handleNext(){}
+    function handleClose(){}
+
+    return(<div>
+        <div className="session">
+            <span>{currentWord.word}</span>
+            {!isLastAnswerCorrect && <>
+                <span>{currentWord.translation}</span>
+                <span>{currentWord.usageExample}</span>
+            </>}
+        </div>
+        {isLastAnswerCorrect ?
+        <><button>Remember</button>
+        <button>Don't remember</button></>
+        : <button>Next</button>}
+        <button>Close</button>
+    </div>);
 }
