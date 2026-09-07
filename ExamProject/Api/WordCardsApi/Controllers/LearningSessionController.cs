@@ -57,6 +57,7 @@ public class LearningSessionController : ControllerBase
         var sessionWords = await _sessionWordProvider.GetSessionWordsAsync(session.Id);
         var sessionWordsDto = sessionWords.Select(w => new SessionWordResponseDto
         {
+            Id = w.Id,
             SessionId = w.SessionId,
             UserWordId = w.UserWordId,
             isCorrect = w.isCorrect,

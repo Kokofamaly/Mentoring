@@ -24,6 +24,7 @@ interface SessionCardProps{
 
 
 interface SessionWord{
+    id: string,
     sessionId: string,
     userWordId: string,
     isCorrect: boolean | null,
@@ -73,7 +74,7 @@ export function Sessions(){
                     const data = await response.json()
                     throw new Error(data.message);
                 }
-                const data = await response.json() as Promise<{session: Session, sessionWords: Array<SessionWord>}>;
+                const data = await response.json() as { session: Session, sessionWords: Array<SessionWord> };
                 return data;
             },
             onError: data => alert(data.message)
@@ -145,7 +146,7 @@ export function Sessions(){
             <button onClick={() => setIsAdding(true)}>Add session</button>
             <hr />
             {startedSessionId && startSessionMutation.data && 
-            <dialog ref={sessionDrawerRef}>
+            <dialog ref={sessionDrawerRef} onCancel={e => e.preventDefault()}>
                 <Session session={startSessionMutation.data.session} sessionWords={startSessionMutation.data.sessionWords} startedSessionId={startedSessionId} setStartedSessionId={setStartedSessionId}/>
             </dialog>}
             { isAdding 
@@ -230,39 +231,98 @@ function SessionCard({ session, setSessionList, setOptimisticSessionList, setSta
 
 function Session({ session, sessionWords, startedSessionId, setStartedSessionId } : StartedSessionProps){
 
+    const [words, setWords] = useState(sessionWords);
     const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState<boolean | null>(null);
     const [currentWord, setCurrentWord] = useState<SessionWord | null | undefined>(sessionWords.find(w => w.isCorrect === null));
 
+    const saveAnswerMutation = useMutation({
+        mutationFn: async (props: {sessionId: string, wordRequest: {id: string, sessionId: string, userWordId: string, isCorrect: boolean}}) => {
+            const response = await apiFetch(`/learningsession/${props.sessionId}`, {
+                method: "PUT",
+                body: JSON.stringify(props.wordRequest)
+            });
+
+            if(!response.ok){
+                const data = await response.json();
+                throw new Error(data.message);
+            }
+
+            return props.wordRequest;
+        },
+        onSuccess: (wordRequest) => {
+            setWords(prev => {
+                const updatedWords = prev.map(word =>
+                    word.id === wordRequest.id
+                        ? { ...word, isCorrect: wordRequest.isCorrect }
+                        : word
+                );
+
+                if (wordRequest.isCorrect) {
+                    const nextWord = updatedWords.find(
+                        word => word.isCorrect === null
+                    );
+
+                    setCurrentWord(nextWord);
+                    setIsLastAnswerCorrect(null);
+                }
+
+                return updatedWords;
+            });
+        },
+        onError: (error) => alert(error.message)
+    });
     
 
-    function handleTrueAnswer(){
-        setCurrentWord(sessionWords.find(w => w.isCorrect === null));
+    function handleAnswer(isCorrect: boolean) {
+        if (!currentWord) return;
+
+        const wordRequest = {
+            id: currentWord.id,
+            userWordId: currentWord.userWordId,
+            sessionId: currentWord.sessionId,
+            isCorrect: isCorrect
+        };
+
+        saveAnswerMutation.mutate({
+            sessionId: session.id,
+            wordRequest
+        });
+
+        setIsLastAnswerCorrect(isCorrect);
+
     }
-    function handleFalseAnswer(){}
+
     function handleNext(){
-        setCurrentWord(sessionWords.find(w => w.isCorrect === null));
+        const nextWord = words.find(word => word.isCorrect === null);
+
+        setCurrentWord(nextWord);
         setIsLastAnswerCorrect(null);
     }
-    function handleClose(){}
+    function handleClose(){
+        setIsLastAnswerCorrect(null);
+        setStartedSessionId(null);
+        setCurrentWord(null);
+    }
 
 
 
-    return( !currentWord
+    return( currentWord
     ? (<div>
-        <span>You know {sessionWords.map(w => w.isCorrect === true).length} words of {sessionWords.length}</span>
-    </div> )
-    : (<div>
         <div className="session">
             <span>{currentWord.word}</span>
-            {isLastAnswerCorrect !== true && <>
+            {isLastAnswerCorrect === false && <>
                 <span>{currentWord.translation}</span>
                 <span>{currentWord.usageExample}</span>
             </>}
         </div>
-        {isLastAnswerCorrect 
-        ? <><button onClick={() => handleTrueAnswer()}>Remember</button>
-        <button onClick={() => handleFalseAnswer()}>Don't remember</button></>
+        {isLastAnswerCorrect || isLastAnswerCorrect === null
+        ? <><button onClick={() => handleAnswer(true)}>Remember</button>
+        <button onClick={() => handleAnswer(false)}>Don't remember</button></>
         : <button onClick={() => handleNext()}>Next</button>}
         <button onClick={() => handleClose()}>Close</button>
-    </div>));
+    </div>) 
+    : (<div>
+        <span>You know {words.filter(w => w.isCorrect === true).length} words of {words.length}</span>
+        <button onClick={() => handleClose()}>Close</button>о
+    </div> ));
 }
