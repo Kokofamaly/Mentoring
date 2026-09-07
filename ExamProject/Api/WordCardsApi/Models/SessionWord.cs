@@ -19,4 +19,5 @@ public class SessionWord
     [Required]
     public string Translation { get; set; }
     public string? UsageExample { get; set; }
+    public int Order { get; set; } = 0;
 }

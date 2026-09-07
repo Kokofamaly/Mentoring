@@ -10,4 +10,5 @@ public class SessionWordResponseDto
     public string Word { get; set; }
     public string Translation { get; set; }
     public string? UsageExample { get; set; }
+    public int Order { get; set; }
 }

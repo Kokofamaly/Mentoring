@@ -55,7 +55,7 @@ public class LearningSessionController : ControllerBase
         var sessionDto = MapResponseDto(session);
 
         var sessionWords = await _sessionWordProvider.GetSessionWordsAsync(session.Id);
-        var sessionWordsDto = sessionWords.Select(w => new SessionWordResponseDto
+        var sessionWordsDto = sessionWords.OrderByDescending(w => w.Order).Select(w => new SessionWordResponseDto
         {
             Id = w.Id,
             SessionId = w.SessionId,
@@ -63,7 +63,8 @@ public class LearningSessionController : ControllerBase
             isCorrect = w.isCorrect,
             Word = w.Word,
             Translation = w.Translation,
-            UsageExample = w.UsageExample
+            UsageExample = w.UsageExample,
+            Order = w.Order
         });
         
         _logger.LogInformation($"{DateTimeOffset.UtcNow}: user:{userId} gets session {sessionDto.Id}");
@@ -97,9 +98,9 @@ public class LearningSessionController : ControllerBase
         await _sessionWordProvider.SetCorrectAsync(answerDto.Id, answerDto.isCorrect);
 
         if(answerDto.isCorrect)
-            await _userWordService.UpUserWordDifficultyLevelAsync(answerDto.UserWordId);
-        else
             await _userWordService.ResetUserWordDifficultyLevelAsync(answerDto.UserWordId);
+        else
+            await _userWordService.UpUserWordDifficultyLevelAsync(answerDto.UserWordId);
 
         _logger.LogInformation($"{DateTimeOffset.UtcNow}: session answer");
 

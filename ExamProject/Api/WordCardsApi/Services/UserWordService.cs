@@ -17,12 +17,12 @@ public class UserWordService
     {
         var userWord = new UserWord
         {
-            Word = wordDto.Word,
-            Translation = wordDto.Translation,
+            Word = wordDto.Word.ToLowerInvariant(),
+            Translation = wordDto.Translation.ToLowerInvariant(),
             UserId = userId,
-            Language = wordDto.Language,
-            Category = wordDto.Category,
-            UsageExample = wordDto.UsageExample
+            Language = wordDto.Language.ToLowerInvariant(),
+            Category = wordDto.Category?.ToLowerInvariant(),
+            UsageExample = wordDto.UsageExample?.ToLowerInvariant()
         };
         return await _userWordProvider.CreateUserWordAsync(userWord);
     }
@@ -36,6 +36,12 @@ public class UserWordService
 
     public async Task<UserWord?> UpdateUserWordAsync(string wordId, UserWordUpdateDto wordUpdateDto)
     {
+        wordUpdateDto.Word = wordUpdateDto.Word.ToLowerInvariant();
+        wordUpdateDto.Translation = wordUpdateDto.Translation.ToLowerInvariant();
+        wordUpdateDto.Language = wordUpdateDto.Language.ToLowerInvariant();
+        wordUpdateDto.Category = wordUpdateDto.Category?.ToLowerInvariant();
+        wordUpdateDto.UsageExample = wordUpdateDto.UsageExample?.ToLowerInvariant();
+
         var oldWord = await _userWordProvider.GetUserWordAsync(wordId);
         
         if(oldWord == null) return null;

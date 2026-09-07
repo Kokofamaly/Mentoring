@@ -25,6 +25,9 @@ public class LearningSessionService
         var words = await _userWordProvider.GetUserWordsByUserIdAsync(userId);
         var selectedWordsQuery = words.Where(w => w.DifficultyLevel > 0);
 
+        sessionDto.Category = sessionDto.Category?.ToLowerInvariant();
+        sessionDto.Language = sessionDto.Language?.ToLowerInvariant();
+
         if(!string.IsNullOrEmpty(sessionDto.Category)) selectedWordsQuery = selectedWordsQuery.Where(w => w.Category == sessionDto.Category);
         if(!string.IsNullOrEmpty(sessionDto.Language)) selectedWordsQuery = selectedWordsQuery.Where(w => w.Language == sessionDto.Language);
 

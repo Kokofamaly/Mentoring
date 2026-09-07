@@ -17,9 +17,12 @@ public class UserService
     public async Task<User?> GetUserAsync(string userId)
     => await _userProvider.GetUserByIdAsync(userId);
 
-    public async Task<User> UpdateUserAsync(string userId, UserUpdateDto userUpdateDto)
-    => await _userProvider.UpdateUserAsync(userUpdateDto, userId);
+    public async Task<User> UpdateUserAsync(string userId, UserUpdateDto userUpdateDto){
+        userUpdateDto.Email = userUpdateDto.Email.ToLowerInvariant();
+        userUpdateDto.Name = userUpdateDto.Name.ToLowerInvariant();
 
+        return await _userProvider.UpdateUserAsync(userUpdateDto, userId);
+    }
     public async Task DeleteUserAsync(string userId, string refreshToken){
 
         await _userProvider.DeleteUserAsync(userId);

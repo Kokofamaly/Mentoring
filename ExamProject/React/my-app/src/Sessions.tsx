@@ -30,7 +30,8 @@ interface SessionWord{
     isCorrect: boolean | null,
     word: string,
     translation: string,
-    usageExample?: string
+    usageExample?: string,
+    order: number
 }
 
 interface StartedSessionProps{
@@ -235,7 +236,7 @@ function SessionCard({ session, setSessionList, setOptimisticSessionList, setSta
 
 function Session({ session, sessionWords, startedSessionId, setStartedSessionId } : StartedSessionProps){
 
-    const [words, setWords] = useState(sessionWords);
+    const [words, setWords] = useState([...sessionWords].sort((a, b) => b.order - a.order));
     const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState<boolean | null>(null);
     const [currentWord, setCurrentWord] = useState<SessionWord | null | undefined>(sessionWords.find(w => w.isCorrect === null));
 

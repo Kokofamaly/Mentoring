@@ -20,7 +20,7 @@ public class AuthService
 
     public async Task<User?> LoginUserAsync(UserLoginDto userDto)
     {
-        var user = await _userProvider.GetUserAsync(userDto.Email);
+        var user = await _userProvider.GetUserAsync(userDto.Email.ToLowerInvariant());
 
         if(user == null) return null;
 
@@ -40,8 +40,8 @@ public class AuthService
             
             var userToRegister = new User
             {
-                Name = userDto.Name,
-                Email = userDto.Email,
+                Name = userDto.Name.ToLowerInvariant(),
+                Email = userDto.Email.ToLowerInvariant(),
                 HashedPassword = string.Empty
             };
             userToRegister.HashedPassword = _hasher.HashPassword(userToRegister, userDto.Password);
@@ -52,7 +52,7 @@ public class AuthService
         }
         catch(MongoWriteException ex) when (ex.WriteError?.Category == ServerErrorCategory.DuplicateKey)
         {
-            throw new EmailAlreadyExistsException(userDto.Email);
+            throw new EmailAlreadyExistsException(userDto.Email.ToLowerInvariant());
         }
 
     }
