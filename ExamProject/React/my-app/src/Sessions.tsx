@@ -4,6 +4,7 @@ import "./Sessions.css";
 import { apiFetch } from "./api/apiFetch";
 import { UserContext } from "./UserContext";
 import { jsx } from "react/jsx-runtime";
+import { data } from "react-router-dom";
 
 interface Session{
     id: string,
@@ -19,6 +20,23 @@ interface SessionCardProps{
     setOptimisticSessionList: (action: Session[] | ((pendingState: Session[]) => Session[])) => void,
     setStartedSessionId: React.Dispatch<React.SetStateAction<string | null>>,
     startedSessionId: string | null
+}
+
+
+interface SessionWord{
+    sessionId: string,
+    userWordId: string,
+    isCorrect: boolean | null,
+    word: string,
+    translation: string,
+    usageExample?: string
+}
+
+interface StartedSessionProps{
+    session: Session,
+    sessionWords: Array<SessionWord>,
+    startedSessionId: string,
+    setStartedSessionId: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 export function Sessions(){
@@ -47,31 +65,27 @@ export function Sessions(){
 
     const startSessionMutation = useMutation(
         {
-            mutationFn: (id: string) => {
+            mutationFn: async (id: string) => {
                 const response = await apiFetch(`/learningsession/${id}`);
-                const data = await response.json();
+                
 
                 if(!response.ok){
+                    const data = await response.json()
                     throw new Error(data.message);
                 }
-
+                const data = await response.json() as Promise<{session: Session, sessionWords: Array<SessionWord>}>;
                 return data;
             },
-            onSuccess: ,
             onError: data => alert(data.message)
         }
     );
 
     useEffect(() => {
         const modal = sessionDrawerRef.current;
-        if(!modal) return;
-        if(!startedSessionId){
-            modal.showModal();
-            startSessionMutation.mutate(startedSessionId as string)
-        }
-        else{
-            modal.close();
-        }
+        if (!modal || !startedSessionId) return;
+
+        modal.showModal();
+        startSessionMutation.mutate(startedSessionId);
     }, [startedSessionId]);
 
     useEffect(() =>{
@@ -113,8 +127,6 @@ export function Sessions(){
         });
     }
 
-    const session = startSessionMutation.data.session;
-    const sessionWords = startSessionMutation.data.words;
 
     if(getSessionsQuery.isPending){
         return (
@@ -132,9 +144,9 @@ export function Sessions(){
             <h2>Learning sessions:</h2>
             <button onClick={() => setIsAdding(true)}>Add session</button>
             <hr />
-            {startedSessionId && 
+            {startedSessionId && startSessionMutation.data && 
             <dialog ref={sessionDrawerRef}>
-                <Session session={session} sessionWords={sessionWords} startedSessionId={startedSessionId} setStartedSessionId={setStartedSessionId}/>
+                <Session session={startSessionMutation.data.session} sessionWords={startSessionMutation.data.sessionWords} startedSessionId={startedSessionId} setStartedSessionId={setStartedSessionId}/>
             </dialog>}
             { isAdding 
             ? <form onSubmit={(e) => {
@@ -216,30 +228,41 @@ function SessionCard({ session, setSessionList, setOptimisticSessionList, setSta
     );
 }
 
-function Session({ session, sessionWords, startedSessionId, setStartedSessionId }){
+function Session({ session, sessionWords, startedSessionId, setStartedSessionId } : StartedSessionProps){
 
-    const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false);
-    const [currentWord, setCurrentWord] = useState();
+    const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState<boolean | null>(null);
+    const [currentWord, setCurrentWord] = useState<SessionWord | null | undefined>(sessionWords.find(w => w.isCorrect === null));
 
-    setCurrentWord(sessionWords.find(w => w.isCorrect === null))
+    
 
-    function handleTrueAnswer(){}
+    function handleTrueAnswer(){
+        setCurrentWord(sessionWords.find(w => w.isCorrect === null));
+    }
     function handleFalseAnswer(){}
-    function handleNext(){}
+    function handleNext(){
+        setCurrentWord(sessionWords.find(w => w.isCorrect === null));
+        setIsLastAnswerCorrect(null);
+    }
     function handleClose(){}
 
-    return(<div>
+
+
+    return( !currentWord
+    ? (<div>
+        <span>You know {sessionWords.map(w => w.isCorrect === true).length} words of {sessionWords.length}</span>
+    </div> )
+    : (<div>
         <div className="session">
             <span>{currentWord.word}</span>
-            {!isLastAnswerCorrect && <>
+            {isLastAnswerCorrect !== true && <>
                 <span>{currentWord.translation}</span>
                 <span>{currentWord.usageExample}</span>
             </>}
         </div>
-        {isLastAnswerCorrect ?
-        <><button>Remember</button>
-        <button>Don't remember</button></>
-        : <button>Next</button>}
-        <button>Close</button>
-    </div>);
+        {isLastAnswerCorrect 
+        ? <><button onClick={() => handleTrueAnswer()}>Remember</button>
+        <button onClick={() => handleFalseAnswer()}>Don't remember</button></>
+        : <button onClick={() => handleNext()}>Next</button>}
+        <button onClick={() => handleClose()}>Close</button>
+    </div>));
 }
