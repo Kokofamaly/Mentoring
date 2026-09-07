@@ -7,7 +7,7 @@ public class RefreshToken
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public string? Id { get; set; }
     public string HashedToken { get; set; } = string.Empty;
     public string UserId { get; set; } = string.Empty;
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;

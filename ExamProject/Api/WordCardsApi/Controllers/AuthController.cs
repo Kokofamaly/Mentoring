@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
     {
         var userToLogin = await _authService.LoginUserAsync(userLoginDto);
         
-        if(userToLogin == null) return BadRequest("Failed to login");
+        if(userToLogin == null || userToLogin.Id == null) return BadRequest("Failed to login");
 
         var userResponse = new UserResponseDto{ Email = userToLogin.Email, Name = userToLogin.Name };
 
@@ -52,9 +52,10 @@ public class AuthController : ControllerBase
     {
         var createdUser = await _authService.RegisterUserAsync(userRegisterDto);
 
-        if(createdUser == null) return BadRequest("Failed to register user.");
+        if(createdUser == null || createdUser.Id == null) return BadRequest("Failed to register user.");
 
         var userResponse = new UserResponseDto{ Email = createdUser.Email, Name = createdUser.Name };
+
 
         var refreshToken = await _refreshTokenService.GenerateTokenAsync(createdUser.Id);
         SetRefreshTokenCookies(refreshToken);

@@ -107,7 +107,7 @@ public class UserWordController : ControllerBase
     {
         var wordDto = new UserWordResponseDto
         {
-            Id = word.Id,
+            Id = word.Id!,
             Word = word.Word.StartStringWithCapitalNormalize(),
             Translation = word.Translation.StartStringWithCapitalNormalize(),
             Language = word.Language.StartStringWithCapitalNormalize(),

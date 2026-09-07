@@ -8,16 +8,16 @@ public class SessionWord
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public string? Id { get; set; }
     [Required]
-    public string SessionId { get; set; }
+    public string SessionId { get; set; } = string.Empty;
     [Required]
-    public string UserWordId { get; set; }
+    public string UserWordId { get; set; } = string.Empty;
     public bool? isCorrect { get; set; }
     [Required]
-    public string Word { get; set; }
+    public string Word { get; set; } = string.Empty;
     [Required]
-    public string Translation { get; set; }
+    public string Translation { get; set; } = string.Empty;
     public string? UsageExample { get; set; }
     public int Order { get; set; } = 0;
 }

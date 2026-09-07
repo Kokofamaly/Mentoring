@@ -58,7 +58,7 @@ public class MongoDbContext
         {
             userWords.Add(new UserWord()
             {
-                UserId = user.Id,
+                UserId = user.Id!,
                 Word = words[i],
                 Translation = translations[i],
                 Language = "english",
@@ -73,7 +73,7 @@ public class MongoDbContext
         {
             userWords.Add(new UserWord()
             {
-                UserId = user.Id,
+                UserId = user.Id!,
                 Word = foodWords[i],
                 Translation = foodTranslations[i],
                 Language = "english",
@@ -87,14 +87,14 @@ public class MongoDbContext
 
         LearningSession categorizedSession = new LearningSession
         {
-            UserId = user.Id,
+            UserId = user.Id!,
             CreatedAt = DateTimeOffset.UtcNow,
             Category = "food",
             Language = "english"
         };
         LearningSession defaultSession = new LearningSession
         {
-            UserId = user.Id,
+            UserId = user.Id!,
             CreatedAt = DateTimeOffset.UtcNow,
         }; 
 
@@ -111,8 +111,8 @@ public class MongoDbContext
             Console.WriteLine($"SESSION WORD NUMBER: {index}");
             sessionWords.Add(new SessionWord
             {
-                UserWordId = word.Id,
-                SessionId = word.Category == categorizedSession.Category ? categorizedSession.Id : defaultSession.Id,
+                UserWordId = word.Id!,
+                SessionId = word.Category == categorizedSession.Category ? categorizedSession.Id! : defaultSession.Id!,
                 Word = word.Word,
                 Translation = word.Translation,
                 UsageExample = word.UsageExample

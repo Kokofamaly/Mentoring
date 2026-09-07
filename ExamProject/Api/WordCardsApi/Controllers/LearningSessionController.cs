@@ -55,10 +55,10 @@ public class LearningSessionController : ControllerBase
 
         var sessionDto = MapResponseDto(session);
 
-        var sessionWords = await _sessionWordProvider.GetSessionWordsAsync(session.Id);
+        var sessionWords = await _sessionWordProvider.GetSessionWordsAsync(session.Id!);
         var sessionWordsDto = sessionWords.OrderByDescending(w => w.Order).Select(w => new SessionWordResponseDto
         {
-            Id = w.Id,
+            Id = w.Id!,
             SessionId = w.SessionId,
             UserWordId = w.UserWordId,
             isCorrect = w.isCorrect,
@@ -132,7 +132,7 @@ public class LearningSessionController : ControllerBase
     {
         var sessionDto = new LearningSessionResponseDto
         {
-            Id = session.Id,
+            Id = session.Id!,
             CreatedAt = session.CreatedAt,
             Category = session.Category?.StartStringWithCapitalNormalize(),
             Language = session.Language?.StartStringWithCapitalNormalize()

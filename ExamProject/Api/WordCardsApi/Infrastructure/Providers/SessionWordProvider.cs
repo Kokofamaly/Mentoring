@@ -15,7 +15,7 @@ public class SessionWordProvider
 
     public async Task<IEnumerable<SessionWord>> CreateSessionWordsAsync(IEnumerable<UserWord> words, string sessionId)
     {
-        var sessionWords = words.OrderBy(w => w.DifficultyLevel).Select(w => new SessionWord{ SessionId = sessionId, UserWordId = w.Id, Translation = w.Translation, Word = w.Word, UsageExample = w.UsageExample, Order = w.DifficultyLevel}).ToList();
+        var sessionWords = words.OrderBy(w => w.DifficultyLevel).Select(w => new SessionWord{ SessionId = sessionId, UserWordId = w.Id!, Translation = w.Translation, Word = w.Word, UsageExample = w.UsageExample, Order = w.DifficultyLevel}).ToList();
         await _sessionWords.InsertManyAsync(sessionWords);
         return sessionWords;
     }

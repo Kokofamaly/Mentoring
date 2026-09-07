@@ -57,6 +57,6 @@ public class UserWordService
     => await _userWordProvider.ResetUserWordDifficultyLevelAsync(wordId);
 
     public async Task DeleteUserWordAsync(UserWord userWord)
-    => await _userWordProvider.DeleteUserWordAsync(userWord.Id);
+    => await _userWordProvider.DeleteUserWordAsync(userWord.Id!);
     
 }

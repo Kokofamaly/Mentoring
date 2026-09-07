@@ -57,7 +57,7 @@ public class LearningSessionService
 
         var result = await _learningSessionProvider.CreateSessionAsync(session);
 
-        await _sessionWordProvider.CreateSessionWordsAsync(selectedWords, result.Id);
+        await _sessionWordProvider.CreateSessionWordsAsync(selectedWords, result.Id!);
         
         return result;
     }
@@ -69,8 +69,8 @@ public class LearningSessionService
     
     public async Task DeleteSessionAsync(LearningSession session)
     {
-        await _learningSessionProvider.DeleteSessionAsync(session.Id, session.UserId);
-        await _sessionWordProvider.DeleteSessionWordsAsync(session.Id);
+        await _learningSessionProvider.DeleteSessionAsync(session.Id!, session.UserId);
+        await _sessionWordProvider.DeleteSessionWordsAsync(session.Id!);
         
     }
 }
