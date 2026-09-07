@@ -82,12 +82,16 @@ export function Sessions(){
     );
 
     useEffect(() => {
-        const modal = sessionDrawerRef.current;
-        if (!modal || !startedSessionId) return;
+        if (!startedSessionId) return;
 
-        modal.showModal();
         startSessionMutation.mutate(startedSessionId);
     }, [startedSessionId]);
+
+    useEffect(() => {
+        if(!startSessionMutation.data) return;
+
+        sessionDrawerRef.current?.showModal();
+    }, [startSessionMutation.data]);
 
     useEffect(() =>{
         if(getSessionsQuery.data){
@@ -309,20 +313,20 @@ function Session({ session, sessionWords, startedSessionId, setStartedSessionId 
     return( currentWord
     ? (<div>
         <div className="session">
-            <span>{currentWord.word}</span>
+            <span className="word">{currentWord.word}</span>
             {isLastAnswerCorrect === false && <>
-                <span>{currentWord.translation}</span>
-                <span>{currentWord.usageExample}</span>
+                <span className="translation">{currentWord.translation}</span>
+                {currentWord.usageExample && <span className="usageExample">{currentWord.usageExample}</span>}
             </>}
         </div>
         {isLastAnswerCorrect || isLastAnswerCorrect === null
         ? <><button onClick={() => handleAnswer(true)}>Remember</button>
         <button onClick={() => handleAnswer(false)}>Don't remember</button></>
         : <button onClick={() => handleNext()}>Next</button>}
-        <button onClick={() => handleClose()}>Close</button>
+        <button className="closeButton" onClick={() => handleClose()}>Close</button>
     </div>) 
     : (<div>
         <span>You know {words.filter(w => w.isCorrect === true).length} words of {words.length}</span>
-        <button onClick={() => handleClose()}>Close</button>о
+        <button className="closeButton" onClick={() => handleClose()}>Close</button>
     </div> ));
 }

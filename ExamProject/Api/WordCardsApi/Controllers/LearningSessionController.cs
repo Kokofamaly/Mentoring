@@ -50,7 +50,7 @@ public class LearningSessionController : ControllerBase
         var session = await _learningSessionService.GetLearningSessionAsync(id);
 
         if(session == null) return NotFound();
-        if(session.UserId == userId) return Forbid();
+        if(session.UserId != userId) return Forbid();
 
         var sessionDto = MapResponseDto(session);
 
@@ -66,9 +66,9 @@ public class LearningSessionController : ControllerBase
             UsageExample = w.UsageExample
         });
         
-        _logger.LogInformation($"{DateTimeOffset.UtcNow}: user:{userId} gets session{sessionDto.Id}");
+        _logger.LogInformation($"{DateTimeOffset.UtcNow}: user:{userId} gets session {sessionDto.Id}");
 
-        return Ok(new {session = sessionDto, words = sessionWordsDto});
+        return Ok(new {session = sessionDto, sessionWords = sessionWordsDto});
 
     }
 
