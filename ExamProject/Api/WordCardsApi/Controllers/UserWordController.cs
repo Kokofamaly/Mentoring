@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using WordCardsApi.DTOs;
+using WordCardsApi.Extensions;
 using WordCardsApi.Models;
 using WordCardsApi.Services;
 
@@ -107,14 +108,15 @@ public class UserWordController : ControllerBase
         var wordDto = new UserWordResponseDto
         {
             Id = word.Id,
-            Word = word.Word,
-            Translation = word.Translation,
-            Language = word.Language,
-            Category = word.Category,
-            UsageExample = word.UsageExample
+            Word = word.Word.StartStringWithCapitalNormalize(),
+            Translation = word.Translation.StartStringWithCapitalNormalize(),
+            Language = word.Language.StartStringWithCapitalNormalize(),
+            Category = word.Category?.StartStringWithCapitalNormalize(),
+            UsageExample = word.UsageExample?.StartStringWithCapitalNormalize()
         };
 
         return wordDto;
     }
+
 
 }

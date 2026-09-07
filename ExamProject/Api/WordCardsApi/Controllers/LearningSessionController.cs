@@ -4,6 +4,7 @@ using WordCardsApi.DTOs;
 using WordCardsApi.Models;
 using WordCardsApi.Services;
 using WordCardsApi.Infrastructure.Providers;
+using WordCardsApi.Extensions;
 
 namespace WordCardsApi.Controllers;
 
@@ -61,9 +62,9 @@ public class LearningSessionController : ControllerBase
             SessionId = w.SessionId,
             UserWordId = w.UserWordId,
             isCorrect = w.isCorrect,
-            Word = w.Word,
-            Translation = w.Translation,
-            UsageExample = w.UsageExample,
+            Word = w.Word.StartStringWithCapitalNormalize(),
+            Translation = w.Translation.StartStringWithCapitalNormalize(),
+            UsageExample = w.UsageExample?.StartStringWithCapitalNormalize(),
             Order = w.Order
         });
         
@@ -133,9 +134,10 @@ public class LearningSessionController : ControllerBase
         {
             Id = session.Id,
             CreatedAt = session.CreatedAt,
-            Category = session.Category,
-            Language = session.Language
+            Category = session.Category?.StartStringWithCapitalNormalize(),
+            Language = session.Language?.StartStringWithCapitalNormalize()
         };
         return sessionDto;
     }
+
 }

@@ -45,6 +45,7 @@ public class UserController : ControllerBase
         if(user == null) return BadRequest();
 
         _logger.LogInformation($"{DateTimeOffset.UtcNow}: User:{user.Id} updates profile data");
+        
         return NoContent();
     }
 
