@@ -1,6 +1,6 @@
 
 .words.area {
-    background-color: rgb(222, 221, 221);
+    background-color: hwb(0 95% 10%);
     padding: 1.5rem;
     min-width: 0;
     border-radius: 16px;
@@ -17,6 +17,13 @@ hr{
 h2 + button{
     flex: 1;
     margin: 1rem auto;
+    transition:
+        background-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+h2 + button:hover{
+    transform: translateY(-2px);
 }
 
 h2 + button:disabled{

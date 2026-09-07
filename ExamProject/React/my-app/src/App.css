@@ -7,9 +7,27 @@ html{
   
 }
 
+
+
 body{
   width: 100vw;
-  background-color: #fbfbf0;
+  height: 100vh;
+  background-color: rgb(253, 252, 246);
+}
+
+body::before{
+  content: '';
+  background-image: url("assets/h-co--odUkx8C2gg-unsplash.jpg");
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  opacity: .08;
+}
+
+form{
+  background-color: aqua;
 }
 
 form label{
@@ -20,7 +38,13 @@ form label{
 
 }
 form label + input{
-  margin-top: auto;
+  margin-top: 5px;
+}
+
+form button{
+  width: 100%;
+  margin: 0.75rem auto;
+
 }
 input{
   border: 1px solid #f0f0f0;

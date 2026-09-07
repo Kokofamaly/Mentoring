@@ -166,7 +166,7 @@ export function Sessions(){
 
                 <label>Language</label>
                 <input type="text" value={newSession.language} onChange={(e) => setNewSession(s => ({...s, language: e.target.value}))} />
-
+                
                 <button type="submit" disabled={addSessionMutation.isPending}>Confirm</button>
                 <button type="button" onClick={() => {
                     setIsAdding(false);
@@ -313,6 +313,12 @@ function Session({ session, sessionWords, startedSessionId, setStartedSessionId 
 
     return( currentWord
     ? (<div>
+        <div className="session progress">
+            <div className="text"> {words.filter(w => w.isCorrect !== null).length} / {words.length}</div>
+            <div className="progress bar">
+                <div className="fill" style={{width: `${(words.filter(w => w.isCorrect !== null).length / words.length) * 100}%`}}/>
+            </div>
+        </div>
         <div className="session">
             <span className="word">{currentWord.word}</span>
             {isLastAnswerCorrect === false && <>
