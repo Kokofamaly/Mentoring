@@ -40,8 +40,8 @@ public class AuthService
             
             var userToRegister = new User
             {
-                Name = userDto.Name.ToLowerInvariant(),
-                Email = userDto.Email.ToLowerInvariant(),
+                Name = userDto.Name.Trim().ToLowerInvariant(),
+                Email = userDto.Email.Trim().ToLowerInvariant(),
                 HashedPassword = string.Empty
             };
             userToRegister.HashedPassword = _hasher.HashPassword(userToRegister, userDto.Password);
@@ -52,7 +52,7 @@ public class AuthService
         }
         catch(MongoWriteException ex) when (ex.WriteError?.Category == ServerErrorCategory.DuplicateKey)
         {
-            throw new EmailAlreadyExistsException(userDto.Email.ToLowerInvariant());
+            throw new EmailAlreadyExistsException(userDto.Email.Trim().ToLowerInvariant());
         }
 
     }

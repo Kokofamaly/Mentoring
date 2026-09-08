@@ -18,8 +18,8 @@ public class UserService
     => await _userProvider.GetUserByIdAsync(userId);
 
     public async Task<User> UpdateUserAsync(string userId, UserUpdateDto userUpdateDto){
-        userUpdateDto.Email = userUpdateDto.Email.ToLowerInvariant();
-        userUpdateDto.Name = userUpdateDto.Name.ToLowerInvariant();
+        userUpdateDto.Email = userUpdateDto.Email.Trim().ToLowerInvariant();
+        userUpdateDto.Name = userUpdateDto.Name.Trim().ToLowerInvariant();
 
         return await _userProvider.UpdateUserAsync(userUpdateDto, userId);
     }

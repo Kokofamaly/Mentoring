@@ -32,9 +32,14 @@ export function ProtectedRoute({ setUser } : {
         }
     }, [authQuery.data]);
 
+    if(authQuery.isPending){
+        return <div>Loading...</div>
+    }
+    
     if(authQuery.isError){
         return <Navigate to="login" replace/>;
     }
+
 
     return <Outlet />;
 }

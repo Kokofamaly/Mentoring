@@ -107,10 +107,7 @@ export function Sessions(){
         onError: (error) => alert(error.message)
     });
 
-    // const [isPending, error, data] = useQuery({
-    //     queryKey: ['sessionList'],
-    //     queryFn: () => fetch("/learningsession").then(res => res.json())
-    // });
+
     async function addSession(newSession: Omit<Session, "id" | "createdAt">){
         const response = await apiFetch("/learningsession", {
             method: "POST",

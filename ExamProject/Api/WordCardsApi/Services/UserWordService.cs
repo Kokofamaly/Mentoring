@@ -17,12 +17,12 @@ public class UserWordService
     {
         var userWord = new UserWord
         {
-            Word = wordDto.Word.ToLowerInvariant(),
-            Translation = wordDto.Translation.ToLowerInvariant(),
+            Word = wordDto.Word.Trim().ToLowerInvariant(),
+            Translation = wordDto.Translation.Trim().ToLowerInvariant(),
             UserId = userId,
-            Language = wordDto.Language.ToLowerInvariant(),
-            Category = wordDto.Category?.ToLowerInvariant(),
-            UsageExample = wordDto.UsageExample?.ToLowerInvariant()
+            Language = wordDto.Language.Trim().ToLowerInvariant(),
+            Category = wordDto.Category?.Trim().ToLowerInvariant(),
+            UsageExample = wordDto.UsageExample?.Trim().ToLowerInvariant()
         };
         return await _userWordProvider.CreateUserWordAsync(userWord);
     }
@@ -36,11 +36,11 @@ public class UserWordService
 
     public async Task<UserWord?> UpdateUserWordAsync(string wordId, UserWordUpdateDto wordUpdateDto)
     {
-        wordUpdateDto.Word = wordUpdateDto.Word.ToLowerInvariant();
-        wordUpdateDto.Translation = wordUpdateDto.Translation.ToLowerInvariant();
-        wordUpdateDto.Language = wordUpdateDto.Language.ToLowerInvariant();
-        wordUpdateDto.Category = wordUpdateDto.Category?.ToLowerInvariant();
-        wordUpdateDto.UsageExample = wordUpdateDto.UsageExample?.ToLowerInvariant();
+        wordUpdateDto.Word = wordUpdateDto.Word.Trim().ToLowerInvariant();
+        wordUpdateDto.Translation = wordUpdateDto.Translation.Trim().ToLowerInvariant();
+        wordUpdateDto.Language = wordUpdateDto.Language.Trim().ToLowerInvariant();
+        wordUpdateDto.Category = wordUpdateDto.Category?.Trim().ToLowerInvariant();
+        wordUpdateDto.UsageExample = wordUpdateDto.UsageExample?.Trim().ToLowerInvariant();
 
         var oldWord = await _userWordProvider.GetUserWordAsync(wordId);
         

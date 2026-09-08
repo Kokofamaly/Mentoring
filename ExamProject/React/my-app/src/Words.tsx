@@ -140,66 +140,60 @@ export function Words(){
             <button onClick={() => setMode("adding")} disabled={mode === "adding"}>Add word</button>
             <hr />
             { mode === "adding" 
-            ? <AddForm setMode={setMode} addWordMutation={addWordMutation} setOptimisticWordList={setOptimisticWordList}/> 
+            ? <AddForm 
+                setMode={setMode} 
+                addWordMutation={addWordMutation} 
+                setOptimisticWordList={setOptimisticWordList}/> 
             :
             <>
                 
-                <input type="text" placeholder="search..." value={searchWord} onChange={e => setSearchWord(e.target.value)}/>
+                <input 
+                    type="text" 
+                    placeholder="search..." 
+                    value={searchWord} 
+                    onChange={e => setSearchWord(e.target.value)}/>
                 <ul>
                     {searchWord 
                     ? filteredWordList.map(w => selectedWord === w 
-                        ? mode === "editing" ? <li key={w.id}>
-                                <input type="text" placeholder="word" value={editedWord!.word} onChange={(e) => setEditedWord({...editedWord!, word: e.target.value})}/>
-                                <input type="text" placeholder="translation" value={editedWord!.translation} onChange={(e) => setEditedWord({...editedWord!, translation: e.target.value})}/>
-                                <input type="text" placeholder="language" value={editedWord!.language} onChange={(e) => setEditedWord({...editedWord!, language: e.target.value})}/>
-                                <input type="text" placeholder="category" value={editedWord!.category} onChange={(e) => setEditedWord({...editedWord!, category: e.target.value})}/>
-                                <input type="text" placeholder="usage example" value={editedWord!.usageExample} onChange={(e) => setEditedWord({...editedWord!, usageExample: e.target.value})}/>
-                                <button onClick={() => handleEdit(selectedWordId!, editedWord!)}>Confirm</button>
-                                <button onClick={() => setMode(null)}>Close</button>
-                            </li>
-                            : <li key={w.id} className="wordcard selected" onClick={() => handleSelect(w.id)}>
-                                <span>{w.word}</span>
-                                <span>{w.translation}</span>
-                                <span>{w.language}</span>
-                                {w.category && <span>{w.category}</span>}
-                                {w.usageExample && <span>{w.usageExample}</span>}
-                                <button onClick={(e) => {
-                                    e.stopPropagation();
-                                    setMode("editing");
-                                    setEditedWord(selectedWord);
-                                    }}>Edit</button>
-                                <button onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDelete(w.id);
-                                    }}>Delete</button>
-                            </li> 
+                        ? mode === "editing" 
+
+                            ? <EditWord 
+                                word={w} 
+                                editedWord={editedWord} 
+                                setEditedWord={setEditedWord} 
+                                handleEdit={handleEdit} 
+                                setMode={setMode} 
+                                selectedWordId={selectedWordId}/>
+
+                            : <SelectWord 
+                                word={w} 
+                                selectedWord={selectedWord} 
+                                handleSelect={handleSelect} 
+                                handleDelete={handleDelete} 
+                                setMode={setMode} 
+                                setEditedWord={setEditedWord} /> 
+
                         : <li key={w.id} className="wordcard" onClick={() => handleSelect(w.id)}>{w.word}</li>) 
+
                     : optimisticWordList.map(w => selectedWord === w 
-                        ? mode === "editing" ? <li key={w.id}>
-                                <input type="text" placeholder="word" value={editedWord!.word} onChange={(e) => setEditedWord({...editedWord!, word: e.target.value})}/>
-                                <input type="text" placeholder="translation" value={editedWord!.translation} onChange={(e) => setEditedWord({...editedWord!, translation: e.target.value})}/>
-                                <input type="text" placeholder="language" value={editedWord!.language} onChange={(e) => setEditedWord({...editedWord!, language: e.target.value})}/>
-                                <input type="text" placeholder="category" value={editedWord!.category} onChange={(e) => setEditedWord({...editedWord!, category: e.target.value})}/>
-                                <input type="text" placeholder="usage example" value={editedWord!.usageExample} onChange={(e) => setEditedWord({...editedWord!, usageExample: e.target.value})}/>
-                                <button onClick={() => handleEdit(selectedWordId!, editedWord!)}>Confirm</button>
-                                <button onClick={() => setMode(null)}>Close</button>
-                            </li>
-                            : <li key={w.id} className="wordcard selected" onClick={() => handleSelect(w.id)}>
-                                <span>{w.word}</span>
-                                <span>{w.translation}</span>
-                                <span>{w.language}</span>
-                                {w.category && <span>{w.category}</span>}
-                                {w.usageExample && <span>{w.usageExample}</span>}
-                                <button onClick={(e) => {
-                                    e.stopPropagation();
-                                    setMode("editing");
-                                    setEditedWord(selectedWord);
-                                    }}>Edit</button>
-                                <button onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDelete(w.id);
-                                    }}>Delete</button>
-                            </li> 
+                        ? mode === "editing" 
+
+                            ? <EditWord 
+                                word={w} 
+                                editedWord={editedWord} 
+                                setEditedWord={setEditedWord} 
+                                handleEdit={handleEdit} 
+                                setMode={setMode} 
+                                selectedWordId={selectedWordId}/>
+
+                            : <SelectWord 
+                                word={w} 
+                                selectedWord={selectedWord} 
+                                handleSelect={handleSelect} 
+                                handleDelete={handleDelete} 
+                                setMode={setMode} 
+                                setEditedWord={setEditedWord} />
+
                         : <li key={w.id} className="wordcard" onClick={() => handleSelect(w.id)}>{w.word}</li>)}
                 </ul>
             </>}
@@ -239,4 +233,39 @@ function AddForm({ setMode, addWordMutation, setOptimisticWordList } : {setMode:
                 <button type="submit" disabled={addWordMutation.isPending}>Confirm</button>
                 <button type="button" onClick={() => setMode(null)}>Close</button>
             </form> );
+}
+
+function EditWord({ word, editedWord, setEditedWord, handleEdit, setMode, selectedWordId } : {selectedWordId: string | null, word: Word, editedWord: Word | null, setEditedWord: (value: React.SetStateAction<Word | null>) => void, handleEdit: (wordId: string, updatedWord: Omit<Word, "id">) => void, setMode: (value: React.SetStateAction<"adding" | "editing" | null>) => void}){
+    return(
+        <li key={word.id}>
+            <input type="text" placeholder="word" value={editedWord!.word} onChange={(e) => setEditedWord({...editedWord!, word: e.target.value})}/>
+            <input type="text" placeholder="translation" value={editedWord!.translation} onChange={(e) => setEditedWord({...editedWord!, translation: e.target.value})}/>
+            <input type="text" placeholder="language" value={editedWord!.language} onChange={(e) => setEditedWord({...editedWord!, language: e.target.value})}/>
+            <input type="text" placeholder="category" value={editedWord!.category} onChange={(e) => setEditedWord({...editedWord!, category: e.target.value})}/>
+            <input type="text" placeholder="usage example" value={editedWord!.usageExample} onChange={(e) => setEditedWord({...editedWord!, usageExample: e.target.value})}/>
+            <button onClick={() => handleEdit(selectedWordId!, editedWord!)}>Confirm</button>
+            <button onClick={() => setMode(null)}>Close</button>
+        </li>
+    );
+}
+
+function SelectWord({ word, handleSelect, setMode, setEditedWord, handleDelete, selectedWord} : { handleSelect: (wordId: string) => void,handleDelete: (wordId: string) => void , selectedWord: Word, word: Word, setEditedWord: (value: React.SetStateAction<Word | null>) => void, setMode: (value: React.SetStateAction<"adding" | "editing" | null>) => void}){
+    return(
+        <li key={word.id} className="wordcard selected" onClick={() => handleSelect(word.id)}>
+            <span>{word.word}</span>
+            <span>{word.translation}</span>
+            <span>{word.language}</span>
+            {word.category && <span>{word.category}</span>}
+            {word.usageExample && <span>{word.usageExample}</span>}
+            <button onClick={(e) => {
+                e.stopPropagation();
+                setMode("editing");
+                setEditedWord(selectedWord);
+                }}>Edit</button>
+            <button onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(word.id);
+                }}>Delete</button>
+        </li> 
+    );
 }
