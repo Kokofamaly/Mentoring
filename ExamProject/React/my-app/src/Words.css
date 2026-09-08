@@ -77,12 +77,13 @@ h2 + button:disabled{
     background-color: white;
     border-radius: 10px;
 
-
     cursor: pointer;
+
 }
 
 .wordcard.selected {
     border: 3px solid rgb(255, 200, 0);
+    
 }
 
 
@@ -96,21 +97,47 @@ h2 + button:disabled{
 }
 
 
-/* =========================
-   Card buttons
-   ========================= */
-
 .wordcard button {
-    width: calc(50% - 5px);
-    margin: 10px 2.5px 0;
+    border: none;
+    border-radius: 10px;
 
-    box-sizing: border-box;
+    padding: 12px 24px;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        background-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.wordcard button:hover {
+    transform: translateY(-2px);
+}
+
+.wordcard button:active {
+    transform: translateY(0);
+}
+
+.wordcard button:focus-visible {
+    outline: 3px solid rgb(0 100 255 / 0.35);
+    outline-offset: 3px;
+}
+
+.wordcard button:last-child{
+    background: #f1f1f1;
+    color: #666;
+}
+
+.wordcard button:last-child:hover{
+    background: #e5e5e5;
+    color: #333;
 }
 
 
-/* =========================
-   Edit form inside card
-   ========================= */
 
 .wordcard input,
 .words.area li > input {

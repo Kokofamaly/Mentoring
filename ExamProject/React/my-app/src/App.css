@@ -128,3 +128,7 @@ form input{
     height: calc(100vh - 60px);
     padding: 20px;
 }
+
+span.user.name{
+  text-transform: capitalize;
+}

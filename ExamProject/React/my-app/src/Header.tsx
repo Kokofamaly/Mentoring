@@ -40,7 +40,7 @@ export function Header({setUser} : {
     return (<>
         <header>
             <div>
-                {user ? <>Добро пожаловать, {user.name}
+                {user ? <>Добро пожаловать, <span className="user name">{user.name}</span>
                 <button onClick={() => logoutMutation.mutate()} disabled={logoutMutation.isPending}>Logout</button></> 
                 : (<>
                     <button onClick={() => navigate("/register")}>Register</button>

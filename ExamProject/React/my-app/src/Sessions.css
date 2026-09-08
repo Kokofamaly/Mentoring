@@ -202,7 +202,7 @@ dialog {
     background: #f8f8f8;
     box-shadow: 0 20px 60px rgb(0 0 0 / 0.25);
 
-    overflow: hidden;
+    overflow: auto;
 }
 
 /* Затемнение страницы */
